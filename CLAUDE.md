@@ -33,7 +33,8 @@ All listed features are in scope for the prototype.
    - Dictatorship mode: one user pins a restaurant to the top of the list.
    - People filter: dissect the ranking by group member.
 
-### Open questions
+### Decisions
 
-- Where do the restaurant pictures and data come from?
-- How does the group ranking combine the swipes of each member?
+- Restaurant pictures and data: scrape Google.
+- Group ranking: every member has equal weight. Under the people filter,
+  each member's name shows the total number of swipes they have done.
