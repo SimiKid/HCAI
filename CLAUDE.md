@@ -38,3 +38,11 @@ All listed features are in scope for the prototype.
 - Restaurant pictures and data: scrape Google.
 - Group ranking: every member has equal weight. Under the people filter,
   each member's name shows the total number of swipes they have done.
+
+## HCAI design principles (required)
+
+For any UI, feature, ranking or recommendation logic, data handling, or user-facing copy, use the `hcai-principles` skill in `.claude/skills/hcai-principles/`.
+
+- The catalogue of course principles with stable IDs is `.claude/skills/hcai-principles/principles.md`.
+- Tag the code where a principle is applied with a comment of the form `@hcai` + ID + how it is applied.
+- Run `scripts/study-guide.sh` after tagging and commit the regenerated `docs/hcai-study-guide.md` with the code.
