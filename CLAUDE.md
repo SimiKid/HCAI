@@ -41,8 +41,8 @@ All listed features are in scope for the prototype.
 
 ## HCAI design principles (required)
 
-For any UI, feature, ranking or recommendation logic, data handling, or user-facing copy, use the `hcai-principles` skill in `.claude/skills/hcai-principles/`.
+For key design decisions (how the AI learns, ranks, explains, who can override it, what personal data is used), use the `hcai-principles` skill in `.claude/skills/hcai-principles/`. Not for routine UI work.
 
 - The catalogue of course principles with stable IDs is `.claude/skills/hcai-principles/principles.md`.
-- Tag the code where a principle is applied with a comment of the form `@hcai` + ID + how it is applied.
+- Tag only those key decisions in the code, with a comment of the form `@hcai` + ID + how it is applied. Aim for about 15 to 30 tags in the whole app.
 - Run `scripts/study-guide.sh` after tagging and commit the regenerated `docs/hcai-study-guide.md` with the code.

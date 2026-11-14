@@ -1,82 +1,88 @@
 ---
 name: hcai-principles
-description: Use for any UI, feature, ranking or recommendation logic, data handling, user-facing copy, or onboarding work in this repo, and when drafting the project report. Applies the Human-Centered AI course design principles, tags the code where each one is applied with @hcai IDs, and regenerates the study guide in docs/hcai-study-guide.md.
+description: Use when designing or changing a key design decision of Restaurant Tinder, such as how the AI learns from swipes, how the group ranking works, how results are explained, how users override the AI, or what personal data is used, and when drafting the project report. Not for routine UI work, styling, refactors, or bug fixes.
 ---
 
 # HCAI principles
 
-This repo is a course project for Human-Centered AI (UZH, HS26). The grade
-depends on justifying design choices with principles from class, and in the
-oral exam any team member can be asked about any feature. So every piece of
-user-facing or AI behaviour has to (1) follow the course principles, (2) say
-in the code which principle it follows, and (3) show up in the study guide.
+This repo is a course project for Human-Centered AI (UZH, HS26). The report
+asks for 3 to 5 key design features justified with course principles, and in
+the oral exam any team member can be asked about them. This skill keeps those
+few important decisions principled, marked in the code, and listed in
+`docs/hcai-study-guide.md`.
 
-The catalogue is `principles.md` in this folder. It is the only valid source
-of principle IDs.
+Less is more. The study guide should read like a short list of the decisions
+we would defend in the exam, not an inventory of every button.
+
+## Is this a key design decision?
+
+Tag only if at least one is true:
+
+- It shapes how the **AI behaves** toward users: what it learns, when it acts,
+  how confident it claims to be, how it explains itself.
+- It decides **who has control**: overriding, pinning, vetoing, turning the AI off.
+- It affects **fairness or privacy**: how members are weighted, what data is
+  collected or shown about people.
+- We **chose between real alternatives** for a reason from class, and would
+  mention it in the report or the oral exam.
+
+Do not tag routine work that any decent app has anyway: button hover
+states, loading spinners, standard layout, styling, form validation, refactors,
+bug fixes, tests. If in doubt, do not tag.
+
+Rough budget: one feature gets 1 to 3 tags. The whole app should end up with
+about 15 to 30 tags, not hundreds.
 
 ## Workflow
 
-1. **Look up before you build.** Before designing a feature, read the
-   catalogue sections that fit the task (table below). Use `grep` on
-   `principles.md` for a keyword if unsure.
-2. **Apply.** Let the principles shape the design, not decorate it
-   afterwards. When two principles pull in different directions, pick one
-   and record the trade-off (step 3).
-3. **Tag.** At the place in the code where a principle is realised, add one
-   comment in the file's own comment syntax:
+1. **Before a key decision, look it up.** Read the catalogue sections that fit
+   (table below) in `principles.md`. Skip this for routine work.
+2. **Apply.** Let the principle shape the design. When two principles conflict,
+   pick one and mark the trade-off.
+3. **Tag once, at the place that best shows the decision.** One comment in the
+   file's own comment syntax:
 
    ```
    // @hcai AMR-11 Each card shows one "why" line built from the member's own swipes
-   {/* @hcai DM-04 "Let's go here" is a human tap, the AI never commits a choice */}
-   # @hcai HOR-13 decide() returns none, ask or act from two probability thresholds
-   // @hcai FAIR-04 (trade-off) Equal weight per member, heavy swipers get no extra say
+   # @hcai FAIR-04 (trade-off) Equal weight per member, heavy swipers get no extra say
    ```
 
-   - Format is `@hcai <ID> <how it is applied here>` on one line.
-   - The "how" is concrete and specific to this code, in English, no em-dashes.
-     "Applies explainability" is useless. "Shows top 2 SHAP factors as chips" is good.
-   - Tag where a reviewer would see the principle in action: the component,
-     the function, the copy string. One tag per principle per place, not per line.
-   - Several principles at one place get several tags.
-   - Mark deliberate compromises with `(trade-off)` right after the ID.
-4. **Regenerate the guide.** Run `scripts/study-guide.sh`. It fails on an
-   unknown ID, so fix typos or add the principle first. Commit the updated
-   `docs/hcai-study-guide.md` together with the code.
-5. **Report back.** In your reply, list the principle IDs you applied and any
-   trade-offs, in one or two lines.
+   - Format is `@hcai <ID> <how it is applied here>` on one line, in English,
+     no em-dashes. Concrete: "shows top 2 factors as chips", not "applies explainability".
+   - Put the tag where the decision lives (the ranking function, the
+     explanation component), not on every file that touches it.
+   - Do not repeat the same principle for the same decision in several places.
+4. **Regenerate the guide** with `scripts/study-guide.sh` and commit
+   `docs/hcai-study-guide.md` together with the code. The script fails on an
+   unknown ID.
+5. **Mention it.** If you added tags, list the IDs in one line in your reply.
 
 ## Which sections to read
 
-| Working on | Read |
+| Decision about | Read |
 |---|---|
-| Swipe deck, gestures, cards | DM, NOR, ERR-01 to ERR-05, AMR-07 to AMR-09, DM-11 |
-| Onboarding, first run, copy | AMR-01, AMR-02, MM, NOR-06, DM-06 |
-| Preference model, learning from swipes | HOR, AMR-13 to AMR-16, ERR-08, ERR-09, XAI-12, XAI-13, FAIR-09 |
-| Group ranking, aggregation | FAIR-04, FAIR-05, FAIR-10, FAIR-11, HCAI-02, HOR-08, HOR-14, AMR-10 |
-| Explanations, "why this?" | XAI, AMR-11, MM-03, DM-07, DM-10 |
-| Re-rank, pin, dictatorship mode, filters | HOR-09, DM-04, DM-05, FAIR-01, FAIR-03, FAIR-15, FAIR-16, AMR-14 |
-| Notifications, prompts, timing | AMR-03, HOR-03, HOR-05, HOR-07, HOR-13 |
-| Profile, personal data, demographics | FAIR-06, FAIR-07, FAIR-12, FAIR-17, FAIR-20, MM-07, AMR-17 |
-| Empty states, errors, no results | ERR-10 to ERR-13, XAI-02 |
-| Map and results views | DM-02, DM-03, AMR-04, ERR-07 |
-| Report, model card, evaluation | FAIR-11, FAIR-13, FAIR-19, ERR-14, DM-12, HCAI-04, PROC |
+| Learning from swipes | HOR-02, HOR-12, AMR-13 to AMR-16, ERR-08, FAIR-09 |
+| Group ranking, aggregation | FAIR-04, FAIR-05, FAIR-10, HOR-08, AMR-10 |
+| Explanations, "why this?" | XAI-07 to XAI-11, XAI-14 to XAI-16, AMR-11, DM-10 |
+| Override, pin, dictatorship mode, filters | HCAI-02, DM-04, DM-05, FAIR-01, FAIR-03, HOR-09 |
+| When the AI acts or asks | HOR-03, HOR-05, HOR-13, AMR-03, HCAI-03 |
+| Confidence, trust | XAI-01, XAI-02, XAI-10, FAIR-18, AMR-02 |
+| Personal data, demographics | FAIR-07, FAIR-12, FAIR-13, FAIR-17, FAIR-20, MM-07 |
+| Onboarding, first impression | AMR-01, MM-02, MM-06, NOR-06 |
+| Report, evaluation, model card | FAIR-11, FAIR-19, ERR-14, DM-12, PROC |
 
 ## Rules
 
-- Never invent an ID. If a course principle is missing, add an entry to
+- Never invent an ID. If a course principle is missing, add it to
   `principles.md` (own words, source pointer, next free number in its
   section), then tag it.
-- Never paste slide text or copy lecture PDFs into the repo. It is public.
-  Summaries in our own words with a source pointer only.
+- Never paste slide text or lecture PDFs into the repo. It is public.
 - If a requested feature conflicts with a principle, say so before building
-  and propose an alternative. Known conflicts in the current product idea:
+  and propose an alternative. Known conflicts in the product idea:
   - "Average demographic that likes each restaurant" clashes with FAIR-07,
-    FAIR-08, FAIR-12, FAIR-13 (stereotyping) and FAIR-17. Suggest taste
-    clusters ("people who like spicy food") instead, opt-in only.
-  - Dictatorship mode is good for HCAI-02 and FAIR-03 but shifts power.
-    Show who pinned (FAIR-01).
-  - Filter by member supports FAIR-16 but exposes individual preferences to
-    the group (AMR-05).
-  - Photo swipes are a proxy with feedback loops (FAIR-09, ERR-09).
-- Do not hand-edit the generated part of `docs/hcai-study-guide.md`. The
-  hand-written sections above the marker are fine to edit.
+    FAIR-12, FAIR-13 (stereotyping) and FAIR-17. Suggest taste clusters
+    ("people who like spicy food") instead, opt-in only.
+  - Dictatorship mode supports HCAI-02 and FAIR-03 but shifts power. Show who pinned (FAIR-01).
+  - The people filter supports FAIR-16 but exposes individual preferences (AMR-05).
+  - Photo swipes are a proxy with feedback loops (FAIR-09).
+- Do not hand-edit the generated part of `docs/hcai-study-guide.md`.
