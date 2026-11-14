@@ -1,41 +1,39 @@
-# CLAUDE.md
+## Product
 
-Guidance for Claude Code when working in this repository.
+Working title: Restaurant Tinder. A group picks a restaurant by swiping on
+restaurant pictures. The app ranks restaurants for the whole group.
 
-## Project
+### User journey
 
-Repository for the UZH course "The Effects of AI on Individuals and Society" (HCIAI8, HS26, instructor Daniel M. Russell). It holds the final team project. The final presentation is in December 2026.
+Each step has a core flow and the prototype features that belong to it.
+All listed features are in scope for the prototype.
 
-Status: the repository is new and empty. Topic, stack, structure, and tooling are not decided yet.
+1. Create a profile
+   - Questions about the user.
+   - Core person information: allergies, diets.
 
-## Working rules
+2. Join a group or trip
+   - Questions about the user and the trip (hotel, area, dates).
+   - Trip-specific preferences, for example "I want to eat traditionally"
+     or "trendy areas".
 
-- Do not assume a tech stack. Once the first code lands, record the stack plus the setup, run, and test commands in this file.
-- This repository is public. Never commit secrets, API keys, `.env` files, personal data, or course material that is not ours to publish (readings, slides, restricted datasets).
-- Add a `.gitignore` before the first code commit (virtual environments, `node_modules`, `.env`, OS and editor files, large data files).
-- Keep changes small and focused. One concern per commit.
-- Prefer simple, readable solutions. This is course work with a deadline, not a product.
-- State assumptions and open questions instead of guessing silently.
+3. Swipe pictures
+   - The user swipes on restaurant pictures. Swipe as much as you want.
+   - The app needs as little data as possible to work.
+   - Each swipe trains the algorithm on the user's preferences.
+   - Each card shows: location, price level (dollar signs), radius,
+     reviews including numbers.
 
-## Git
+4. Ranked list of restaurants for the group
+   - One ranked list for the whole group.
+   - Shows the expected reservation time.
+   - The user can re-rank the list with their own preferences.
+   - Map view of the results.
+   - Shows the average demographic that likes each restaurant.
+   - Dictatorship mode: one user pins a restaurant to the top of the list.
+   - People filter: dissect the ranking by group member.
 
-- Default branch: `main`.
-- Use short-lived feature branches and pull requests when more than one person works on the same area.
-- Commit messages in the imperative, e.g. "Add survey data loader".
-- Never force-push to `main`.
+### Open questions
 
-## Writing style
-
-- Code, comments, commit messages, and documentation in English.
-- Concise and precise. No filler.
-- No em-dashes. Use periods, commas, or colons.
-
-## Keep this file current
-
-Update this file when any of these is decided or changes:
-
-- Project topic and research question
-- Tech stack and versions
-- Setup, run, and test commands
-- Directory layout
-- Deadlines and deliverables
+- Where do the restaurant pictures and data come from?
+- How does the group ranking combine the swipes of each member?
