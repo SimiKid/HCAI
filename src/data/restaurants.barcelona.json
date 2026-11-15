@@ -1,0 +1,2655 @@
+[
+ {
+  "id": "osm-6914132390",
+  "displayName": "El Nou Ramonet",
+  "primaryType": "tapas",
+  "location": {
+   "latitude": 41.3817315,
+   "longitude": 2.1876268
+  },
+  "neighbourhood": "Barceloneta",
+  "formattedAddress": "Carrer de Carbonell, Barcelona",
+  "priceLevel": 2,
+  "rating": 4.4,
+  "userRatingCount": 2180,
+  "photos": [
+   {
+    "src": "/photos/osm-6914132390.jpg",
+    "attribution": "Katherine Price from UK, CC BY 2.0"
+   }
+  ],
+  "sample": {
+   "vibes": [
+    "traditional",
+    "lively",
+    "touristy"
+   ],
+   "dietOptions": [
+    "vegetarian",
+    "pescatarian"
+   ],
+   "allergens": [],
+   "reservation": {
+    "walkInUpTo": 4,
+    "slots": [
+     {
+      "time": "19:30",
+      "maxParty": 2
+     },
+     {
+      "time": "20:00",
+      "maxParty": 2
+     },
+     {
+      "time": "20:30",
+      "maxParty": 4
+     },
+     {
+      "time": "21:00",
+      "maxParty": 6
+     },
+     {
+      "time": "21:30",
+      "maxParty": 8
+     },
+     {
+      "time": "22:00",
+      "maxParty": 8
+     }
+    ]
+   },
+   "popularWith": [
+    "Seafood fans",
+    "Beach-day groups"
+   ]
+  }
+ },
+ {
+  "id": "osm-10249345709",
+  "displayName": "Lonja de Tapas",
+  "primaryType": "tapas",
+  "location": {
+   "latitude": 41.3844484,
+   "longitude": 2.1820837
+  },
+  "neighbourhood": "El Born",
+  "formattedAddress": "Placeta de Montcada, Barcelona",
+  "priceLevel": 2,
+  "rating": 4.3,
+  "userRatingCount": 3270,
+  "photos": [
+   {
+    "src": "/photos/osm-10249345709.jpg",
+    "attribution": "Juan Emilio Prades Bel, CC BY 4.0"
+   }
+  ],
+  "sample": {
+   "vibes": [
+    "lively",
+    "touristy"
+   ],
+   "dietOptions": [
+    "vegetarian",
+    "pescatarian"
+   ],
+   "allergens": [],
+   "reservation": {
+    "walkInUpTo": 2,
+    "slots": [
+     {
+      "time": "19:00",
+      "maxParty": 2
+     },
+     {
+      "time": "19:30",
+      "maxParty": 2
+     },
+     {
+      "time": "20:00",
+      "maxParty": 6
+     },
+     {
+      "time": "20:30",
+      "maxParty": 6
+     },
+     {
+      "time": "21:00",
+      "maxParty": 8
+     },
+     {
+      "time": "21:30",
+      "maxParty": 8
+     }
+    ]
+   },
+   "popularWith": [
+    "First-time visitors",
+    "Groups of friends"
+   ]
+  }
+ },
+ {
+  "id": "osm-6634324591",
+  "displayName": "Xanc i Meli",
+  "primaryType": "tapas",
+  "location": {
+   "latitude": 41.4034492,
+   "longitude": 2.1460354
+  },
+  "neighbourhood": "Gràcia",
+  "formattedAddress": "Carrer del Francolí, Barcelona",
+  "priceLevel": 1,
+  "rating": 4.3,
+  "userRatingCount": 630,
+  "photos": [
+   {
+    "src": "/photos/osm-6634324591.jpg",
+    "attribution": "Juan Emilio Prades Bel, CC BY-SA 4.0"
+   }
+  ],
+  "sample": {
+   "vibes": [
+    "local",
+    "cosy"
+   ],
+   "dietOptions": [
+    "vegetarian",
+    "pescatarian"
+   ],
+   "allergens": [],
+   "reservation": {
+    "walkInUpTo": 4,
+    "slots": [
+     {
+      "time": "19:30",
+      "maxParty": 4
+     },
+     {
+      "time": "20:00",
+      "maxParty": 4
+     },
+     {
+      "time": "20:30",
+      "maxParty": 6
+     },
+     {
+      "time": "21:00",
+      "maxParty": 8
+     },
+     {
+      "time": "21:30",
+      "maxParty": 8
+     },
+     {
+      "time": "22:00",
+      "maxParty": 8
+     }
+    ]
+   },
+   "popularWith": [
+    "Locals after work",
+    "Budget travellers"
+   ]
+  }
+ },
+ {
+  "id": "osm-6634324487",
+  "displayName": "Casa de Tapas Cañote",
+  "primaryType": "tapas",
+  "location": {
+   "latitude": 41.3742115,
+   "longitude": 2.1546082
+  },
+  "neighbourhood": "Sant Antoni",
+  "formattedAddress": "Carrer de Lleida, Barcelona",
+  "priceLevel": 2,
+  "rating": 4.6,
+  "userRatingCount": 4240,
+  "photos": [
+   {
+    "src": "/photos/osm-6634324487.jpg",
+    "attribution": "Jessica Spengler, CC BY 2.0"
+   }
+  ],
+  "sample": {
+   "vibes": [
+    "trendy",
+    "lively"
+   ],
+   "dietOptions": [
+    "vegetarian",
+    "pescatarian"
+   ],
+   "allergens": [],
+   "reservation": {
+    "walkInUpTo": 2,
+    "slots": [
+     {
+      "time": "19:30",
+      "maxParty": 2
+     },
+     {
+      "time": "20:00",
+      "maxParty": 2
+     },
+     {
+      "time": "20:30",
+      "maxParty": 6
+     },
+     {
+      "time": "21:00",
+      "maxParty": 6
+     },
+     {
+      "time": "21:30",
+      "maxParty": 8
+     },
+     {
+      "time": "22:00",
+      "maxParty": 8
+     }
+    ]
+   },
+   "popularWith": [
+    "Food explorers",
+    "Groups of friends"
+   ]
+  }
+ },
+ {
+  "id": "osm-5109943322",
+  "displayName": "La Kabane",
+  "primaryType": "tapas",
+  "location": {
+   "latitude": 41.4043018,
+   "longitude": 2.1550041
+  },
+  "neighbourhood": "Gràcia",
+  "formattedAddress": "Carrer del Torrent de l'Olla, Barcelona",
+  "priceLevel": 2,
+  "rating": 4.2,
+  "userRatingCount": 1390,
+  "photos": [
+   {
+    "src": "/photos/osm-5109943322.jpg",
+    "attribution": "Laura Lynch, CC BY-SA 2.0"
+   }
+  ],
+  "sample": {
+   "vibes": [
+    "cosy",
+    "local"
+   ],
+   "dietOptions": [
+    "vegetarian",
+    "pescatarian"
+   ],
+   "allergens": [],
+   "reservation": {
+    "walkInUpTo": 4,
+    "slots": [
+     {
+      "time": "19:00",
+      "maxParty": 3
+     },
+     {
+      "time": "19:30",
+      "maxParty": 3
+     },
+     {
+      "time": "20:00",
+      "maxParty": 5
+     },
+     {
+      "time": "20:30",
+      "maxParty": 7
+     },
+     {
+      "time": "21:00",
+      "maxParty": 8
+     },
+     {
+      "time": "21:30",
+      "maxParty": 8
+     }
+    ]
+   },
+   "popularWith": [
+    "Wine lovers",
+    "Small groups"
+   ]
+  }
+ },
+ {
+  "id": "osm-10023384980",
+  "displayName": "Babula Bar 1937",
+  "primaryType": "tapas",
+  "location": {
+   "latitude": 41.393631,
+   "longitude": 2.1657443
+  },
+  "neighbourhood": "Eixample",
+  "formattedAddress": "Carrer de Pau Claris, Barcelona",
+  "priceLevel": 2,
+  "rating": 4.6,
+  "userRatingCount": 2770,
+  "photos": [
+   {
+    "src": "/photos/osm-10023384980.jpg",
+    "attribution": "Boca Dorada, CC BY-SA 2.0"
+   }
+  ],
+  "sample": {
+   "vibes": [
+    "traditional",
+    "local"
+   ],
+   "dietOptions": [
+    "vegetarian",
+    "pescatarian"
+   ],
+   "allergens": [],
+   "reservation": {
+    "walkInUpTo": 2,
+    "slots": [
+     {
+      "time": "19:00",
+      "maxParty": 2
+     },
+     {
+      "time": "19:30",
+      "maxParty": 4
+     },
+     {
+      "time": "20:00",
+      "maxParty": 6
+     },
+     {
+      "time": "20:30",
+      "maxParty": 6
+     },
+     {
+      "time": "21:00",
+      "maxParty": 8
+     },
+     {
+      "time": "21:30",
+      "maxParty": 8
+     }
+    ]
+   },
+   "popularWith": [
+    "Locals after work",
+    "Late diners"
+   ]
+  }
+ },
+ {
+  "id": "osm-9060791908",
+  "displayName": "Tapas 2254",
+  "primaryType": "catalan",
+  "location": {
+   "latitude": 41.3900845,
+   "longitude": 2.1641778
+  },
+  "neighbourhood": "Eixample",
+  "formattedAddress": "Carrer del Consell de Cent, Barcelona",
+  "priceLevel": 2,
+  "rating": 4.4,
+  "userRatingCount": 1880,
+  "photos": [
+   {
+    "src": "/photos/osm-9060791908.jpg",
+    "attribution": "Juan Emilio Prades Bel, CC BY 4.0"
+   }
+  ],
+  "sample": {
+   "vibes": [
+    "trendy",
+    "local"
+   ],
+   "dietOptions": [
+    "pescatarian",
+    "vegetarian",
+    "vegan",
+    "gluten-free"
+   ],
+   "allergens": [
+    "nuts"
+   ],
+   "reservation": {
+    "walkInUpTo": 2,
+    "slots": [
+     {
+      "time": "19:30",
+      "maxParty": 2
+     },
+     {
+      "time": "20:00",
+      "maxParty": 3
+     },
+     {
+      "time": "20:30",
+      "maxParty": 5
+     },
+     {
+      "time": "21:00",
+      "maxParty": 7
+     },
+     {
+      "time": "21:30",
+      "maxParty": 8
+     },
+     {
+      "time": "22:00",
+      "maxParty": 8
+     }
+    ]
+   },
+   "popularWith": [
+    "Mixed-diet groups",
+    "Food explorers"
+   ]
+  }
+ },
+ {
+  "id": "osm-4001010203",
+  "displayName": "Arcano Restaurant Barcelona",
+  "primaryType": "catalan",
+  "location": {
+   "latitude": 41.3850046,
+   "longitude": 2.1786227
+  },
+  "neighbourhood": "Barri Gòtic",
+  "formattedAddress": "Carrer de Mercaders, Barcelona",
+  "priceLevel": 3,
+  "rating": 4.7,
+  "userRatingCount": 1880,
+  "photos": [
+   {
+    "src": "/photos/osm-4001010203.jpg",
+    "attribution": "Evan Bench from paris, france, CC BY 2.0"
+   }
+  ],
+  "sample": {
+   "vibes": [
+    "traditional",
+    "cosy",
+    "touristy"
+   ],
+   "dietOptions": [
+    "pescatarian"
+   ],
+   "allergens": [
+    "nuts"
+   ],
+   "reservation": {
+    "walkInUpTo": 0,
+    "slots": [
+     {
+      "time": "19:30",
+      "maxParty": 2
+     },
+     {
+      "time": "20:00",
+      "maxParty": 2
+     },
+     {
+      "time": "20:30",
+      "maxParty": 4
+     },
+     {
+      "time": "21:00",
+      "maxParty": 6
+     },
+     {
+      "time": "21:30",
+      "maxParty": 8
+     },
+     {
+      "time": "22:00",
+      "maxParty": 8
+     }
+    ]
+   },
+   "popularWith": [
+    "Special occasions",
+    "Meat lovers"
+   ]
+  }
+ },
+ {
+  "id": "osm-2866873011",
+  "displayName": "Casa Leopoldo",
+  "primaryType": "catalan",
+  "location": {
+   "latitude": 41.3792715,
+   "longitude": 2.1695103
+  },
+  "neighbourhood": "El Raval",
+  "formattedAddress": "Carrer de Sant Rafael, Barcelona",
+  "priceLevel": 3,
+  "rating": 4.1,
+  "userRatingCount": 2030,
+  "photos": [
+   {
+    "src": "/photos/osm-2866873011.jpg",
+    "attribution": "Kritzolina, CC BY-SA 4.0"
+   }
+  ],
+  "sample": {
+   "vibes": [
+    "traditional",
+    "local",
+    "fancy"
+   ],
+   "dietOptions": [
+    "pescatarian"
+   ],
+   "allergens": [
+    "nuts"
+   ],
+   "reservation": {
+    "walkInUpTo": 0,
+    "slots": [
+     {
+      "time": "19:30",
+      "maxParty": 2
+     },
+     {
+      "time": "20:00",
+      "maxParty": 2
+     },
+     {
+      "time": "20:30",
+      "maxParty": 3
+     },
+     {
+      "time": "21:00",
+      "maxParty": 5
+     },
+     {
+      "time": "21:30",
+      "maxParty": 8
+     },
+     {
+      "time": "22:00",
+      "maxParty": 8
+     }
+    ]
+   },
+   "popularWith": [
+    "Classic-cuisine fans",
+    "Special occasions"
+   ]
+  }
+ },
+ {
+  "id": "osm-11020523105",
+  "displayName": "taps",
+  "primaryType": "catalan",
+  "location": {
+   "latitude": 41.3728758,
+   "longitude": 2.1556472
+  },
+  "neighbourhood": "Poble-sec",
+  "formattedAddress": "Carrer de la Mare de Déu del Remei, Barcelona",
+  "priceLevel": 1,
+  "rating": 4.5,
+  "userRatingCount": 1930,
+  "photos": [
+   {
+    "src": "/photos/osm-11020523105.jpg",
+    "attribution": "Lablascovegmenu from London, CC BY 2.0"
+   }
+  ],
+  "sample": {
+   "vibes": [
+    "local",
+    "lively"
+   ],
+   "dietOptions": [
+    "pescatarian"
+   ],
+   "allergens": [
+    "nuts"
+   ],
+   "reservation": {
+    "walkInUpTo": 4,
+    "slots": [
+     {
+      "time": "19:00",
+      "maxParty": 3
+     },
+     {
+      "time": "19:30",
+      "maxParty": 5
+     },
+     {
+      "time": "20:00",
+      "maxParty": 5
+     },
+     {
+      "time": "20:30",
+      "maxParty": 8
+     },
+     {
+      "time": "21:00",
+      "maxParty": 8
+     },
+     {
+      "time": "21:30",
+      "maxParty": 8
+     }
+    ]
+   },
+   "popularWith": [
+    "Locals after work",
+    "Budget travellers"
+   ]
+  }
+ },
+ {
+  "id": "osm-4184893894",
+  "displayName": "Windsor",
+  "primaryType": "catalan",
+  "location": {
+   "latitude": 41.3945914,
+   "longitude": 2.1572605
+  },
+  "neighbourhood": "Eixample",
+  "formattedAddress": "Carrer de Còrsega, Barcelona",
+  "priceLevel": 4,
+  "rating": 4.6,
+  "userRatingCount": 830,
+  "photos": [
+   {
+    "src": "/photos/osm-4184893894.jpg",
+    "attribution": "Juan Emilio Prades Bel, CC BY-SA 4.0"
+   }
+  ],
+  "sample": {
+   "vibes": [
+    "fancy",
+    "traditional"
+   ],
+   "dietOptions": [
+    "pescatarian",
+    "gluten-free"
+   ],
+   "allergens": [
+    "nuts"
+   ],
+   "reservation": {
+    "walkInUpTo": 0,
+    "slots": [
+     {
+      "time": "19:30",
+      "maxParty": 2
+     },
+     {
+      "time": "20:00",
+      "maxParty": 4
+     },
+     {
+      "time": "20:30",
+      "maxParty": 4
+     },
+     {
+      "time": "21:00",
+      "maxParty": 8
+     },
+     {
+      "time": "21:30",
+      "maxParty": 8
+     },
+     {
+      "time": "22:00",
+      "maxParty": 8
+     }
+    ]
+   },
+   "popularWith": [
+    "Special occasions",
+    "Classic-cuisine fans"
+   ]
+  }
+ },
+ {
+  "id": "osm-2398528980",
+  "displayName": "MariscCo",
+  "primaryType": "seafood",
+  "location": {
+   "latitude": 41.3942919,
+   "longitude": 2.1567572
+  },
+  "neighbourhood": "Eixample",
+  "formattedAddress": "Carrer de Còrsega, Barcelona",
+  "priceLevel": 3,
+  "rating": 4.2,
+  "userRatingCount": 3500,
+  "photos": [
+   {
+    "src": "/photos/osm-2398528980.jpg",
+    "attribution": "Tsumugii, CC BY-SA 4.0"
+   }
+  ],
+  "sample": {
+   "vibes": [
+    "trendy",
+    "lively"
+   ],
+   "dietOptions": [
+    "pescatarian",
+    "gluten-free"
+   ],
+   "allergens": [
+    "shellfish"
+   ],
+   "reservation": {
+    "walkInUpTo": 0,
+    "slots": [
+     {
+      "time": "19:00",
+      "maxParty": 2
+     },
+     {
+      "time": "19:30",
+      "maxParty": 2
+     },
+     {
+      "time": "20:00",
+      "maxParty": 5
+     },
+     {
+      "time": "20:30",
+      "maxParty": 5
+     },
+     {
+      "time": "21:00",
+      "maxParty": 8
+     },
+     {
+      "time": "21:30",
+      "maxParty": 8
+     }
+    ]
+   },
+   "popularWith": [
+    "Seafood fans",
+    "Groups of friends"
+   ]
+  }
+ },
+ {
+  "id": "osm-2247733112",
+  "displayName": "Passadís del Pep",
+  "primaryType": "seafood",
+  "location": {
+   "latitude": 41.382955,
+   "longitude": 2.1825798
+  },
+  "neighbourhood": "El Born",
+  "formattedAddress": "Pla de Palau, Barcelona",
+  "priceLevel": 4,
+  "rating": 4.7,
+  "userRatingCount": 300,
+  "photos": [
+   {
+    "src": "/photos/osm-2247733112.jpg",
+    "attribution": "Gerda Arendt, CC BY-SA 4.0"
+   }
+  ],
+  "sample": {
+   "vibes": [
+    "traditional",
+    "fancy",
+    "local"
+   ],
+   "dietOptions": [
+    "pescatarian",
+    "gluten-free"
+   ],
+   "allergens": [
+    "shellfish"
+   ],
+   "reservation": {
+    "walkInUpTo": 0,
+    "slots": [
+     {
+      "time": "19:00",
+      "maxParty": 2
+     },
+     {
+      "time": "19:30",
+      "maxParty": 5
+     },
+     {
+      "time": "20:00",
+      "maxParty": 5
+     },
+     {
+      "time": "20:30",
+      "maxParty": 7
+     },
+     {
+      "time": "21:00",
+      "maxParty": 8
+     },
+     {
+      "time": "21:30",
+      "maxParty": 8
+     }
+    ]
+   },
+   "popularWith": [
+    "Seafood fans",
+    "Special occasions"
+   ]
+  }
+ },
+ {
+  "id": "osm-4812237224",
+  "displayName": "Botafumeiro",
+  "primaryType": "seafood",
+  "location": {
+   "latitude": 41.4004038,
+   "longitude": 2.1546391
+  },
+  "neighbourhood": "Gràcia",
+  "formattedAddress": "Carrer Gran de Gràcia, Barcelona",
+  "priceLevel": 4,
+  "rating": 4.8,
+  "userRatingCount": 1860,
+  "photos": [
+   {
+    "src": "/photos/osm-4812237224.jpg",
+    "attribution": "arroutado, CC BY-SA 3.0"
+   }
+  ],
+  "sample": {
+   "vibes": [
+    "traditional",
+    "fancy",
+    "touristy"
+   ],
+   "dietOptions": [
+    "pescatarian",
+    "gluten-free"
+   ],
+   "allergens": [
+    "shellfish"
+   ],
+   "reservation": {
+    "walkInUpTo": 0,
+    "slots": [
+     {
+      "time": "19:30",
+      "maxParty": 2
+     },
+     {
+      "time": "20:00",
+      "maxParty": 4
+     },
+     {
+      "time": "20:30",
+      "maxParty": 6
+     },
+     {
+      "time": "21:00",
+      "maxParty": 6
+     },
+     {
+      "time": "21:30",
+      "maxParty": 8
+     },
+     {
+      "time": "22:00",
+      "maxParty": 8
+     }
+    ]
+   },
+   "popularWith": [
+    "Seafood fans",
+    "Special occasions"
+   ]
+  }
+ },
+ {
+  "id": "osm-5048602523",
+  "displayName": "Marisqueria Lloritu",
+  "primaryType": "seafood",
+  "location": {
+   "latitude": 41.4067138,
+   "longitude": 2.1596113
+  },
+  "neighbourhood": "Gràcia",
+  "formattedAddress": "Carrer del Torrent de les Flors, Barcelona",
+  "priceLevel": 2,
+  "rating": 4.1,
+  "userRatingCount": 150,
+  "photos": [
+   {
+    "src": "/photos/osm-5048602523.jpg",
+    "attribution": "NiTenIchiRyu, CC BY-SA 4.0"
+   }
+  ],
+  "sample": {
+   "vibes": [
+    "local",
+    "traditional"
+   ],
+   "dietOptions": [
+    "pescatarian",
+    "gluten-free"
+   ],
+   "allergens": [
+    "shellfish"
+   ],
+   "reservation": {
+    "walkInUpTo": 2,
+    "slots": [
+     {
+      "time": "19:30",
+      "maxParty": 2
+     },
+     {
+      "time": "20:00",
+      "maxParty": 4
+     },
+     {
+      "time": "20:30",
+      "maxParty": 6
+     },
+     {
+      "time": "21:00",
+      "maxParty": 8
+     },
+     {
+      "time": "21:30",
+      "maxParty": 8
+     },
+     {
+      "time": "22:00",
+      "maxParty": 8
+     }
+    ]
+   },
+   "popularWith": [
+    "Seafood fans",
+    "Locals after work"
+   ]
+  }
+ },
+ {
+  "id": "osm-5721034923",
+  "displayName": "Nogal",
+  "primaryType": "spanish",
+  "location": {
+   "latitude": 41.3989677,
+   "longitude": 2.178717
+  },
+  "neighbourhood": "Eixample",
+  "formattedAddress": "Carrer de la Diputació, Barcelona",
+  "priceLevel": 1,
+  "rating": 4,
+  "userRatingCount": 480,
+  "photos": [
+   {
+    "src": "/photos/osm-5721034923.jpg",
+    "attribution": "Kent Wang, CC BY-SA 2.0"
+   }
+  ],
+  "sample": {
+   "vibes": [
+    "local",
+    "cosy"
+   ],
+   "dietOptions": [
+    "vegetarian",
+    "pescatarian"
+   ],
+   "allergens": [
+    "eggs"
+   ],
+   "reservation": {
+    "walkInUpTo": 6,
+    "slots": [
+     {
+      "time": "19:00",
+      "maxParty": 2
+     },
+     {
+      "time": "19:30",
+      "maxParty": 4
+     },
+     {
+      "time": "20:00",
+      "maxParty": 8
+     },
+     {
+      "time": "20:30",
+      "maxParty": 8
+     },
+     {
+      "time": "21:00",
+      "maxParty": 8
+     },
+     {
+      "time": "21:30",
+      "maxParty": 8
+     }
+    ]
+   },
+   "popularWith": [
+    "Budget travellers",
+    "Lunch crowd"
+   ]
+  }
+ },
+ {
+  "id": "osm-14209595101",
+  "displayName": "Morralet",
+  "primaryType": "spanish",
+  "location": {
+   "latitude": 41.4004286,
+   "longitude": 2.1523109
+  },
+  "neighbourhood": "Gràcia",
+  "formattedAddress": "Carrer de Benet Mercadé, Barcelona",
+  "priceLevel": 2,
+  "rating": 4,
+  "userRatingCount": 190,
+  "photos": [
+   {
+    "src": "/photos/osm-14209595101.jpg",
+    "attribution": "Bocadorada, CC BY-SA 2.0"
+   }
+  ],
+  "sample": {
+   "vibes": [
+    "traditional",
+    "local"
+   ],
+   "dietOptions": [
+    "vegetarian",
+    "pescatarian"
+   ],
+   "allergens": [
+    "eggs"
+   ],
+   "reservation": {
+    "walkInUpTo": 2,
+    "slots": [
+     {
+      "time": "19:00",
+      "maxParty": 2
+     },
+     {
+      "time": "19:30",
+      "maxParty": 6
+     },
+     {
+      "time": "20:00",
+      "maxParty": 8
+     },
+     {
+      "time": "20:30",
+      "maxParty": 8
+     },
+     {
+      "time": "21:00",
+      "maxParty": 8
+     },
+     {
+      "time": "21:30",
+      "maxParty": 8
+     }
+    ]
+   },
+   "popularWith": [
+    "Classic-cuisine fans",
+    "Small groups"
+   ]
+  }
+ },
+ {
+  "id": "osm-6788577586",
+  "displayName": "Misiú",
+  "primaryType": "italian",
+  "location": {
+   "latitude": 41.3919087,
+   "longitude": 2.1686068
+  },
+  "neighbourhood": "Eixample",
+  "formattedAddress": "Carrer de Pau Claris, Barcelona",
+  "priceLevel": 3,
+  "rating": 4.1,
+  "userRatingCount": 1380,
+  "photos": [
+   {
+    "src": "/photos/osm-6788577586.jpg",
+    "attribution": "Javier Somoza, CC BY-SA 4.0"
+   }
+  ],
+  "sample": {
+   "vibes": [
+    "trendy",
+    "cosy"
+   ],
+   "dietOptions": [
+    "vegetarian",
+    "pescatarian"
+   ],
+   "allergens": [
+    "gluten",
+    "dairy"
+   ],
+   "reservation": {
+    "walkInUpTo": 0,
+    "slots": [
+     {
+      "time": "19:30",
+      "maxParty": 2
+     },
+     {
+      "time": "20:00",
+      "maxParty": 4
+     },
+     {
+      "time": "20:30",
+      "maxParty": 4
+     },
+     {
+      "time": "21:00",
+      "maxParty": 8
+     },
+     {
+      "time": "21:30",
+      "maxParty": 8
+     },
+     {
+      "time": "22:00",
+      "maxParty": 8
+     }
+    ]
+   },
+   "popularWith": [
+    "Date nights",
+    "Pasta lovers"
+   ]
+  }
+ },
+ {
+  "id": "osm-2434563732",
+  "displayName": "La Bella Napoli",
+  "primaryType": "italian",
+  "location": {
+   "latitude": 41.3743686,
+   "longitude": 2.1637621
+  },
+  "neighbourhood": "Poble-sec",
+  "formattedAddress": "Carrer de Margarit, Barcelona",
+  "priceLevel": 2,
+  "rating": 4.6,
+  "userRatingCount": 150,
+  "photos": [
+   {
+    "src": "/photos/osm-2434563732.jpg",
+    "attribution": "Wheeler Cowperthwaite, CC BY 2.0"
+   }
+  ],
+  "sample": {
+   "vibes": [
+    "traditional",
+    "lively"
+   ],
+   "dietOptions": [
+    "vegetarian",
+    "pescatarian"
+   ],
+   "allergens": [
+    "gluten",
+    "dairy"
+   ],
+   "reservation": {
+    "walkInUpTo": 4,
+    "slots": [
+     {
+      "time": "19:30",
+      "maxParty": 2
+     },
+     {
+      "time": "20:00",
+      "maxParty": 4
+     },
+     {
+      "time": "20:30",
+      "maxParty": 6
+     },
+     {
+      "time": "21:00",
+      "maxParty": 8
+     },
+     {
+      "time": "21:30",
+      "maxParty": 8
+     },
+     {
+      "time": "22:00",
+      "maxParty": 8
+     }
+    ]
+   },
+   "popularWith": [
+    "Families",
+    "Groups of friends"
+   ]
+  }
+ },
+ {
+  "id": "osm-9721513617",
+  "displayName": "CiaoCiao Restaurant",
+  "primaryType": "italian",
+  "location": {
+   "latitude": 41.3799734,
+   "longitude": 2.174591
+  },
+  "neighbourhood": "Barri Gòtic",
+  "formattedAddress": "La Rambla, Barcelona",
+  "priceLevel": 2,
+  "rating": 4.3,
+  "userRatingCount": 200,
+  "photos": [
+   {
+    "src": "/photos/osm-9721513617.jpg",
+    "attribution": "Benoît Prieur, CC0"
+   }
+  ],
+  "sample": {
+   "vibes": [
+    "touristy",
+    "cosy"
+   ],
+   "dietOptions": [
+    "vegetarian",
+    "pescatarian"
+   ],
+   "allergens": [
+    "gluten",
+    "dairy"
+   ],
+   "reservation": {
+    "walkInUpTo": 4,
+    "slots": [
+     {
+      "time": "19:00",
+      "maxParty": 2
+     },
+     {
+      "time": "19:30",
+      "maxParty": 4
+     },
+     {
+      "time": "20:00",
+      "maxParty": 6
+     },
+     {
+      "time": "20:30",
+      "maxParty": 8
+     },
+     {
+      "time": "21:00",
+      "maxParty": 8
+     },
+     {
+      "time": "21:30",
+      "maxParty": 8
+     }
+    ]
+   },
+   "popularWith": [
+    "First-time visitors",
+    "Families"
+   ]
+  }
+ },
+ {
+  "id": "osm-5910291400",
+  "displayName": "Pizzeria La Vela",
+  "primaryType": "pizza",
+  "location": {
+   "latitude": 41.3912016,
+   "longitude": 2.196642
+  },
+  "neighbourhood": "Poblenou",
+  "formattedAddress": "Avinguda d' Icària, Barcelona",
+  "priceLevel": 1,
+  "rating": 4.1,
+  "userRatingCount": 320,
+  "photos": [
+   {
+    "src": "/photos/osm-5910291400.jpg",
+    "attribution": "Fabryx98, CC BY-SA 4.0"
+   }
+  ],
+  "sample": {
+   "vibes": [
+    "local",
+    "lively"
+   ],
+   "dietOptions": [
+    "vegetarian",
+    "pescatarian"
+   ],
+   "allergens": [
+    "gluten",
+    "dairy"
+   ],
+   "reservation": {
+    "walkInUpTo": 4,
+    "slots": [
+     {
+      "time": "19:00",
+      "maxParty": 2
+     },
+     {
+      "time": "19:30",
+      "maxParty": 4
+     },
+     {
+      "time": "20:00",
+      "maxParty": 6
+     },
+     {
+      "time": "20:30",
+      "maxParty": 8
+     },
+     {
+      "time": "21:00",
+      "maxParty": 8
+     },
+     {
+      "time": "21:30",
+      "maxParty": 8
+     }
+    ]
+   },
+   "popularWith": [
+    "Budget travellers",
+    "Families"
+   ]
+  }
+ },
+ {
+  "id": "osm-11309476436",
+  "displayName": "Alain Pizza",
+  "primaryType": "pizza",
+  "location": {
+   "latitude": 41.4083243,
+   "longitude": 2.1800028
+  },
+  "neighbourhood": "Poblenou",
+  "formattedAddress": "Provença, Barcelona",
+  "priceLevel": 1,
+  "rating": 4,
+  "userRatingCount": 3210,
+  "photos": [
+   {
+    "src": "/photos/osm-11309476436.jpg",
+    "attribution": "Gatorfan252525, CC BY-SA 4.0"
+   }
+  ],
+  "sample": {
+   "vibes": [
+    "local",
+    "cosy"
+   ],
+   "dietOptions": [
+    "vegetarian",
+    "pescatarian"
+   ],
+   "allergens": [
+    "gluten",
+    "dairy"
+   ],
+   "reservation": {
+    "walkInUpTo": 6,
+    "slots": [
+     {
+      "time": "19:30",
+      "maxParty": 2
+     },
+     {
+      "time": "20:00",
+      "maxParty": 2
+     },
+     {
+      "time": "20:30",
+      "maxParty": 6
+     },
+     {
+      "time": "21:00",
+      "maxParty": 6
+     },
+     {
+      "time": "21:30",
+      "maxParty": 8
+     },
+     {
+      "time": "22:00",
+      "maxParty": 8
+     }
+    ]
+   },
+   "popularWith": [
+    "Budget travellers",
+    "Locals after work"
+   ]
+  }
+ },
+ {
+  "id": "osm-4374295994",
+  "displayName": "Messié Pizza Sin Gluten",
+  "primaryType": "pizza",
+  "location": {
+   "latitude": 41.4009856,
+   "longitude": 2.1595985
+  },
+  "neighbourhood": "Gràcia",
+  "formattedAddress": "Carrer de Siracusa, Barcelona",
+  "priceLevel": 2,
+  "rating": 4.7,
+  "userRatingCount": 1650,
+  "photos": [
+   {
+    "src": "/photos/osm-4374295994.jpg",
+    "attribution": "Dale Cruse, CC BY 2.0"
+   }
+  ],
+  "sample": {
+   "vibes": [
+    "trendy",
+    "local"
+   ],
+   "dietOptions": [
+    "vegetarian",
+    "pescatarian",
+    "gluten-free"
+   ],
+   "allergens": [
+    "dairy"
+   ],
+   "reservation": {
+    "walkInUpTo": 4,
+    "slots": [
+     {
+      "time": "19:00",
+      "maxParty": 2
+     },
+     {
+      "time": "19:30",
+      "maxParty": 3
+     },
+     {
+      "time": "20:00",
+      "maxParty": 5
+     },
+     {
+      "time": "20:30",
+      "maxParty": 8
+     },
+     {
+      "time": "21:00",
+      "maxParty": 8
+     },
+     {
+      "time": "21:30",
+      "maxParty": 8
+     }
+    ]
+   },
+   "popularWith": [
+    "Gluten-free diners",
+    "Mixed-diet groups"
+   ]
+  }
+ },
+ {
+  "id": "osm-4788621926",
+  "displayName": "Nakashita",
+  "primaryType": "japanese",
+  "location": {
+   "latitude": 41.3899184,
+   "longitude": 2.1798326
+  },
+  "neighbourhood": "El Born",
+  "formattedAddress": "Carrer del Rec Comtal, Barcelona",
+  "priceLevel": 3,
+  "rating": 4.7,
+  "userRatingCount": 160,
+  "photos": [
+   {
+    "src": "/photos/osm-4788621926.jpg",
+    "attribution": "chidorian from Japan, CC BY-SA 2.0"
+   }
+  ],
+  "sample": {
+   "vibes": [
+    "trendy",
+    "cosy"
+   ],
+   "dietOptions": [
+    "pescatarian"
+   ],
+   "allergens": [
+    "shellfish"
+   ],
+   "reservation": {
+    "walkInUpTo": 0,
+    "slots": [
+     {
+      "time": "19:30",
+      "maxParty": 3
+     },
+     {
+      "time": "20:00",
+      "maxParty": 5
+     },
+     {
+      "time": "20:30",
+      "maxParty": 7
+     },
+     {
+      "time": "21:00",
+      "maxParty": 7
+     },
+     {
+      "time": "21:30",
+      "maxParty": 8
+     },
+     {
+      "time": "22:00",
+      "maxParty": 8
+     }
+    ]
+   },
+   "popularWith": [
+    "Sushi lovers",
+    "Date nights"
+   ]
+  }
+ },
+ {
+  "id": "osm-5327559000",
+  "displayName": "Kurai",
+  "primaryType": "japanese",
+  "location": {
+   "latitude": 41.3757045,
+   "longitude": 2.1483271
+  },
+  "neighbourhood": "Sant Antoni",
+  "formattedAddress": "Carrer de Tarragona, Barcelona",
+  "priceLevel": 3,
+  "rating": 4.3,
+  "userRatingCount": 4090,
+  "photos": [
+   {
+    "src": "/photos/osm-5327559000.jpg",
+    "attribution": "Jpatokal, CC BY-SA 4.0"
+   }
+  ],
+  "sample": {
+   "vibes": [
+    "trendy",
+    "fancy"
+   ],
+   "dietOptions": [
+    "pescatarian"
+   ],
+   "allergens": [
+    "shellfish"
+   ],
+   "reservation": {
+    "walkInUpTo": 0,
+    "slots": [
+     {
+      "time": "19:30",
+      "maxParty": 2
+     },
+     {
+      "time": "20:00",
+      "maxParty": 2
+     },
+     {
+      "time": "20:30",
+      "maxParty": 3
+     },
+     {
+      "time": "21:00",
+      "maxParty": 7
+     },
+     {
+      "time": "21:30",
+      "maxParty": 7
+     },
+     {
+      "time": "22:00",
+      "maxParty": 8
+     }
+    ]
+   },
+   "popularWith": [
+    "Sushi lovers",
+    "Food explorers"
+   ]
+  }
+ },
+ {
+  "id": "osm-6194581340",
+  "displayName": "Kuyi",
+  "primaryType": "japanese",
+  "location": {
+   "latitude": 41.3878591,
+   "longitude": 2.142481
+  },
+  "neighbourhood": "Sant Antoni",
+  "formattedAddress": "Camí Vell de Sarrià, Barcelona",
+  "priceLevel": 2,
+  "rating": 4.7,
+  "userRatingCount": 880,
+  "photos": [
+   {
+    "src": "/photos/osm-6194581340.jpg",
+    "attribution": "Syced, CC0"
+   }
+  ],
+  "sample": {
+   "vibes": [
+    "local",
+    "cosy"
+   ],
+   "dietOptions": [
+    "pescatarian"
+   ],
+   "allergens": [
+    "shellfish"
+   ],
+   "reservation": {
+    "walkInUpTo": 4,
+    "slots": [
+     {
+      "time": "19:00",
+      "maxParty": 2
+     },
+     {
+      "time": "19:30",
+      "maxParty": 3
+     },
+     {
+      "time": "20:00",
+      "maxParty": 5
+     },
+     {
+      "time": "20:30",
+      "maxParty": 7
+     },
+     {
+      "time": "21:00",
+      "maxParty": 8
+     },
+     {
+      "time": "21:30",
+      "maxParty": 8
+     }
+    ]
+   },
+   "popularWith": [
+    "Small groups",
+    "Food explorers"
+   ]
+  }
+ },
+ {
+  "id": "osm-12068709006",
+  "displayName": "Madame",
+  "primaryType": "ramen",
+  "location": {
+   "latitude": 41.3794503,
+   "longitude": 2.170714
+  },
+  "neighbourhood": "El Raval",
+  "formattedAddress": "Carrer d'en Robador, Barcelona",
+  "priceLevel": 2,
+  "rating": 4.3,
+  "userRatingCount": 240,
+  "photos": [
+   {
+    "src": "/photos/osm-12068709006.jpg",
+    "attribution": "Shisma, CC BY 4.0"
+   }
+  ],
+  "sample": {
+   "vibes": [
+    "trendy",
+    "lively"
+   ],
+   "dietOptions": [
+    "vegetarian",
+    "pescatarian"
+   ],
+   "allergens": [
+    "gluten",
+    "eggs"
+   ],
+   "reservation": {
+    "walkInUpTo": 2,
+    "slots": [
+     {
+      "time": "19:00",
+      "maxParty": 2
+     },
+     {
+      "time": "19:30",
+      "maxParty": 6
+     },
+     {
+      "time": "20:00",
+      "maxParty": 6
+     },
+     {
+      "time": "20:30",
+      "maxParty": 8
+     },
+     {
+      "time": "21:00",
+      "maxParty": 8
+     },
+     {
+      "time": "21:30",
+      "maxParty": 8
+     }
+    ]
+   },
+   "popularWith": [
+    "Noodle fans",
+    "Budget travellers"
+   ]
+  }
+ },
+ {
+  "id": "osm-4667802489",
+  "displayName": "CatBar",
+  "primaryType": "burger",
+  "location": {
+   "latitude": 41.3809949,
+   "longitude": 2.1809483
+  },
+  "neighbourhood": "Barri Gòtic",
+  "formattedAddress": "Carrer de la Mercè, Barcelona",
+  "priceLevel": 1,
+  "rating": 4.4,
+  "userRatingCount": 630,
+  "photos": [
+   {
+    "src": "/photos/osm-4667802489.jpg",
+    "attribution": "Jennifer from Vancouver, Canada, CC BY 2.0"
+   }
+  ],
+  "sample": {
+   "vibes": [
+    "trendy",
+    "local",
+    "lively"
+   ],
+   "dietOptions": [
+    "vegetarian",
+    "vegan",
+    "pescatarian",
+    "halal"
+   ],
+   "allergens": [
+    "gluten"
+   ],
+   "reservation": {
+    "walkInUpTo": 4,
+    "slots": [
+     {
+      "time": "19:00",
+      "maxParty": 4
+     },
+     {
+      "time": "19:30",
+      "maxParty": 6
+     },
+     {
+      "time": "20:00",
+      "maxParty": 8
+     },
+     {
+      "time": "20:30",
+      "maxParty": 8
+     },
+     {
+      "time": "21:00",
+      "maxParty": 8
+     },
+     {
+      "time": "21:30",
+      "maxParty": 8
+     }
+    ]
+   },
+   "popularWith": [
+    "Plant-based eaters",
+    "Craft-beer fans"
+   ]
+  }
+ },
+ {
+  "id": "osm-2618447074",
+  "displayName": "Vegetalia",
+  "primaryType": "burger",
+  "location": {
+   "latitude": 41.3803973,
+   "longitude": 2.1776952
+  },
+  "neighbourhood": "Barri Gòtic",
+  "formattedAddress": "Carrer dels Escudellers, Barcelona",
+  "priceLevel": 2,
+  "rating": 4.1,
+  "userRatingCount": 280,
+  "photos": [
+   {
+    "src": "/photos/osm-2618447074.jpg",
+    "attribution": "Zimt Zauberstab, CC BY-SA 2.0"
+   }
+  ],
+  "sample": {
+   "vibes": [
+    "local",
+    "cosy"
+   ],
+   "dietOptions": [
+    "vegetarian",
+    "vegan",
+    "pescatarian",
+    "halal",
+    "gluten-free"
+   ],
+   "allergens": [],
+   "reservation": {
+    "walkInUpTo": 4,
+    "slots": [
+     {
+      "time": "19:30",
+      "maxParty": 2
+     },
+     {
+      "time": "20:00",
+      "maxParty": 6
+     },
+     {
+      "time": "20:30",
+      "maxParty": 6
+     },
+     {
+      "time": "21:00",
+      "maxParty": 8
+     },
+     {
+      "time": "21:30",
+      "maxParty": 8
+     },
+     {
+      "time": "22:00",
+      "maxParty": 8
+     }
+    ]
+   },
+   "popularWith": [
+    "Plant-based eaters",
+    "Mixed-diet groups"
+   ]
+  }
+ },
+ {
+  "id": "osm-10690659452",
+  "displayName": "Tacos Tacos",
+  "primaryType": "mexican",
+  "location": {
+   "latitude": 41.3744433,
+   "longitude": 2.165064
+  },
+  "neighbourhood": "Poble-sec",
+  "formattedAddress": "Carrer de Tapioles, Barcelona",
+  "priceLevel": 1,
+  "rating": 4.4,
+  "userRatingCount": 1150,
+  "photos": [
+   {
+    "src": "/photos/osm-10690659452.jpg",
+    "attribution": "Larry Miller, CC BY-SA 2.0"
+   }
+  ],
+  "sample": {
+   "vibes": [
+    "lively",
+    "trendy"
+   ],
+   "dietOptions": [
+    "vegetarian",
+    "vegan",
+    "pescatarian",
+    "gluten-free"
+   ],
+   "allergens": [],
+   "reservation": {
+    "walkInUpTo": 6,
+    "slots": [
+     {
+      "time": "19:00",
+      "maxParty": 3
+     },
+     {
+      "time": "19:30",
+      "maxParty": 5
+     },
+     {
+      "time": "20:00",
+      "maxParty": 5
+     },
+     {
+      "time": "20:30",
+      "maxParty": 8
+     },
+     {
+      "time": "21:00",
+      "maxParty": 8
+     },
+     {
+      "time": "21:30",
+      "maxParty": 8
+     }
+    ]
+   },
+   "popularWith": [
+    "Budget travellers",
+    "Groups of friends"
+   ]
+  }
+ },
+ {
+  "id": "osm-3777075876",
+  "displayName": "Oaxaca",
+  "primaryType": "mexican",
+  "location": {
+   "latitude": 41.3821041,
+   "longitude": 2.1838988
+  },
+  "neighbourhood": "El Born",
+  "formattedAddress": "Pla de Palau, Barcelona",
+  "priceLevel": 3,
+  "rating": 4.7,
+  "userRatingCount": 430,
+  "photos": [
+   {
+    "src": "/photos/osm-3777075876.jpg",
+    "attribution": "Missvain, CC BY 4.0"
+   }
+  ],
+  "sample": {
+   "vibes": [
+    "trendy",
+    "lively"
+   ],
+   "dietOptions": [
+    "vegetarian",
+    "vegan",
+    "pescatarian",
+    "gluten-free"
+   ],
+   "allergens": [],
+   "reservation": {
+    "walkInUpTo": 0,
+    "slots": [
+     {
+      "time": "19:00",
+      "maxParty": 2
+     },
+     {
+      "time": "19:30",
+      "maxParty": 3
+     },
+     {
+      "time": "20:00",
+      "maxParty": 5
+     },
+     {
+      "time": "20:30",
+      "maxParty": 7
+     },
+     {
+      "time": "21:00",
+      "maxParty": 8
+     },
+     {
+      "time": "21:30",
+      "maxParty": 8
+     }
+    ]
+   },
+   "popularWith": [
+    "Food explorers",
+    "Groups of friends"
+   ]
+  }
+ },
+ {
+  "id": "osm-14364982601",
+  "displayName": "El Curry Restaurant",
+  "primaryType": "indian",
+  "location": {
+   "latitude": 41.377259,
+   "longitude": 2.1639791
+  },
+  "neighbourhood": "Sant Antoni",
+  "formattedAddress": "Carrer del Parlament, Barcelona",
+  "priceLevel": 2,
+  "rating": 4.1,
+  "userRatingCount": 1170,
+  "photos": [
+   {
+    "src": "/photos/osm-14364982601.jpg",
+    "attribution": "Michael Hays, CC BY 2.0"
+   }
+  ],
+  "sample": {
+   "vibes": [
+    "cosy",
+    "local"
+   ],
+   "dietOptions": [
+    "vegetarian",
+    "vegan",
+    "pescatarian",
+    "halal"
+   ],
+   "allergens": [
+    "nuts",
+    "dairy"
+   ],
+   "reservation": {
+    "walkInUpTo": 4,
+    "slots": [
+     {
+      "time": "19:30",
+      "maxParty": 2
+     },
+     {
+      "time": "20:00",
+      "maxParty": 3
+     },
+     {
+      "time": "20:30",
+      "maxParty": 5
+     },
+     {
+      "time": "21:00",
+      "maxParty": 8
+     },
+     {
+      "time": "21:30",
+      "maxParty": 8
+     },
+     {
+      "time": "22:00",
+      "maxParty": 8
+     }
+    ]
+   },
+   "popularWith": [
+    "Spice lovers",
+    "Mixed-diet groups"
+   ]
+  }
+ },
+ {
+  "id": "osm-4573831896",
+  "displayName": "Bombay Spicy",
+  "primaryType": "indian",
+  "location": {
+   "latitude": 41.3803566,
+   "longitude": 2.1729179
+  },
+  "neighbourhood": "El Raval",
+  "formattedAddress": "Carrer de Sant Pau, Barcelona",
+  "priceLevel": 1,
+  "rating": 4.1,
+  "userRatingCount": 150,
+  "photos": [
+   {
+    "src": "/photos/osm-4573831896.jpg",
+    "attribution": "Vyacheslav Argenberg, CC BY 4.0"
+   }
+  ],
+  "sample": {
+   "vibes": [
+    "local",
+    "lively"
+   ],
+   "dietOptions": [
+    "vegetarian",
+    "vegan",
+    "pescatarian",
+    "halal"
+   ],
+   "allergens": [
+    "nuts",
+    "dairy"
+   ],
+   "reservation": {
+    "walkInUpTo": 6,
+    "slots": [
+     {
+      "time": "19:00",
+      "maxParty": 2
+     },
+     {
+      "time": "19:30",
+      "maxParty": 4
+     },
+     {
+      "time": "20:00",
+      "maxParty": 8
+     },
+     {
+      "time": "20:30",
+      "maxParty": 8
+     },
+     {
+      "time": "21:00",
+      "maxParty": 8
+     },
+     {
+      "time": "21:30",
+      "maxParty": 8
+     }
+    ]
+   },
+   "popularWith": [
+    "Spice lovers",
+    "Budget travellers"
+   ]
+  }
+ },
+ {
+  "id": "osm-2187210264",
+  "displayName": "Sopa",
+  "primaryType": "vegan",
+  "location": {
+   "latitude": 41.4023416,
+   "longitude": 2.1952788
+  },
+  "neighbourhood": "Poblenou",
+  "formattedAddress": "Carrer de Roc Boronat, Barcelona",
+  "priceLevel": 2,
+  "rating": 4.7,
+  "userRatingCount": 2880,
+  "photos": [
+   {
+    "src": "/photos/osm-2187210264.jpg",
+    "attribution": "PizzaMan, CC BY-SA 4.0"
+   }
+  ],
+  "sample": {
+   "vibes": [
+    "trendy",
+    "local",
+    "cosy"
+   ],
+   "dietOptions": [
+    "vegetarian",
+    "vegan",
+    "pescatarian",
+    "halal"
+   ],
+   "allergens": [
+    "nuts"
+   ],
+   "reservation": {
+    "walkInUpTo": 2,
+    "slots": [
+     {
+      "time": "19:00",
+      "maxParty": 2
+     },
+     {
+      "time": "19:30",
+      "maxParty": 4
+     },
+     {
+      "time": "20:00",
+      "maxParty": 4
+     },
+     {
+      "time": "20:30",
+      "maxParty": 6
+     },
+     {
+      "time": "21:00",
+      "maxParty": 8
+     },
+     {
+      "time": "21:30",
+      "maxParty": 8
+     }
+    ]
+   },
+   "popularWith": [
+    "Plant-based eaters",
+    "Lunch crowd"
+   ]
+  }
+ },
+ {
+  "id": "osm-4278033118",
+  "displayName": "Enjoy Vegan",
+  "primaryType": "vegan",
+  "location": {
+   "latitude": 41.3881559,
+   "longitude": 2.1806616
+  },
+  "neighbourhood": "El Born",
+  "formattedAddress": "Plaça de Sant Agustí Vell, Barcelona",
+  "priceLevel": 2,
+  "rating": 4.3,
+  "userRatingCount": 340,
+  "photos": [
+   {
+    "src": "/photos/osm-4278033118.jpg",
+    "attribution": "Suyash Dwivedi, CC BY-SA 4.0"
+   }
+  ],
+  "sample": {
+   "vibes": [
+    "trendy",
+    "cosy"
+   ],
+   "dietOptions": [
+    "vegetarian",
+    "vegan",
+    "pescatarian",
+    "halal"
+   ],
+   "allergens": [
+    "nuts"
+   ],
+   "reservation": {
+    "walkInUpTo": 2,
+    "slots": [
+     {
+      "time": "19:30",
+      "maxParty": 2
+     },
+     {
+      "time": "20:00",
+      "maxParty": 6
+     },
+     {
+      "time": "20:30",
+      "maxParty": 6
+     },
+     {
+      "time": "21:00",
+      "maxParty": 8
+     },
+     {
+      "time": "21:30",
+      "maxParty": 8
+     },
+     {
+      "time": "22:00",
+      "maxParty": 8
+     }
+    ]
+   },
+   "popularWith": [
+    "Plant-based eaters",
+    "Mixed-diet groups"
+   ]
+  }
+ },
+ {
+  "id": "osm-4025265804",
+  "displayName": "Rasoterra",
+  "primaryType": "vegan",
+  "location": {
+   "latitude": 41.381234,
+   "longitude": 2.1780994
+  },
+  "neighbourhood": "Barri Gòtic",
+  "formattedAddress": "Carrer de Palau, Barcelona",
+  "priceLevel": 3,
+  "rating": 4,
+  "userRatingCount": 210,
+  "photos": [
+   {
+    "src": "/photos/osm-4025265804.jpg",
+    "attribution": "Orenrosenfeld, CC BY-SA 4.0"
+   }
+  ],
+  "sample": {
+   "vibes": [
+    "trendy",
+    "fancy",
+    "local"
+   ],
+   "dietOptions": [
+    "vegetarian",
+    "vegan",
+    "pescatarian",
+    "halal",
+    "gluten-free"
+   ],
+   "allergens": [
+    "nuts"
+   ],
+   "reservation": {
+    "walkInUpTo": 0,
+    "slots": [
+     {
+      "time": "19:30",
+      "maxParty": 3
+     },
+     {
+      "time": "20:00",
+      "maxParty": 5
+     },
+     {
+      "time": "20:30",
+      "maxParty": 7
+     },
+     {
+      "time": "21:00",
+      "maxParty": 8
+     },
+     {
+      "time": "21:30",
+      "maxParty": 8
+     },
+     {
+      "time": "22:00",
+      "maxParty": 8
+     }
+    ]
+   },
+   "popularWith": [
+    "Plant-based eaters",
+    "Food explorers"
+   ]
+  }
+ },
+ {
+  "id": "osm-1878684097",
+  "displayName": "Ugarit",
+  "primaryType": "lebanese",
+  "location": {
+   "latitude": 41.3907428,
+   "longitude": 2.1979509
+  },
+  "neighbourhood": "Poblenou",
+  "formattedAddress": "Avinguda d'Icària, Barcelona",
+  "priceLevel": 2,
+  "rating": 4.7,
+  "userRatingCount": 450,
+  "photos": [
+   {
+    "src": "/photos/osm-1878684097.jpg",
+    "attribution": "Gerda Arendt, CC BY-SA 4.0"
+   }
+  ],
+  "sample": {
+   "vibes": [
+    "lively",
+    "local"
+   ],
+   "dietOptions": [
+    "vegetarian",
+    "vegan",
+    "pescatarian",
+    "halal"
+   ],
+   "allergens": [
+    "nuts"
+   ],
+   "reservation": {
+    "walkInUpTo": 2,
+    "slots": [
+     {
+      "time": "19:00",
+      "maxParty": 4
+     },
+     {
+      "time": "19:30",
+      "maxParty": 4
+     },
+     {
+      "time": "20:00",
+      "maxParty": 6
+     },
+     {
+      "time": "20:30",
+      "maxParty": 8
+     },
+     {
+      "time": "21:00",
+      "maxParty": 8
+     },
+     {
+      "time": "21:30",
+      "maxParty": 8
+     }
+    ]
+   },
+   "popularWith": [
+    "Sharing-plate fans",
+    "Mixed-diet groups"
+   ]
+  }
+ },
+ {
+  "id": "osm-4591423938",
+  "displayName": "Café Arabia Barcelona",
+  "primaryType": "lebanese",
+  "location": {
+   "latitude": 41.3796023,
+   "longitude": 2.1762764
+  },
+  "neighbourhood": "Barri Gòtic",
+  "formattedAddress": "Carrer dels Escudellers, Barcelona",
+  "priceLevel": 1,
+  "rating": 4.2,
+  "userRatingCount": 390,
+  "photos": [
+   {
+    "src": "/photos/osm-4591423938.jpg",
+    "attribution": "Miansari66, CC0"
+   }
+  ],
+  "sample": {
+   "vibes": [
+    "cosy",
+    "touristy"
+   ],
+   "dietOptions": [
+    "vegetarian",
+    "vegan",
+    "pescatarian",
+    "halal"
+   ],
+   "allergens": [
+    "nuts"
+   ],
+   "reservation": {
+    "walkInUpTo": 4,
+    "slots": [
+     {
+      "time": "19:30",
+      "maxParty": 4
+     },
+     {
+      "time": "20:00",
+      "maxParty": 4
+     },
+     {
+      "time": "20:30",
+      "maxParty": 6
+     },
+     {
+      "time": "21:00",
+      "maxParty": 8
+     },
+     {
+      "time": "21:30",
+      "maxParty": 8
+     },
+     {
+      "time": "22:00",
+      "maxParty": 8
+     }
+    ]
+   },
+   "popularWith": [
+    "Budget travellers",
+    "Small groups"
+   ]
+  }
+ },
+ {
+  "id": "osm-7158622885",
+  "displayName": "Argentinisimo",
+  "primaryType": "steak",
+  "location": {
+   "latitude": 41.3853997,
+   "longitude": 2.158972
+  },
+  "neighbourhood": "Sant Antoni",
+  "formattedAddress": "Carrer de Casanova, Barcelona",
+  "priceLevel": 3,
+  "rating": 4,
+  "userRatingCount": 1590,
+  "photos": [
+   {
+    "src": "/photos/osm-7158622885.jpg",
+    "attribution": "Horacio Cambeiro, CC BY-SA 3.0"
+   }
+  ],
+  "sample": {
+   "vibes": [
+    "traditional",
+    "lively"
+   ],
+   "dietOptions": [
+    "gluten-free"
+   ],
+   "allergens": [],
+   "reservation": {
+    "walkInUpTo": 0,
+    "slots": [
+     {
+      "time": "19:30",
+      "maxParty": 2
+     },
+     {
+      "time": "20:00",
+      "maxParty": 2
+     },
+     {
+      "time": "20:30",
+      "maxParty": 4
+     },
+     {
+      "time": "21:00",
+      "maxParty": 8
+     },
+     {
+      "time": "21:30",
+      "maxParty": 8
+     },
+     {
+      "time": "22:00",
+      "maxParty": 8
+     }
+    ]
+   },
+   "popularWith": [
+    "Meat lovers",
+    "Groups of friends"
+   ]
+  }
+ },
+ {
+  "id": "osm-13427550202",
+  "displayName": "Ocho Bcn Gastrobar",
+  "primaryType": "steak",
+  "location": {
+   "latitude": 41.3759881,
+   "longitude": 2.1572553
+  },
+  "neighbourhood": "Sant Antoni",
+  "formattedAddress": "Carrer de Tamarit, Barcelona",
+  "priceLevel": 3,
+  "rating": 4.6,
+  "userRatingCount": 1470,
+  "photos": [
+   {
+    "src": "/photos/osm-13427550202.jpg",
+    "attribution": "Dominic Lockyer, CC BY 2.0"
+   }
+  ],
+  "sample": {
+   "vibes": [
+    "trendy",
+    "cosy"
+   ],
+   "dietOptions": [
+    "gluten-free"
+   ],
+   "allergens": [],
+   "reservation": {
+    "walkInUpTo": 0,
+    "slots": [
+     {
+      "time": "19:00",
+      "maxParty": 2
+     },
+     {
+      "time": "19:30",
+      "maxParty": 2
+     },
+     {
+      "time": "20:00",
+      "maxParty": 4
+     },
+     {
+      "time": "20:30",
+      "maxParty": 8
+     },
+     {
+      "time": "21:00",
+      "maxParty": 8
+     },
+     {
+      "time": "21:30",
+      "maxParty": 8
+     }
+    ]
+   },
+   "popularWith": [
+    "Meat lovers",
+    "Date nights"
+   ]
+  }
+ }
+]
