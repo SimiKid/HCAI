@@ -57,3 +57,25 @@ export function FrontRunner({ item, members, party, pinnedBy, onOpen }: Props) {
     </div>
   )
 }
+
+export const SWIPES_NEEDED = 8
+
+/** Shown instead of a front-runner while someone at the table has barely swiped. */
+export function TooEarly({ members, waiting }: { members: Member[]; waiting: Member[] }) {
+  const left = (m: Member) => SWIPES_NEEDED - m.swipes.length
+  const me = waiting.find((m) => m.id === 'me')
+  const others = waiting.filter((m) => m.id !== 'me')
+  return (
+    <div className="front" role="status">
+      <GroupTable members={members} size={Math.min(240, 190 + members.length * 10)} seat={46}
+        reactions={Object.fromEntries(waiting.map((m) => [m.id, 'mixed' as Reaction]))} />
+      <span className="eyebrow" style={{ marginTop: 8 }}>No front-runner yet</span>
+      <span className="front-name" style={{ fontSize: '1.625rem' }}>Too early to call</span>
+      <span>
+        {me && `Swipe ${left(me)} more ${left(me) === 1 ? 'place' : 'places'} and the table gets a front-runner.`}
+        {me && others.length > 0 && ' '}
+        {others.length > 0 && `Still waiting for ${others.map((m) => m.name).join(' and ')}.`}
+      </span>
+    </div>
+  )
+}

@@ -1,4 +1,4 @@
-import type { Features, Weights } from '../types'
+import type { Features, Member, Weights } from '../types'
 import { BIAS, featurePhrase } from './features'
 import { rankGroup, type RankInput } from './rank'
 
@@ -40,4 +40,40 @@ export function rankWithout(input: RankInput, restaurantId: string, memberId: st
   const { ranked } = rankGroup({ ...input, members, pinnedId: null })
   const i = ranked.findIndex((r) => r.restaurant.id === restaurantId)
   return i < 0 ? null : i + 1
+}
+
+export interface SharedReasons {
+  /** Members whose reasons may be shown with their name: the viewer and those who opted in. */
+  named: { member: Member; reasons: Reason[] }[]
+  /** The other members' main reasons, counted and without names. */
+  summary: string[]
+}
+
+// @hcai AMR-05 Other members' reasons are counted without names ("two people prefer cheaper places") unless they chose to share them
+export function sharedReasons(
+  members: Member[],
+  weights: Record<string, Weights>,
+  x: Features,
+  viewerId: string,
+): SharedReasons {
+  const named: SharedReasons['named'] = []
+  const counts = new Map<string, { feature: string; positive: boolean; n: number }>()
+  for (const m of members) {
+    const mine = m.id === viewerId
+    if (mine || m.sharesReasons) {
+      named.push({ member: m, reasons: reasonsFor(weights[m.id] ?? {}, x, 2, m.id === 'me') })
+      continue
+    }
+    const top = reasonsFor(weights[m.id] ?? {}, x, 1)[0]
+    if (!top) continue
+    const key = `${top.feature}|${top.positive}`
+    const entry = counts.get(key) ?? { feature: top.feature, positive: top.positive, n: 0 }
+    entry.n++
+    counts.set(key, entry)
+  }
+  const words = ['', 'One person', 'Two people', 'Three people', 'Four people', 'Five people']
+  const summary = [...counts.values()]
+    .sort((a, b) => b.n - a.n)
+    .map((c) => `${words[c.n] ?? `${c.n} people`} ${featurePhrase(c.feature, c.n > 1)[c.positive ? 0 : 1]}`)
+  return { named, summary }
 }

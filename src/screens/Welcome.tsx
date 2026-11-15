@@ -7,7 +7,7 @@ import { CardsIcon, ForkIcon, HeartIcon, ListIcon } from '../components/Icons'
 // the cast on the welcome screen: five characters around one table
 const CAST: Member[] = ['tomato+crown', 'avocado+headphones', 'pizza+shades', 'egg+beret', 'olive+moustache'].map((avatar, i) => ({
   id: `cast-${i}`, name: avatar, color: '#ffffff', avatar,
-  diets: [], allergies: [], tripPrefs: [], swipes: [], muted: [], simulated: true,
+  diets: [], allergies: [], tripPrefs: [], swipes: [], muted: [], sharesReasons: false, simulated: true,
 }))
 
 // who "likes" each dish as it lands on the table, so the hearts change with the plate

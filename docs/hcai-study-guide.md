@@ -21,29 +21,33 @@ analysis finding it answers. Edit this section by hand.
 
 <!-- BEGIN GENERATED: do not edit by hand, run scripts/study-guide.sh -->
 
-28 of 117 principles applied, 29 tags in the code.
+31 of 117 principles applied, 31 tags in the code.
 
 ### Amershi et al. 2019, Guidelines for Human-AI Interaction (L04 p.66)
 
 #### AMR-01 Make clear what the system can do
 
-- `src/screens/Welcome.tsx:32` The first screen says what the app does and that it only guesses, before any data is asked for
+- `src/screens/Welcome.tsx:48` The first screen says what the app does and that it only guesses, before any data is asked for
 
 #### AMR-02 Make clear how well the system can do what it can do
 
-- `src/screens/Swipe.tsx:67` The header always shows how sure the app is, in words, next to the swipe count
+- `src/screens/Swipe.tsx:88` The header always shows how sure the app is, in words, next to the swipe count
 
 #### AMR-05 Match relevant social norms
 
-- `src/screens/Swipe.tsx:43` Friends who liked the same place lean in only after my own swipe, so nobody swipes to fit in
+- `src/model/explain.ts:52` Other members' reasons are counted without names ("two people prefer cheaper places") unless they chose to share them
 
 #### AMR-09 Support efficient correction
 
-- `src/model/learn.ts:54` A taste the member removed in "What the app thinks you like" is forgotten, whatever the swipes said
+- `src/model/learn.ts:72` A taste the member removed in "What the app thinks you like" is forgotten, whatever the swipes said
+
+#### AMR-10 Scope services when in doubt
+
+- `src/screens/Ranking.tsx:55` Until everyone at the table has 8 swipes there is no front-runner, only an unordered shortlist of three
 
 #### AMR-11 Make clear why the system did what it did
 
-- `src/components/WhySheet.tsx:86` Every place explains its rank per member: a match word and the two reasons that mattered most
+- `src/components/WhySheet.tsx:91` Every place explains its rank per member: a match word for everyone, plus the two reasons that mattered most
 
 #### AMR-13 Learn from user behavior
 
@@ -53,70 +57,73 @@ analysis finding it answers. Edit this section by hand.
 
 - `src/model/learn.ts:4` Small learning rate, one swipe nudges the taste profile and never flips it
 
+#### AMR-15 Encourage granular feedback
+
+- `src/screens/Swipe.tsx:65` One optional tap after a swipe says what it was about (food, vibe, price or location), beyond like and skip
+
 #### AMR-16 Convey the consequences of user actions
 
-- `src/screens/Swipe.tsx:48` After each swipe one line says how it changes the ranking
-- `src/screens/Profile.tsx:61` Before saving, the form says what a diet or allergy will do: hide places for the whole group
+- `src/screens/Swipe.tsx:58` After each swipe one line says how it changes the ranking
 
 ### Mental models and the model of the user (L04 p.4 to 19)
 
 #### MM-03 Make the AI's model of the user visible
 
-- `src/screens/Profile.tsx:103` The app's picture of the member is on screen as chips, and each chip can be removed
-
-#### MM-07 Make privacy verifiable, not "trust me"
-
-- `src/store.tsx:60` Profile, swipes and the learned taste stay in this browser's storage, nothing is sent to a server
+- `src/screens/Profile.tsx:131` The app's picture of the member is on screen as chips, and each chip can be removed
 
 ### Errors and AI failure modes (L04 p.28 to 64)
 
 #### ERR-12 Context errors: explain no-result and offer alternatives
 
-- `src/screens/Ranking.tsx:126` Places removed by a diet or allergy are not silently dropped: the list says how many, and why for each
+- `src/screens/Ranking.tsx:161` Places removed by a diet or allergy are not silently dropped: the list says how many, and why for each
 
 ### Fairness, accountability, ethics (L06)
 
 #### FAIR-01 Accountability
 
-- `src/components/WhySheet.tsx:62` A pinned place carries the name of who pinned it and says that it overrides the ranking
+- `src/components/WhySheet.tsx:65` A pinned place carries the name of who pinned it and says that it overrides the ranking
 
 #### FAIR-03 Corrigibility
 
-- `src/components/WhySheet.tsx:68` Anyone in the group can undo a pin with one tap, so the group keeps the last word
+- `src/components/WhySheet.tsx:73` Anyone in the group can undo a pin with one tap, so the group keeps the last word
 
 #### FAIR-04 Procedural vs. distributive justice: equality or equity
 
-- `src/model/rank.ts:69` (trade-off) Plain average, one member one vote: someone with 40 swipes counts the same as someone with 5
+- `src/model/rank.ts:72` (trade-off) One member one vote under both rules: someone with 40 swipes counts the same as someone with 5
+
+#### FAIR-05 Pick a fairness notion deliberately
+
+- `src/model/rank.ts:73` The group picks its fairness rule: best on average, or nobody left unhappy (the lowest score counts)
 
 #### FAIR-09 Measurement bias
 
-- `src/screens/Swipe.tsx:26` The deck is in a fixed shuffled order, not sorted by predicted taste, so every place gets the same chance to be seen
+- `src/screens/Swipe.tsx:35` The deck is in a fixed shuffled order, not sorted by predicted taste, so every place gets the same chance to be seen
 
 #### FAIR-10 Aggregation bias
 
-- `src/model/rank.ts:54` Diets and allergies are a veto, not a taste: one member who cannot eat there removes the place for the group
+- `src/model/rank.ts:57` Diets and allergies are a veto, not a taste: one member who cannot eat there removes the place for the group
 
 #### FAIR-13 Harm types
 
-- `src/screens/Profile.tsx:150` "Popular with" uses taste groups, not age or gender, and stays off until a member turns it on
+- `src/screens/Profile.tsx:178` "Popular with" uses taste groups, not age or gender, and stays off until a member turns it on
 
 #### FAIR-16 User auditing
 
-- `src/screens/Ranking.tsx:80` The people filter lets anyone switch members off and see whose taste shapes the list, with each swipe count in view
+- `src/screens/Ranking.tsx:93` The people filter lets anyone switch members off and see whose taste shapes the list, with each swipe count in view
 
 #### FAIR-17 Privacy: consent, control, erasure
 
-- `src/store.tsx:131` One tap erases everything the app learned about me, a second one deletes the whole profile
+- `src/screens/Profile.tsx:186` Showing my reasons to the group by name is my choice, off by default, and can be switched back any time
 
 #### FAIR-18 Confidence is not accuracy, calibrate it
 
-- `src/model/learn.ts:61` Confidence follows the number of swipes and is worded, never a percentage
+- `src/model/learn.ts:79` Confidence follows the number of swipes and is worded, never a percentage
 
 ### Explainability and trust (L07)
 
 #### XAI-09 Choose the explanation format on purpose
 
-- `src/components/WhySheet.tsx:73` The explanation is a receipt: one line per person, a dashed rule, the group result as the total
+- `src/components/WhySheet.tsx:78` The explanation is a receipt: one line per person, a dashed rule, the group result as the total
 
 #### XAI-10 Unwarranted faith in numbers
 
@@ -138,7 +145,13 @@ analysis finding it answers. Edit this section by hand.
 
 #### HCAI-02 High control and high automation together
 
-- `src/screens/Ranking.tsx:42` The ranking is automatic, and people steer it three ways: filter members, re-rank for yourself, or pin a place
+- `src/screens/Ranking.tsx:44` The ranking is automatic, and people steer it three ways: filter members, re-rank for yourself, or pin a place
+
+### Horvitz 1999, Principles of mixed-initiative user interfaces (reading, week 4)
+
+#### HOR-05 Use dialog to resolve key uncertainties
+
+- `src/model/learn.ts:66` When the member says what a swipe was about, that part of the card is learned twice more, the rest once
 
 ### Shneiderman and Maes 1997, Direct manipulation vs. interface agents (reading, week 4)
 
@@ -148,7 +161,7 @@ analysis finding it answers. Edit this section by hand.
 
 #### DM-11 Accessible alternatives to gestures
 
-- `src/screens/Swipe.tsx:101` Like, skip and undo are buttons too, so the swipe gesture is never the only way
+- `src/screens/Swipe.tsx:130` Like, skip and undo are buttons too, so the swipe gesture is never the only way
 
 ### Not applied yet
 
@@ -157,9 +170,7 @@ analysis finding it answers. Edit this section by hand.
 - AMR-06 Mitigate social biases
 - AMR-07 Support efficient invocation
 - AMR-08 Support efficient dismissal
-- AMR-10 Scope services when in doubt
 - AMR-12 Remember recent interactions
-- AMR-15 Encourage granular feedback
 - AMR-17 Provide global controls
 - AMR-18 Notify users about changes
 - MM-01 Three models must line up
@@ -167,6 +178,7 @@ analysis finding it answers. Edit this section by hand.
 - MM-04 The model of the user is always incomplete
 - MM-05 Design for overlooked user groups
 - MM-06 Encourage safe experimentation, do not learn from first use
+- MM-07 Make privacy verifiable, not "trust me"
 - ERR-01 Feedforward and feedback across the seven stages of action
 - ERR-02 Slips vs. mistakes
 - ERR-03 Consistency enables habituation
@@ -187,7 +199,6 @@ analysis finding it answers. Edit this section by hand.
 - NOR-05 Constraints
 - NOR-06 Conceptual model
 - FAIR-02 Consistency
-- FAIR-05 Pick a fairness notion deliberately
 - FAIR-06 Unawareness is not enough
 - FAIR-07 Historical bias
 - FAIR-08 Representation bias
@@ -218,7 +229,6 @@ analysis finding it answers. Edit this section by hand.
 - HOR-02 Represent uncertainty about the user's goals
 - HOR-03 Time services to the user's attention
 - HOR-04 Weigh costs, benefits and uncertainty before acting
-- HOR-05 Use dialog to resolve key uncertainties
 - HOR-06 Efficient direct invocation and termination
 - HOR-07 Minimise the cost of poor guesses
 - HOR-08 Scope precision to match uncertainty

@@ -4,7 +4,7 @@ import type { Member } from '../types'
 import { useStore, type Group } from '../store'
 import { CUISINE_LABEL, distanceKm } from '../model/features'
 import { confidence } from '../model/learn'
-import { matchLevel, rankWithout, reasonsFor } from '../model/explain'
+import { matchLevel, rankWithout, sharedReasons } from '../model/explain'
 import { expectedReservation, type RankInput, type Ranked } from '../model/rank'
 import { Avatar, count, km, price, swipes } from './Bits'
 import { Gallery } from './Gallery'
@@ -37,6 +37,9 @@ export function WhySheet({ item, rank, input, group, party, canPin, onClose }: P
   const pinnedBy = state.pin ? group.members.find((m) => m.id === state.pin!.by) : undefined
   const lowest = input.members.find((m) => m.id === item.lowestMemberId)
   const who = (m: Member) => (m.id === 'me' ? 'You' : m.name)
+  const viewerId = group.actor.id
+  const shared = sharedReasons(input.members, group.weights, x, viewerId)
+  const open = (m: Member) => m.id === viewerId || m.sharesReasons
 
   // which member moves this place most when they are left out
   let swing: { member: Member; to: number } | null = null
@@ -63,7 +66,9 @@ export function WhySheet({ item, rank, input, group, party, canPin, onClose }: P
             <div className="note stack" style={{ gap: 8 }}>
               <p><span className="strong">Pinned to the top by {pinnedBy?.name ?? 'someone'}.</span> This overrides the group ranking.</p>
               {item.conflicts.length > 0 && (
-                <p>Heads up: {item.conflicts.map((c) => `${nameOf(group.members, c.memberId)} ${c.kind === 'diet' ? `needs ${c.what} food` : `is allergic to ${c.what}`}`).join(', ')}, and this place may not work for that.</p>
+                <p>Heads up: {item.conflicts.map((c) => (c.memberId === viewerId
+                  ? (c.kind === 'diet' ? `you need ${c.what} food` : `you are allergic to ${c.what}`)
+                  : (c.kind === 'diet' ? `someone in the group needs ${c.what} food` : `someone in the group is allergic to ${c.what}`))).join(', ')}, and this place may not work for that.</p>
               )}
               {/* @hcai FAIR-03 Anyone in the group can undo a pin with one tap, so the group keeps the last word */}
               <button className="btn slim" style={{ alignSelf: 'flex-start' }} onClick={() => set({ pin: null })}>Unpin</button>
@@ -83,10 +88,10 @@ export function WhySheet({ item, rank, input, group, party, canPin, onClose }: P
               </div>
               <hr />
               <p className="bill-caps" style={{ marginBottom: 10 }}>{item.pinned ? 'What the ranking says' : `Why it is number ${rank}`}</p>
-              {/* @hcai AMR-11 Every place explains its rank per member: a match word and the two reasons that mattered most */}
+              {/* @hcai AMR-11 Every place explains its rank per member: a match word for everyone, plus the two reasons that mattered most */}
               {input.members.map((m) => {
                 const match = matchLevel(item.memberScores[m.id])
-                const reasons = reasonsFor(group.weights[m.id], x, 2, m.id === 'me')
+                const reasons = shared.named.find((n) => n.member.id === m.id)?.reasons
                 const conf = confidence(m.swipes.length)
                 return (
                   <div key={m.id}>
@@ -96,23 +101,28 @@ export function WhySheet({ item, rank, input, group, party, canPin, onClose }: P
                       <span>{match.label}</span>
                     </div>
                     <p className="bill-reason">
-                      {reasons.length ? sentence(reasons.map((q) => q.text)) : 'No clear signal yet.'}
+                      {!reasons ? 'Keeps their reasons private.' : reasons.length ? sentence(reasons.map((q) => q.text)) : 'No clear signal yet.'}
                       {conf.level === 'low' && ` Rough guess, only ${swipes(m.swipes.length)}.`}
                     </p>
                   </div>
                 )
               })}
+              {shared.summary.length > 0 && <p style={{ marginTop: 4 }}>From the others: {shared.summary.join('. ')}.</p>}
               <hr />
               <div className="bill-line bill-total">
                 <span>{input.members.length > 1 ? `Group of ${input.members.length}` : 'Total'}</span>
                 <span className="dots" aria-hidden="true" />
                 <span>{matchLevel(item.groupScore).label}</span>
               </div>
-              <p className="bill-small" style={{ marginTop: 6 }}>Split evenly: everyone counts the same, however much they swiped.</p>
+              <p className="bill-small" style={{ marginTop: 6 }}>
+                {input.rule === 'least-misery'
+                  ? 'Nobody left unhappy: the place is counted by its least happy person.'
+                  : 'Split evenly: everyone counts the same, however much they swiped.'}
+              </p>
               {input.members.length > 1 && lowest && (
                 <p style={{ marginTop: 10 }}>
-                  Works least well for {lowest.id === 'me' ? 'you' : lowest.name}.
-                  {swing && ` Without ${swing.member.id === 'me' ? 'you' : swing.member.name}, it would be number ${swing.to}.`}
+                  Works least well for {lowest.id === 'me' ? 'you' : open(lowest) ? lowest.name : 'one person at the table'}.
+                  {swing && ` Without ${swing.member.id === 'me' ? 'you' : open(swing.member) ? swing.member.name : swing.member.id === lowest.id ? 'that person' : 'one of the others'}, it would be number ${swing.to}.`}
                 </p>
               )}
               <hr />
@@ -154,10 +164,6 @@ export function WhySheet({ item, rank, input, group, party, canPin, onClose }: P
       </motion.div>
     </>
   )
-}
-
-function nameOf(members: Member[], id: string): string {
-  return id === 'me' ? 'You' : (members.find((m) => m.id === id)?.name ?? id)
 }
 
 function sentence(parts: string[]): string {

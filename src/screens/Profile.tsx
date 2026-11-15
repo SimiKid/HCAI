@@ -86,10 +86,10 @@ function PersonFields() {
         <span className="label">Allergies</span>
         <ChipToggle label="Allergies" options={ALLERGIES} selected={state.allergies} onChange={(allergies) => set({ allergies })} />
       </div>
-      {/* @hcai AMR-16 Before saving, the form says what a diet or allergy will do: hide places for the whole group */}
       <p className="note">
-        Diets and allergies hide places you cannot eat at, for you and for the group ranking. They
-        are stored on this phone only. You can change or delete them any time in Profile.
+        Diets and allergies hide places you cannot eat at, for you and for the group ranking. The
+        group sees that a place is ruled out, not by whom. You can change or delete them any time
+        in Profile.
       </p>
     </>
   )
@@ -182,6 +182,14 @@ export function ProfileScreen() {
               <p className="small muted">Taste groups such as “seafood fans”. Sample data, off by default.</p>
             </div>
             <Switch checked={state.showPopularWith} onChange={(v) => set({ showPopularWith: v })} label="Show who tends to like each place" />
+          </div>
+          {/* @hcai FAIR-17 Showing my reasons to the group by name is my choice, off by default, and can be switched back any time */}
+          <div className="toggle-row">
+            <div className="grow">
+              <p className="strong">Show my reasons to the group</p>
+              <p className="small muted">Off: the bill shows your match but folds your reasons into “one person prefers…”. On: they appear next to your name.</p>
+            </div>
+            <Switch checked={actor.sharesReasons} onChange={(v) => set((s) => ({ share: { ...s.share, [actor.id]: v } }))} label="Show my reasons to the group" />
           </div>
           <div className="field">
             <span className="label" id="act-label">Demo: use the app as</span>

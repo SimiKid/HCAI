@@ -87,6 +87,7 @@ h1, h2, h3, p { margin: 0; }
   white-space: nowrap; flex: none;
 }
 .chip[aria-pressed='true'], .chip[aria-checked='true'] { background: var(--crimson); border-color: var(--crimson); color: var(--on-crimson); }
+.chip.why { min-height: 44px; padding: 0 14px; font-size: 0.875rem; }
 .chip .count { font-size: 0.75rem; font-weight: 600; opacity: 0.85; }
 .chip.off { color: var(--ink-2); text-decoration: line-through; text-decoration-thickness: 1px; }
 .chip.static { min-height: 32px; padding: 0 12px; font-size: 0.8125rem; border: 0; background: var(--surface); }

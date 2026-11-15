@@ -51,6 +51,17 @@ All listed features are in scope for the prototype.
 - Group ranking: every member has equal weight. Under the people filter,
   each member's name shows the total number of swipes they have done.
 
+- Privacy inside the group: each member sees their own reasons. Other
+  members' reasons are only counted ("two people prefer cheaper places")
+  unless they chose to share them by name. A place ruled out by a diet or
+  allergy never says whose it was.
+- No front-runner until every member at the table has 8 swipes. Before that
+  the ranking shows an unordered shortlist of three.
+- After a swipe, one optional tap says what it was about (food, vibe, price,
+  location). That part is then learned more strongly.
+- The group chooses its fairness rule: "best on average" or "nobody left
+  unhappy" (the lowest member score counts). Members are equal under both.
+
 ### Look and feel
 
 - Palette and base type follow the crimson and lavender reference. Headlines

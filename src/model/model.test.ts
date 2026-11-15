@@ -5,14 +5,14 @@ import { simulatedMembers } from '../data/members'
 import { featuresOf } from './features'
 import { confidence, learn, priorWeights, score, update } from './learn'
 import { conflictsFor, expectedReservation, rankGroup } from './rank'
-import { matchLevel, rankWithout, reasonsFor } from './explain'
+import { matchLevel, rankWithout, reasonsFor, sharedReasons } from './explain'
 
 const restaurants = data as Restaurant[]
 const hotel = { latitude: 41.3833, longitude: 2.1767 }
 const features = Object.fromEntries(restaurants.map((r) => [r.id, featuresOf(r, hotel)]))
 const byType = (t: string) => restaurants.filter((r) => r.primaryType === t)
 const member = (over: Partial<Member>): Member => ({
-  id: 'x', name: 'X', color: '#000', avatar: '', diets: [], allergies: [], tripPrefs: [], swipes: [], muted: [], simulated: false, ...over,
+  id: 'x', name: 'X', color: '#000', avatar: '', diets: [], allergies: [], tripPrefs: [], swipes: [], muted: [], sharesReasons: false, simulated: false, ...over,
 })
 
 describe('data', () => {
@@ -115,6 +115,44 @@ describe('group ranking', () => {
     const { ranked } = rankGroup({ restaurants, members: [a], weights, features, boost: { 'price:high': 8 } })
     expect(ranked[0].restaurant.priceLevel).toBeGreaterThanOrEqual(3)
     expect(weights.a).toEqual({ 'cuisine:pizza': 3 })
+  })
+})
+
+describe('fairness rule', () => {
+  it('nobody left unhappy ranks by the least happy member', () => {
+    const a = member({ id: 'a' })
+    const b = member({ id: 'b' })
+    const weights = { a: { 'cuisine:pizza': 4 }, b: { 'cuisine:pizza': -4, 'cuisine:tapas': 0.5 } }
+    const base = { restaurants, members: [a, b], weights, features }
+    const misery = rankGroup({ ...base, rule: 'least-misery' }).ranked
+    for (const r of misery) expect(r.groupScore).toBeCloseTo(Math.min(r.memberScores.a, r.memberScores.b), 10)
+    expect(misery[0].restaurant.primaryType).not.toBe('pizza')
+  })
+})
+
+describe('asking why', () => {
+  it('a like "because of the vibe" teaches the vibe more than the cuisine', () => {
+    const r = byType('tapas')[0]
+    const plain = learn([], [{ restaurantId: r.id, liked: true }], features)
+    const vibe = learn([], [{ restaurantId: r.id, liked: true, because: 'vibe' }], features)
+    const v = `vibe:${r.sample.vibes[0]}`
+    expect(vibe[v]).toBeGreaterThan(plain[v])
+    expect(vibe['cuisine:tapas']).toBeCloseTo(plain['cuisine:tapas'], 10)
+  })
+})
+
+describe('privacy in the group', () => {
+  it('names only the viewer and members who share, and counts the rest', () => {
+    const x = features[byType('pizza')[0].id]
+    const me = member({ id: 'me' })
+    const open = member({ id: 'o', sharesReasons: true })
+    const shy1 = member({ id: 's1', name: 'Shy' })
+    const shy2 = member({ id: 's2', name: 'Shyer' })
+    const w = { 'cuisine:pizza': 2 }
+    const out = sharedReasons([me, open, shy1, shy2], { me: w, o: w, s1: w, s2: w }, x, 'me')
+    expect(out.named.map((n) => n.member.id)).toEqual(['me', 'o'])
+    expect(out.summary).toEqual(['Two people like pizza'])
+    expect(out.summary.join(' ')).not.toMatch(/Shy/)
   })
 })
 

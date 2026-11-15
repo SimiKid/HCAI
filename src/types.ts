@@ -30,9 +30,13 @@ export interface Restaurant {
   }
 }
 
+/** What a swipe was mostly about, when the member chose to say. */
+export type Because = 'food' | 'vibe' | 'price' | 'near'
+
 export interface Swipe {
   restaurantId: string
   liked: boolean
+  because?: Because
 }
 
 export interface Member {
@@ -47,6 +51,8 @@ export interface Member {
   swipes: Swipe[]
   /** Features the member told the app to forget. */
   muted: string[]
+  /** True when this member lets the group see their reasons by name. */
+  sharesReasons: boolean
   simulated: boolean
 }
 
