@@ -12,7 +12,7 @@ const hotel = { latitude: 41.3833, longitude: 2.1767 }
 const features = Object.fromEntries(restaurants.map((r) => [r.id, featuresOf(r, hotel)]))
 const byType = (t: string) => restaurants.filter((r) => r.primaryType === t)
 const member = (over: Partial<Member>): Member => ({
-  id: 'x', name: 'X', color: '#000', diets: [], allergies: [], tripPrefs: [], swipes: [], muted: [], simulated: false, ...over,
+  id: 'x', name: 'X', color: '#000', avatar: '', diets: [], allergies: [], tripPrefs: [], swipes: [], muted: [], simulated: false, ...over,
 })
 
 describe('data', () => {

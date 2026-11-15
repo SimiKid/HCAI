@@ -13,6 +13,11 @@ All listed features are in scope for the prototype.
    - Core person information: allergies, diets.
 
 2. Join a group or trip
+   - Three ways in: accept an invitation, type a trip code, or start a new
+     trip.
+   - Whoever starts a trip gets a trip code and an invite link to share, and
+     sees who has joined. More people can be invited later from the Group tab.
+   - Opening an invite link fills in the trip code.
    - Questions about the user and the trip (hotel, area, dates).
    - Trip-specific preferences, for example "I want to eat traditionally"
      or "trendy areas".
@@ -45,6 +50,17 @@ All listed features are in scope for the prototype.
   group members are simulated with seeded swipes.
 - Group ranking: every member has equal weight. Under the people filter,
   each member's name shows the total number of swipes they have done.
+
+### Look and feel
+
+- Palette and base type follow the crimson and lavender reference. Headlines
+  use Bricolage Grotesque, the bill uses DM Mono.
+- Signature: the group's table. Avatars sit around a round table seen from
+  above. On Swipe, friends who liked the same place react only after your own
+  swipe. On Ranking, number one is served on the plate in the middle as
+  "tonight's front-runner".
+- The explanation of a rank is "the bill": a receipt with one line per person
+  and the group result as the total.
 
 ## HCAI design principles (required)
 

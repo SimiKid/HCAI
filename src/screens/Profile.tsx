@@ -3,6 +3,7 @@ import type { Allergy, Diet } from '../types'
 import { deleteProfile, eraseLearning, useGroup, useStore } from '../store'
 import { confidence, tasteProfile } from '../model/learn'
 import { featureLabel } from '../model/features'
+import { AVATARS, avatarById } from '../data/avatars'
 import { ChipToggle, Switch, swipes } from '../components/Bits'
 import { XIcon } from '../components/Icons'
 import { ConfidenceDots } from '../components/ConfidenceDots'
@@ -24,8 +25,26 @@ const ALLERGIES: { value: Allergy; label: string }[] = [
 
 function PersonFields() {
   const { state, set } = useStore()
+  const picked = avatarById(state.avatar)
   return (
     <>
+      <div className="field">
+        <span className="label" id="avatar-label">Pick your avatar</span>
+        <div className="row" style={{ alignItems: 'flex-start', gap: 16 }}>
+          <span className="avatar-big" style={{ background: picked?.bg ?? 'var(--surface)' }} aria-hidden="true">
+            {picked?.emoji ?? (state.name.trim()[0]?.toUpperCase() || '?')}
+          </span>
+          <div className="avatar-grid grow" role="radiogroup" aria-labelledby="avatar-label">
+            {AVATARS.map((a) => (
+              <button key={a.id} type="button" role="radio" aria-checked={state.avatar === a.id} aria-label={a.label}
+                className="avatar-pick" style={{ background: a.bg }}
+                onClick={() => set({ avatar: state.avatar === a.id ? '' : a.id })}>
+                <span aria-hidden="true">{a.emoji}</span>
+              </button>
+            ))}
+          </div>
+        </div>
+      </div>
       <div className="field">
         <label htmlFor="name">Your first name</label>
         <input id="name" className="input" value={state.name} autoComplete="given-name"
@@ -54,9 +73,9 @@ export function ProfileSetup() {
     <div className="screen">
       <form className="stack" style={{ gap: 24 }} onSubmit={(e) => { e.preventDefault(); set({ stage: 'trip' }) }}>
         <div className="stack" style={{ gap: 8 }}>
-          <p className="eyebrow">Step 1 of 2</p>
+          <p className="eyebrow">Step 1 of 3</p>
           <h1 className="title">About you</h1>
-          <p className="muted">Three things, so the group never ends up somewhere you cannot eat.</p>
+          <p className="muted">A face for the group, and what you can eat, so you never end up somewhere that does not work for you.</p>
         </div>
         <PersonFields />
         <button className="btn primary" disabled={!state.name.trim()}>Continue</button>

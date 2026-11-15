@@ -6,6 +6,7 @@ import { reasonsFor } from '../model/explain'
 import { rankGroup, type RankInput, type Ranked } from '../model/rank'
 import { Avatar, Segmented } from '../components/Bits'
 import { RankRow } from '../components/RankRow'
+import { FrontRunner } from '../components/FrontRunner'
 import { WhySheet } from '../components/WhySheet'
 import { MapView } from '../components/MapView'
 import { ChevronIcon } from '../components/Icons'
@@ -109,8 +110,14 @@ export function RankingScreen() {
 
         {view === 'list' ? (
           <div className="stack" style={{ marginTop: 16, gap: 10 }}>
+            {scope === 'group' && ranked.length > 0 && (
+              <>
+                <FrontRunner item={ranked[0]} members={included} party={party} pinnedBy={pinnedBy} onOpen={() => setOpenId(ranked[0].restaurant.id)} />
+                {ranked.length > 1 && <h2 className="h2" style={{ marginTop: 12 }}>Runners-up</h2>}
+              </>
+            )}
             <ol className="stack" style={{ listStyle: 'none', margin: 0, padding: 0, gap: 10 }}>
-              {ranked.map((item, i) => (
+              {ranked.slice(scope === 'group' ? 1 : 0).map((item, j) => ({ item, i: j + (scope === 'group' ? 1 : 0) })).map(({ item, i }) => (
                 <RankRow key={item.restaurant.id} rank={i + 1} item={item} party={party} whyLine={whyLine(item)}
                   pinnedBy={pinnedBy} onOpen={() => setOpenId(item.restaurant.id)} />
               ))}

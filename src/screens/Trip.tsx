@@ -4,7 +4,7 @@ import { useGroup, useStore } from '../store'
 import { confidence } from '../model/learn'
 import { Avatar, swipes } from '../components/Bits'
 import { ConfidenceDots } from '../components/ConfidenceDots'
-import { TripFields } from './JoinTrip'
+import { InviteCard, TripFields } from './JoinTrip'
 
 const cap = (s: string) => (s ? s[0].toUpperCase() + s.slice(1) : s)
 const fmt = (iso: string) => new Date(iso + 'T12:00:00').toLocaleDateString('en-GB', { day: 'numeric', month: 'short' })
@@ -52,6 +52,11 @@ export function TripScreen() {
               )
             })}
           </ul>
+        </section>
+
+        <section className="stack" aria-labelledby="invite-h" style={{ gap: 12 }}>
+          <h2 className="h2" id="invite-h">Invite people</h2>
+          <InviteCard code={state.trip.code} />
         </section>
 
         <section className="card stack" aria-labelledby="how-h" style={{ gap: 10 }}>

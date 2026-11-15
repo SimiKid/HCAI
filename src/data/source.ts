@@ -14,7 +14,7 @@ export interface RestaurantSource {
 
 export class FixedSource implements RestaurantSource {
   readonly note =
-    'Real Barcelona restaurants from OpenStreetMap. Photos show the type of food, not the place itself. Ratings, review counts, table times and "popular with" are sample values.'
+    'Real Barcelona restaurants from OpenStreetMap. Photos show the type of food and a similar dining room, not the place itself. Ratings, review counts, table times and "popular with" are sample values.'
   async list(): Promise<Restaurant[]> {
     return fixed as Restaurant[]
   }

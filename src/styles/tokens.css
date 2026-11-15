@@ -21,6 +21,14 @@
   --r-card: 24px;
   --r-ctl: 16px;
   --r-pill: 999px;
+  --display: 'Bricolage Grotesque', 'Poppins', system-ui, sans-serif;
+  --mono: 'DM Mono', ui-monospace, 'SF Mono', Menlo, monospace;
+  /* the bill is paper: same colours in light and dark */
+  --paper: #fffdf6;
+  --paper-ink: #1b1a20;
+  --paper-ink-2: #5d5b66;
+  --cloth: #ede8ff;
+  --cloth-ring: #dcd3ff;
   --font: 'Poppins', ui-rounded, system-ui, -apple-system, 'Segoe UI', sans-serif;
   --tabbar-h: 68px;
 }
@@ -44,5 +52,7 @@
     --warn: #ffc163;
     --warn-soft: #3a2c10;
     --shadow: 0 12px 32px rgba(0, 0, 0, 0.5);
+    --cloth: #2a2447;
+    --cloth-ring: #3a3163;
   }
 }

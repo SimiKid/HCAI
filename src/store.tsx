@@ -6,11 +6,13 @@ import { featuresOf } from './model/features'
 import { learn } from './model/learn'
 
 export interface State {
-  stage: 'welcome' | 'profile' | 'trip' | 'app'
+  stage: 'welcome' | 'profile' | 'trip' | 'invite' | 'details' | 'app'
   name: string
+  avatar: string
   diets: Diet[]
   allergies: Allergy[]
-  trip: { code: string; hotelId: string; from: string; to: string; prefs: TripPref[] }
+  /** `role` is 'owner' when this person started the trip, 'guest' when they joined by invite or code. */
+  trip: { code: string; role: 'owner' | 'guest'; hotelId: string; from: string; to: string; prefs: TripPref[] }
   /** Swipes made in this app, by member id. Simulated members also have seeded swipes. */
   swipes: Record<string, Swipe[]>
   muted: Record<string, string[]>
@@ -20,14 +22,15 @@ export interface State {
   actingAs: string
 }
 
-const KEY = 'restaurant-tinder-v1'
+const KEY = 'restaurant-tinder-v2'
 
 export const initialState: State = {
   stage: 'welcome',
   name: '',
+  avatar: '',
   diets: [],
   allergies: [],
-  trip: { code: 'BCN-2611', hotelId: 'gotic', from: '2026-11-20', to: '2026-11-23', prefs: [] },
+  trip: { code: '', role: 'guest', hotelId: 'gotic', from: '2026-11-20', to: '2026-11-23', prefs: [] },
   swipes: {},
   muted: {},
   pin: null,
@@ -101,6 +104,7 @@ export function useGroup(): Group {
       id: 'me',
       name: state.name.trim() || 'You',
       color: '#E0144C',
+      avatar: state.avatar,
       diets: state.diets,
       allergies: state.allergies,
       tripPrefs: state.trip.prefs,

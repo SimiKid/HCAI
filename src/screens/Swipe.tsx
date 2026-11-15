@@ -4,14 +4,22 @@ import { shuffled } from '../data/members'
 import { CUISINE_LABEL, distanceKm } from '../model/features'
 import { confidence } from '../model/learn'
 import { conflictsFor } from '../model/rank'
+import { AnimatePresence } from 'framer-motion'
 import { SwipeCard, type SwipeCardHandle } from '../components/SwipeCard'
+import { PlaceSheet } from '../components/PlaceSheet'
+import { GroupTable, type Reaction } from '../components/GroupTable'
 import { swipes } from '../components/Bits'
 import { ConfidenceDots } from '../components/ConfidenceDots'
 import { HeartIcon, UndoIcon, XIcon } from '../components/Icons'
 
+const listNames = (names: string[]) =>
+  names.length <= 1 ? names.join('') : `${names.slice(0, -1).join(', ')} and ${names[names.length - 1]}`
+
 export function SwipeScreen({ goToRanking }: { goToRanking: () => void }) {
   const { state, set, restaurants } = useStore()
-  const { actor, hotel } = useGroup()
+  const { actor, hotel, members } = useGroup()
+  const [more, setMore] = useState(false)
+  const [echo, setEcho] = useState<Record<string, Reaction>>({})
   const card = useRef<SwipeCardHandle>(null)
   const [feedback, setFeedback] = useState('')
 
@@ -32,15 +40,26 @@ export function SwipeScreen({ goToRanking }: { goToRanking: () => void }) {
       swipes: { ...s.swipes, [actor.id]: [...(s.swipes[actor.id] ?? []), { restaurantId: current.id, liked }] },
     }))
     const what = `${CUISINE_LABEL[current.primaryType]} and ${current.sample.vibes[0]} places`
+    // @hcai AMR-05 Friends who liked the same place lean in only after my own swipe, so nobody swipes to fit in
+    const fans = liked
+      ? members.filter((m) => m.id !== actor.id && m.swipes.some((s) => s.restaurantId === current.id && s.liked))
+      : []
+    setEcho(liked ? Object.fromEntries([actor, ...fans].map((m) => [m.id, 'liked' as Reaction])) : {})
     // @hcai AMR-16 After each swipe one line says how it changes the ranking
-    setFeedback(liked ? `Noted. ${what} move up for you.` : `Noted. ${what} move down a little.`)
+    setFeedback(
+      fans.length
+        ? `${listNames(fans.map((m) => m.name))} liked this too. ${what} move up for you.`
+        : liked ? `Noted. ${what} move up for you.` : `Noted. ${what} move down a little.`,
+    )
   }
   const undo = () => {
     set((s) => ({ swipes: { ...s.swipes, [actor.id]: (s.swipes[actor.id] ?? []).slice(0, -1) } }))
+    setEcho({})
     setFeedback('Last swipe undone.')
   }
 
   return (
+    <>
     <div className="screen" style={{ display: 'flex', flexDirection: 'column', overflow: 'hidden' }}>
       <header className="row between" style={{ marginBottom: 12 }}>
         <div>
@@ -48,7 +67,9 @@ export function SwipeScreen({ goToRanking }: { goToRanking: () => void }) {
           {/* @hcai AMR-02 The header always shows how sure the app is, in words, next to the swipe count */}
           <div className="conf muted"><ConfidenceDots level={conf.level} />{conf.label} · {swipes(actor.swipes.length)}</div>
         </div>
-        <button className="btn slim" onClick={goToRanking}>Ranking</button>
+        <button className="table-btn" onClick={goToRanking} aria-label={`Your table of ${members.length}. See the group ranking`}>
+          <GroupTable members={members} size={108} seat={26} reactions={echo} />
+        </button>
       </header>
 
       {current ? (
@@ -66,6 +87,7 @@ export function SwipeScreen({ goToRanking }: { goToRanking: () => void }) {
               distanceKm={distanceKm(hotel, current.location)}
               hotelLabel={hotel.label}
               onDecide={decide}
+              onMore={() => setMore(true)}
             />
           </div>
           <p className="feedback" role="status">
@@ -74,7 +96,7 @@ export function SwipeScreen({ goToRanking }: { goToRanking: () => void }) {
                 ? `You have seen all ${deck.length} places. Keep going to refine your taste.`
                 : hidden > 0
                   ? `${hidden} places are hidden because of your diet or allergies.`
-                  : 'Swipe right to like, left to skip. Or use the buttons.')}
+                  : 'Swipe right to like, left to skip. Tap the photo for more pictures.')}
           </p>
           {/* @hcai DM-11 Like, skip and undo are buttons too, so the swipe gesture is never the only way */}
           <div className="swipe-actions">
@@ -91,5 +113,13 @@ export function SwipeScreen({ goToRanking }: { goToRanking: () => void }) {
         </div>
       )}
     </div>
+    <AnimatePresence>
+      {more && current && (
+        <PlaceSheet restaurant={current} distanceKm={distanceKm(hotel, current.location)} hotelLabel={hotel.label}
+          party={members.length} onClose={() => setMore(false)}
+          onDecide={(liked) => { setMore(false); card.current?.fling(liked) }} />
+      )}
+    </AnimatePresence>
+    </>
   )
 }

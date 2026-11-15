@@ -19,7 +19,7 @@ export interface Restaurant {
   priceLevel: 1 | 2 | 3 | 4
   rating: number
   userRatingCount: number
-  photos: { src: string; attribution: string }[]
+  photos: { src: string; attribution: string; kind: 'food' | 'inside' }[]
   /** Values Google does not provide. Sample data in the prototype. */
   sample: {
     vibes: Vibe[]
@@ -39,6 +39,8 @@ export interface Member {
   id: string
   name: string
   color: string
+  /** Id of a preset avatar, empty for the initial letter. */
+  avatar: string
   diets: Diet[]
   allergies: Allergy[]
   tripPrefs: TripPref[]

@@ -21,7 +21,7 @@ analysis finding it answers. Edit this section by hand.
 
 <!-- BEGIN GENERATED: do not edit by hand, run scripts/study-guide.sh -->
 
-25 of 117 principles applied, 26 tags in the code.
+28 of 117 principles applied, 29 tags in the code.
 
 ### Amershi et al. 2019, Guidelines for Human-AI Interaction (L04 p.66)
 
@@ -31,7 +31,11 @@ analysis finding it answers. Edit this section by hand.
 
 #### AMR-02 Make clear how well the system can do what it can do
 
-- `src/screens/Swipe.tsx:48` The header always shows how sure the app is, in words, next to the swipe count
+- `src/screens/Swipe.tsx:67` The header always shows how sure the app is, in words, next to the swipe count
+
+#### AMR-05 Match relevant social norms
+
+- `src/screens/Swipe.tsx:43` Friends who liked the same place lean in only after my own swipe, so nobody swipes to fit in
 
 #### AMR-09 Support efficient correction
 
@@ -39,7 +43,7 @@ analysis finding it answers. Edit this section by hand.
 
 #### AMR-11 Make clear why the system did what it did
 
-- `src/components/WhySheet.tsx:82` Every place explains its rank per member: a match word, a bar and the two reasons that mattered most
+- `src/components/WhySheet.tsx:86` Every place explains its rank per member: a match word and the two reasons that mattered most
 
 #### AMR-13 Learn from user behavior
 
@@ -51,34 +55,34 @@ analysis finding it answers. Edit this section by hand.
 
 #### AMR-16 Convey the consequences of user actions
 
-- `src/screens/Swipe.tsx:35` After each swipe one line says how it changes the ranking
-- `src/screens/Profile.tsx:42` Before saving, the form says what a diet or allergy will do: hide places for the whole group
+- `src/screens/Swipe.tsx:48` After each swipe one line says how it changes the ranking
+- `src/screens/Profile.tsx:61` Before saving, the form says what a diet or allergy will do: hide places for the whole group
 
 ### Mental models and the model of the user (L04 p.4 to 19)
 
 #### MM-03 Make the AI's model of the user visible
 
-- `src/screens/Profile.tsx:84` The app's picture of the member is on screen as chips, and each chip can be removed
+- `src/screens/Profile.tsx:103` The app's picture of the member is on screen as chips, and each chip can be removed
 
 #### MM-07 Make privacy verifiable, not "trust me"
 
-- `src/store.tsx:57` Profile, swipes and the learned taste stay in this browser's storage, nothing is sent to a server
+- `src/store.tsx:60` Profile, swipes and the learned taste stay in this browser's storage, nothing is sent to a server
 
 ### Errors and AI failure modes (L04 p.28 to 64)
 
 #### ERR-12 Context errors: explain no-result and offer alternatives
 
-- `src/screens/Ranking.tsx:119` Places removed by a diet or allergy are not silently dropped: the list says how many, and why for each
+- `src/screens/Ranking.tsx:126` Places removed by a diet or allergy are not silently dropped: the list says how many, and why for each
 
 ### Fairness, accountability, ethics (L06)
 
 #### FAIR-01 Accountability
 
-- `src/components/WhySheet.tsx:69` A pinned place carries the name of who pinned it and says that it overrides the ranking
+- `src/components/WhySheet.tsx:62` A pinned place carries the name of who pinned it and says that it overrides the ranking
 
 #### FAIR-03 Corrigibility
 
-- `src/components/WhySheet.tsx:75` Anyone in the group can undo a pin with one tap, so the group keeps the last word
+- `src/components/WhySheet.tsx:68` Anyone in the group can undo a pin with one tap, so the group keeps the last word
 
 #### FAIR-04 Procedural vs. distributive justice: equality or equity
 
@@ -86,7 +90,7 @@ analysis finding it answers. Edit this section by hand.
 
 #### FAIR-09 Measurement bias
 
-- `src/screens/Swipe.tsx:18` The deck is in a fixed shuffled order, not sorted by predicted taste, so every place gets the same chance to be seen
+- `src/screens/Swipe.tsx:26` The deck is in a fixed shuffled order, not sorted by predicted taste, so every place gets the same chance to be seen
 
 #### FAIR-10 Aggregation bias
 
@@ -94,21 +98,25 @@ analysis finding it answers. Edit this section by hand.
 
 #### FAIR-13 Harm types
 
-- `src/screens/Profile.tsx:131` "Popular with" uses taste groups, not age or gender, and stays off until a member turns it on
+- `src/screens/Profile.tsx:150` "Popular with" uses taste groups, not age or gender, and stays off until a member turns it on
 
 #### FAIR-16 User auditing
 
-- `src/screens/Ranking.tsx:79` The people filter lets anyone switch members off and see whose taste shapes the list, with each swipe count in view
+- `src/screens/Ranking.tsx:80` The people filter lets anyone switch members off and see whose taste shapes the list, with each swipe count in view
 
 #### FAIR-17 Privacy: consent, control, erasure
 
-- `src/store.tsx:127` One tap erases everything the app learned about me, a second one deletes the whole profile
+- `src/store.tsx:131` One tap erases everything the app learned about me, a second one deletes the whole profile
 
 #### FAIR-18 Confidence is not accuracy, calibrate it
 
 - `src/model/learn.ts:61` Confidence follows the number of swipes and is worded, never a percentage
 
 ### Explainability and trust (L07)
+
+#### XAI-09 Choose the explanation format on purpose
+
+- `src/components/WhySheet.tsx:73` The explanation is a receipt: one line per person, a dashed rule, the group result as the total
 
 #### XAI-10 Unwarranted faith in numbers
 
@@ -130,19 +138,22 @@ analysis finding it answers. Edit this section by hand.
 
 #### HCAI-02 High control and high automation together
 
-- `src/screens/Ranking.tsx:41` The ranking is automatic, and people steer it three ways: filter members, re-rank for yourself, or pin a place
+- `src/screens/Ranking.tsx:42` The ranking is automatic, and people steer it three ways: filter members, re-rank for yourself, or pin a place
 
 ### Shneiderman and Maes 1997, Direct manipulation vs. interface agents (reading, week 4)
 
+#### DM-04 Users keep responsibility
+
+- `src/components/FrontRunner.tsx:35` The reveal names a front-runner and how many it suits, not a decision: choosing stays with the group
+
 #### DM-11 Accessible alternatives to gestures
 
-- `src/screens/Swipe.tsx:79` Like, skip and undo are buttons too, so the swipe gesture is never the only way
+- `src/screens/Swipe.tsx:101` Like, skip and undo are buttons too, so the swipe gesture is never the only way
 
 ### Not applied yet
 
 - AMR-03 Time services based on context
 - AMR-04 Show contextually relevant information
-- AMR-05 Match relevant social norms
 - AMR-06 Mitigate social biases
 - AMR-07 Support efficient invocation
 - AMR-08 Support efficient dismissal
@@ -194,7 +205,6 @@ analysis finding it answers. Edit this section by hand.
 - XAI-06 Know the audience
 - XAI-07 Causal over correlational explanations
 - XAI-08 Simple but not oversimplified
-- XAI-09 Choose the explanation format on purpose
 - XAI-11 Local vs. global explanations
 - XAI-12 Prefer ante-hoc (interpretable) models where possible
 - XAI-14 Example-based explanations
@@ -222,7 +232,6 @@ analysis finding it answers. Edit this section by hand.
 - DM-01 Direct manipulation
 - DM-02 Overview first, zoom and filter, details on demand
 - DM-03 Dynamic queries
-- DM-04 Users keep responsibility
 - DM-05 Adaptive algorithms below a predictable surface
 - DM-06 Avoid anthropomorphism
 - DM-07 Visible, editable user model

@@ -7,8 +7,9 @@ import { confidence } from '../model/learn'
 import { matchLevel, rankWithout, reasonsFor } from '../model/explain'
 import { expectedReservation, type RankInput, type Ranked } from '../model/rank'
 import { Avatar, count, km, price, swipes } from './Bits'
+import { Gallery } from './Gallery'
 import { reservationText } from './RankRow'
-import { ClockIcon, CrownIcon, StarIcon, XIcon } from './Icons'
+import { CrownIcon, XIcon } from './Icons'
 
 interface Props {
   item: Ranked
@@ -20,6 +21,7 @@ interface Props {
   onClose: () => void
 }
 
+/** "The bill": why a place is where it is, itemised per person like a restaurant receipt. */
 export function WhySheet({ item, rank, input, group, party, canPin, onClose }: Props) {
   const { state, set } = useStore()
   const r = item.restaurant
@@ -34,6 +36,7 @@ export function WhySheet({ item, rank, input, group, party, canPin, onClose }: P
 
   const pinnedBy = state.pin ? group.members.find((m) => m.id === state.pin!.by) : undefined
   const lowest = input.members.find((m) => m.id === item.lowestMemberId)
+  const who = (m: Member) => (m.id === 'me' ? 'You' : m.name)
 
   // which member moves this place most when they are left out
   let swing: { member: Member; to: number } | null = null
@@ -47,23 +50,13 @@ export function WhySheet({ item, rank, input, group, party, canPin, onClose }: P
   return (
     <>
       <motion.div className="backdrop" onClick={onClose} initial={{ opacity: 0 }} animate={{ opacity: 1 }} />
-      <motion.div className="sheet" role="dialog" aria-modal="true" aria-label={r.displayName}
+      <motion.div className="sheet" role="dialog" aria-modal="true" aria-label={`The bill for ${r.displayName}`}
         initial={{ y: '100%' }} animate={{ y: 0 }} transition={{ type: 'tween', duration: 0.25, ease: 'easeOut' }}>
-        <div className="sheet-photo">
-          <img src={r.photos[0].src} alt={`${CUISINE_LABEL[r.primaryType]} dish`} />
-          <button ref={closeRef} className="icon-btn sheet-close" onClick={onClose} aria-label="Close"><XIcon size={20} /></button>
+        <div className="sheet-top">
+          <button ref={closeRef} className="icon-btn" onClick={onClose} aria-label="Close"><XIcon size={20} /></button>
         </div>
-        <div className="stack" style={{ paddingTop: 16 }}>
-          <div className="stack" style={{ gap: 4 }}>
-            <h2 className="title" style={{ fontSize: '1.5rem' }}>{r.displayName}</h2>
-            <div className="meta">
-              <span>{CUISINE_LABEL[r.primaryType]}</span>
-              <span>{price(r.priceLevel)}</span>
-              <span className="fact"><StarIcon size={13} />{r.rating.toFixed(1)} ({count(r.userRatingCount)} reviews)</span>
-              <span>{km(distanceKm(group.hotel, r.location))} from {group.hotel.label}</span>
-            </div>
-            <p className="small muted">{r.formattedAddress}</p>
-          </div>
+        <div className="stack">
+          <Gallery restaurant={r} />
 
           {item.pinned && (
             // @hcai FAIR-01 A pinned place carries the name of who pinned it and says that it overrides the ranking
@@ -77,51 +70,65 @@ export function WhySheet({ item, rank, input, group, party, canPin, onClose }: P
             </div>
           )}
 
-          <section className="stack" aria-labelledby="why-h">
-            <h3 className="h2" id="why-h">{item.pinned ? 'What the ranking says' : `Why it is number ${rank}`}</h3>
-            {/* @hcai AMR-11 Every place explains its rank per member: a match word, a bar and the two reasons that mattered most */}
-            {input.members.map((m) => {
-              const s = item.memberScores[m.id]
-              const match = matchLevel(s)
-              const reasons = reasonsFor(group.weights[m.id], x, 2, m.id === 'me')
-              const conf = confidence(m.swipes.length)
-              return (
-                <div className="member-line" key={m.id}>
-                  <Avatar member={m} />
-                  <div className="row" style={{ gap: 8 }}>
-                    <span className="strong" style={{ minWidth: 56 }}>{m.id === 'me' ? 'You' : m.name}</span>
-                    <span className={match.level === 'strong' ? 'bar strong' : 'bar'} aria-hidden="true"><i style={{ width: `${Math.round(s * 100)}%` }} /></span>
-                    <span className="match">{match.label}</span>
+          {/* @hcai XAI-09 The explanation is a receipt: one line per person, a dashed rule, the group result as the total */}
+          <div className="bill-wrap">
+            <section className="bill" aria-labelledby="bill-h">
+              <div className="bill-center">
+                <p className="bill-caps">The bill · Trip {state.trip.code || 'BCN'}</p>
+                <h2 className="bill-title" id="bill-h">{r.displayName}</h2>
+                <p className="bill-small">
+                  {CUISINE_LABEL[r.primaryType]} · {price(r.priceLevel)} · {r.rating.toFixed(1)} stars ({count(r.userRatingCount)} reviews)
+                </p>
+                <p className="bill-small">{r.formattedAddress} · {km(distanceKm(group.hotel, r.location))} from {group.hotel.label}</p>
+              </div>
+              <hr />
+              <p className="bill-caps" style={{ marginBottom: 10 }}>{item.pinned ? 'What the ranking says' : `Why it is number ${rank}`}</p>
+              {/* @hcai AMR-11 Every place explains its rank per member: a match word and the two reasons that mattered most */}
+              {input.members.map((m) => {
+                const match = matchLevel(item.memberScores[m.id])
+                const reasons = reasonsFor(group.weights[m.id], x, 2, m.id === 'me')
+                const conf = confidence(m.swipes.length)
+                return (
+                  <div key={m.id}>
+                    <div className="bill-line">
+                      <span className="who"><Avatar member={m} small />{who(m)}</span>
+                      <span className="dots" aria-hidden="true" />
+                      <span>{match.label}</span>
+                    </div>
+                    <p className="bill-reason">
+                      {reasons.length ? sentence(reasons.map((q) => q.text)) : 'No clear signal yet.'}
+                      {conf.level === 'low' && ` Rough guess, only ${swipes(m.swipes.length)}.`}
+                    </p>
                   </div>
-                  <p className="reasons small muted">
-                    {reasons.length
-                      ? sentence(reasons.map((x) => x.text))
-                      : 'No clear signal yet.'}
-                    {conf.level === 'low' && ` Rough guess, only ${swipes(m.swipes.length)}.`}
-                  </p>
-                </div>
-              )
-            })}
-            {input.members.length > 1 && lowest && (
-              <p className="small">Works least well for <span className="strong">{lowest.id === 'me' ? 'you' : lowest.name}</span>.
-                {swing && ` Without ${swing.member.id === 'me' ? 'you' : swing.member.name}, it would be number ${swing.to}.`}
-              </p>
-            )}
-          </section>
-
-          <hr className="divider" />
-
-          <section className="stack" aria-labelledby="res-h" style={{ gap: 8 }}>
-            <h3 className="h2" id="res-h">Tables tonight</h3>
-            <p className="row" style={{ gap: 6 }}><ClockIcon size={18} />{reservationText(expectedReservation(r, party), party)}</p>
-            <div className="chips">
-              {r.sample.reservation.slots.map((s) => (
-                <span key={s.time} className={s.maxParty >= party ? 'chip static lav' : 'chip static'}>
-                  {s.time} · up to {s.maxParty}
-                </span>
-              ))}
-            </div>
-          </section>
+                )
+              })}
+              <hr />
+              <div className="bill-line bill-total">
+                <span>{input.members.length > 1 ? `Group of ${input.members.length}` : 'Total'}</span>
+                <span className="dots" aria-hidden="true" />
+                <span>{matchLevel(item.groupScore).label}</span>
+              </div>
+              <p className="bill-small" style={{ marginTop: 6 }}>Split evenly: everyone counts the same, however much they swiped.</p>
+              {input.members.length > 1 && lowest && (
+                <p style={{ marginTop: 10 }}>
+                  Works least well for {lowest.id === 'me' ? 'you' : lowest.name}.
+                  {swing && ` Without ${swing.member.id === 'me' ? 'you' : swing.member.name}, it would be number ${swing.to}.`}
+                </p>
+              )}
+              <hr />
+              <p className="bill-caps" style={{ marginBottom: 8 }}>Tables tonight</p>
+              <p>{reservationText(expectedReservation(r, party), party)}</p>
+              <div className="chips" style={{ marginTop: 10 }}>
+                {r.sample.reservation.slots.map((s) => (
+                  <span key={s.time} className={s.maxParty >= party ? 'chip static lav' : 'chip static'}>
+                    {s.time} · up to {s.maxParty}
+                  </span>
+                ))}
+              </div>
+              <hr />
+              <p className="bill-small bill-center">A guess, not a verdict. Your group has the last word.</p>
+            </section>
+          </div>
 
           {state.showPopularWith ? (
             <section className="stack" aria-labelledby="pop-h" style={{ gap: 8 }}>
@@ -142,7 +149,7 @@ export function WhySheet({ item, rank, input, group, party, canPin, onClose }: P
               <p className="small muted">Dictator mode. The whole group sees this place first, with your name on it. Anyone can undo it.</p>
             </div>
           )}
-          <p className="tiny muted">Ratings, review counts, table times and “popular with” are sample values. The photo shows the type of food, not this restaurant. {r.photos[0].attribution}.</p>
+          <p className="tiny muted">Ratings, review counts, table times and “popular with” are sample values. Photos show the type of food and a similar dining room, not this restaurant. {r.photos.map((p) => p.attribution).join('; ')}.</p>
         </div>
       </motion.div>
     </>
