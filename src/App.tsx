@@ -30,6 +30,10 @@ export function App() {
 function Shell() {
   const { state } = useStore()
   const [tab, setTab] = useState<Tab>('swipe')
+  // onboarding always ends on Swipe, also after a deleted profile left another tab selected
+  useEffect(() => {
+    if (state.stage !== 'app') setTab('swipe')
+  }, [state.stage])
   if (state.stage === 'welcome') return <div className="phone"><Welcome /></div>
   if (state.stage === 'profile') return <div className="phone"><ProfileSetup /></div>
   if (state.stage === 'trip') return <div className="phone"><TripEntry /></div>
