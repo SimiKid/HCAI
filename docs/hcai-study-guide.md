@@ -21,35 +21,141 @@ analysis finding it answers. Edit this section by hand.
 
 <!-- BEGIN GENERATED: do not edit by hand, run scripts/study-guide.sh -->
 
-0 of 117 principles applied, 0 tags in the code.
+25 of 117 principles applied, 26 tags in the code.
+
+### Amershi et al. 2019, Guidelines for Human-AI Interaction (L04 p.66)
+
+#### AMR-01 Make clear what the system can do
+
+- `src/screens/Welcome.tsx:32` The first screen says what the app does and that it only guesses, before any data is asked for
+
+#### AMR-02 Make clear how well the system can do what it can do
+
+- `src/screens/Swipe.tsx:48` The header always shows how sure the app is, in words, next to the swipe count
+
+#### AMR-09 Support efficient correction
+
+- `src/model/learn.ts:54` A taste the member removed in "What the app thinks you like" is forgotten, whatever the swipes said
+
+#### AMR-11 Make clear why the system did what it did
+
+- `src/components/WhySheet.tsx:82` Every place explains its rank per member: a match word, a bar and the two reasons that mattered most
+
+#### AMR-13 Learn from user behavior
+
+- `src/model/learn.ts:35` Each like or skip moves the weights of that card's features, more when the guess was wrong
+
+#### AMR-14 Update and adapt cautiously
+
+- `src/model/learn.ts:4` Small learning rate, one swipe nudges the taste profile and never flips it
+
+#### AMR-16 Convey the consequences of user actions
+
+- `src/screens/Swipe.tsx:35` After each swipe one line says how it changes the ranking
+- `src/screens/Profile.tsx:42` Before saving, the form says what a diet or allergy will do: hide places for the whole group
+
+### Mental models and the model of the user (L04 p.4 to 19)
+
+#### MM-03 Make the AI's model of the user visible
+
+- `src/screens/Profile.tsx:84` The app's picture of the member is on screen as chips, and each chip can be removed
+
+#### MM-07 Make privacy verifiable, not "trust me"
+
+- `src/store.tsx:57` Profile, swipes and the learned taste stay in this browser's storage, nothing is sent to a server
+
+### Errors and AI failure modes (L04 p.28 to 64)
+
+#### ERR-12 Context errors: explain no-result and offer alternatives
+
+- `src/screens/Ranking.tsx:119` Places removed by a diet or allergy are not silently dropped: the list says how many, and why for each
+
+### Fairness, accountability, ethics (L06)
+
+#### FAIR-01 Accountability
+
+- `src/components/WhySheet.tsx:69` A pinned place carries the name of who pinned it and says that it overrides the ranking
+
+#### FAIR-03 Corrigibility
+
+- `src/components/WhySheet.tsx:75` Anyone in the group can undo a pin with one tap, so the group keeps the last word
+
+#### FAIR-04 Procedural vs. distributive justice: equality or equity
+
+- `src/model/rank.ts:69` (trade-off) Plain average, one member one vote: someone with 40 swipes counts the same as someone with 5
+
+#### FAIR-09 Measurement bias
+
+- `src/screens/Swipe.tsx:18` The deck is in a fixed shuffled order, not sorted by predicted taste, so every place gets the same chance to be seen
+
+#### FAIR-10 Aggregation bias
+
+- `src/model/rank.ts:54` Diets and allergies are a veto, not a taste: one member who cannot eat there removes the place for the group
+
+#### FAIR-13 Harm types
+
+- `src/screens/Profile.tsx:131` "Popular with" uses taste groups, not age or gender, and stays off until a member turns it on
+
+#### FAIR-16 User auditing
+
+- `src/screens/Ranking.tsx:79` The people filter lets anyone switch members off and see whose taste shapes the list, with each swipe count in view
+
+#### FAIR-17 Privacy: consent, control, erasure
+
+- `src/store.tsx:127` One tap erases everything the app learned about me, a second one deletes the whole profile
+
+#### FAIR-18 Confidence is not accuracy, calibrate it
+
+- `src/model/learn.ts:61` Confidence follows the number of swipes and is worded, never a percentage
+
+### Explainability and trust (L07)
+
+#### XAI-10 Unwarranted faith in numbers
+
+- `src/model/explain.ts:28` Scores are shown as words and bar lengths, the raw number never reaches the screen
+
+#### XAI-13 Accuracy vs. interpretability, use interpretable features
+
+- `src/model/features.ts:15` The model only sees features a person can name (cuisine, vibe, price, distance, rating), no image embeddings
+
+#### XAI-15 Counterfactual explanations
+
+- `src/model/explain.ts:36` Counterfactual: "without Mia this would be number 2" shows how much one person moves the rank
+
+#### XAI-16 Feature attribution (SHAP)
+
+- `src/model/explain.ts:11` "Why" lists the features that pushed this member's score most, up and down, in plain words
+
+### Human-Centered AI framework (Shneiderman 2022, in L06 and L07)
+
+#### HCAI-02 High control and high automation together
+
+- `src/screens/Ranking.tsx:41` The ranking is automatic, and people steer it three ways: filter members, re-rank for yourself, or pin a place
+
+### Shneiderman and Maes 1997, Direct manipulation vs. interface agents (reading, week 4)
+
+#### DM-11 Accessible alternatives to gestures
+
+- `src/screens/Swipe.tsx:79` Like, skip and undo are buttons too, so the swipe gesture is never the only way
 
 ### Not applied yet
 
-- AMR-01 Make clear what the system can do
-- AMR-02 Make clear how well the system can do what it can do
 - AMR-03 Time services based on context
 - AMR-04 Show contextually relevant information
 - AMR-05 Match relevant social norms
 - AMR-06 Mitigate social biases
 - AMR-07 Support efficient invocation
 - AMR-08 Support efficient dismissal
-- AMR-09 Support efficient correction
 - AMR-10 Scope services when in doubt
-- AMR-11 Make clear why the system did what it did
 - AMR-12 Remember recent interactions
-- AMR-13 Learn from user behavior
-- AMR-14 Update and adapt cautiously
 - AMR-15 Encourage granular feedback
-- AMR-16 Convey the consequences of user actions
 - AMR-17 Provide global controls
 - AMR-18 Notify users about changes
 - MM-01 Three models must line up
 - MM-02 Mental models are incomplete and sticky
-- MM-03 Make the AI's model of the user visible
 - MM-04 The model of the user is always incomplete
 - MM-05 Design for overlooked user groups
 - MM-06 Encourage safe experimentation, do not learn from first use
-- MM-07 Make privacy verifiable, not "trust me"
 - ERR-01 Feedforward and feedback across the seven stages of action
 - ERR-02 Slips vs. mistakes
 - ERR-03 Consistency enables habituation
@@ -61,7 +167,6 @@ analysis finding it answers. Edit this section by hand.
 - ERR-09 Goal misgeneralization
 - ERR-10 Training data errors: let users correct data
 - ERR-11 Input errors: check inputs against expectations
-- ERR-12 Context errors: explain no-result and offer alternatives
 - ERR-13 System hierarchy errors: show which sources drive the result
 - ERR-14 Error audit
 - NOR-01 Affordances
@@ -70,24 +175,15 @@ analysis finding it answers. Edit this section by hand.
 - NOR-04 Feedback
 - NOR-05 Constraints
 - NOR-06 Conceptual model
-- FAIR-01 Accountability
 - FAIR-02 Consistency
-- FAIR-03 Corrigibility
-- FAIR-04 Procedural vs. distributive justice: equality or equity
 - FAIR-05 Pick a fairness notion deliberately
 - FAIR-06 Unawareness is not enough
 - FAIR-07 Historical bias
 - FAIR-08 Representation bias
-- FAIR-09 Measurement bias
-- FAIR-10 Aggregation bias
 - FAIR-11 Evaluation bias
 - FAIR-12 Deployment bias
-- FAIR-13 Harm types
 - FAIR-14 Recourse
 - FAIR-15 Contestability
-- FAIR-16 User auditing
-- FAIR-17 Privacy: consent, control, erasure
-- FAIR-18 Confidence is not accuracy, calibrate it
 - FAIR-19 Model card
 - FAIR-20 Envision first: should this feature exist?
 - XAI-01 Calibrated trust
@@ -99,17 +195,12 @@ analysis finding it answers. Edit this section by hand.
 - XAI-07 Causal over correlational explanations
 - XAI-08 Simple but not oversimplified
 - XAI-09 Choose the explanation format on purpose
-- XAI-10 Unwarranted faith in numbers
 - XAI-11 Local vs. global explanations
 - XAI-12 Prefer ante-hoc (interpretable) models where possible
-- XAI-13 Accuracy vs. interpretability, use interpretable features
 - XAI-14 Example-based explanations
-- XAI-15 Counterfactual explanations
-- XAI-16 Feature attribution (SHAP)
 - XAI-17 Local surrogates are only locally faithful (LIME)
 - XAI-18 Explainability tools can be weaponised
 - HCAI-01 Augment, do not replace
-- HCAI-02 High control and high automation together
 - HCAI-03 Pick the level of automation deliberately
 - HCAI-04 HCAI is a process
 - HCAI-05 Guard against the three threats
@@ -138,7 +229,6 @@ analysis finding it answers. Edit this section by hand.
 - DM-08 Delegate details, keep goals
 - DM-09 The agent must be bypassable
 - DM-10 Show what the agent is focusing on
-- DM-11 Accessible alternatives to gestures
 - DM-12 Measure with real users
 - PROC-01 Ground features in task analysis
 - PROC-02 Elicit mental models in tests
