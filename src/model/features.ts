@@ -40,6 +40,9 @@ export const CUISINE_LABEL: Record<string, string> = {
   steak: 'Grill',
 }
 
+/** Cuisines named after a place or a people: they keep their capital letter inside a sentence. */
+const PROPER_CUISINES = new Set(['catalan', 'spanish', 'italian', 'japanese', 'mexican', 'indian', 'lebanese'])
+
 /**
  * Plain words for a feature, as [when liked, when skipped].
  * `you` switches to the second person: "like tapas" instead of "likes tapas".
@@ -48,7 +51,9 @@ export function featurePhrase(feature: string, you = false): [string, string] {
   const v = (third: string, second: string) => (you ? second : third)
   const [kind, value] = feature.split(':')
   if (kind === 'cuisine') {
-    const c = (CUISINE_LABEL[value] ?? value).toLowerCase()
+    // "likes Spanish" keeps its capital letter, "likes tapas" does not
+    const label = CUISINE_LABEL[value] ?? value
+    const c = PROPER_CUISINES.has(value) ? label : label.toLowerCase()
     return [`${v('likes', 'like')} ${c}`, `${v('tends', 'tend')} to skip ${c}`]
   }
   if (kind === 'vibe') return [`${v('likes', 'like')} ${value} places`, `${v('tends', 'tend')} to skip ${value} places`]

@@ -33,6 +33,16 @@ h1, h2, h3, p { margin: 0; }
   padding: calc(16px + env(safe-area-inset-top)) 20px 24px;
 }
 .screen.flush { padding-left: 0; padding-right: 0; }
+/* a form screen: the content scrolls, the main button stays below it at the bottom edge */
+.screen-form { flex: 1; min-height: 0; display: flex; flex-direction: column; }
+.screen-foot {
+  flex: none;
+  padding: 12px 20px calc(16px + env(safe-area-inset-bottom));
+  background: var(--bg); box-shadow: 0 -1px 0 var(--line);
+}
+.steps { display: flex; gap: 6px; margin-bottom: 4px; }
+.steps i { flex: 1; height: 4px; border-radius: 2px; background: var(--surface-2); }
+.steps i.on { background: var(--crimson); }
 .stack { display: flex; flex-direction: column; gap: 16px; }
 .row { display: flex; align-items: center; gap: 12px; }
 .between { justify-content: space-between; }
@@ -65,6 +75,7 @@ h1, h2, h3, p { margin: 0; }
 .btn.slim { min-height: 44px; width: auto; padding: 0 16px; font-size: 0.875rem; }
 .btn.danger { color: var(--crimson-text); }
 .link { background: none; border: 0; padding: 0; min-height: 44px; color: var(--crimson-text); font-weight: 600; font-size: 0.875rem; }
+.link.quiet { color: var(--ink-2); font-weight: 500; font-size: 0.75rem; text-decoration: underline; }
 .icon-btn {
   width: 44px; height: 44px; flex: none;
   border: 0; border-radius: 50%;
@@ -87,7 +98,8 @@ h1, h2, h3, p { margin: 0; }
   white-space: nowrap; flex: none;
 }
 .chip[aria-pressed='true'], .chip[aria-checked='true'] { background: var(--crimson); border-color: var(--crimson); color: var(--on-crimson); }
-.chip.why { min-height: 44px; padding: 0 14px; font-size: 0.875rem; }
+/* the optional "why" chips are quieter than the like and skip buttons below them */
+.chip.why { min-height: 40px; padding: 0 14px; font-size: 0.875rem; border-color: transparent; background: var(--surface); }
 .chip .count { font-size: 0.75rem; font-weight: 600; opacity: 0.85; }
 .chip.off { color: var(--ink-2); text-decoration: line-through; text-decoration-thickness: 1px; }
 .chip.static { min-height: 32px; padding: 0 12px; font-size: 0.8125rem; border: 0; background: var(--surface); }
@@ -172,6 +184,20 @@ h1, h2, h3, p { margin: 0; }
 .btn.on-crimson:active { background: #ffe9ee; }
 .welcome :focus-visible { outline-color: #fff; }
 
+/* table match: several people at the table like the same place */
+.match-overlay {
+  position: absolute; inset: 0; z-index: 1100; overflow: hidden;
+  display: flex; flex-direction: column;
+  padding: 24px 24px calc(20px + env(safe-area-inset-bottom));
+  background: var(--crimson); color: #fff; text-align: center;
+}
+.match-body { position: relative; z-index: 1; flex: 1; min-height: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 14px; width: 100%; }
+.match-actions { position: relative; z-index: 1; flex: none; display: flex; flex-direction: column; align-items: center; gap: 4px; }
+.match-body .gtable { filter: drop-shadow(0 18px 30px rgba(60, 0, 20, 0.35)); margin-bottom: 6px; }
+.match-title { font-family: var(--display); font-size: 2.5rem; font-weight: 700; letter-spacing: -0.03em; line-height: 1; }
+.match-overlay :focus-visible { outline-color: #fff; }
+.link.on-crimson { color: #fff; }
+
 /* the group's table */
 .gtable { position: relative; flex: none; }
 .gtable-cloth {
@@ -217,6 +243,21 @@ h1, h2, h3, p { margin: 0; }
 .bill-line .who { font-weight: 500; display: inline-flex; align-items: center; gap: 8px; }
 .bill-reason { color: var(--paper-ink-2); font-size: 0.8125rem; padding-left: 30px; margin-bottom: 10px; }
 .bill-total { font-weight: 500; font-size: 1rem; }
+.bill-verdict { font-weight: 500; font-size: 1rem; margin-bottom: 6px; }
+/* a person's line opens their reasons */
+.bill-toggle { width: 100%; min-height: 40px; border: 0; background: none; padding: 0; font: inherit; color: inherit; text-align: left; align-items: center; }
+.bill-toggle .dots { transform: none; }
+.bill-link { border: 0; background: none; padding: 0; min-height: 36px; font: inherit; font-size: 0.8125rem; color: var(--paper-ink); text-decoration: underline; }
+.bill :focus-visible { outline-color: var(--paper-ink); }
+/* the sheet's main action, fixed at its bottom edge */
+.sheet-foot {
+  /* the negative offset cancels the sheet's bottom padding, which a sticky element otherwise stops above */
+  position: sticky; bottom: calc(-24px - env(safe-area-inset-bottom)); z-index: 2;
+  margin: 0 -20px calc(-24px - env(safe-area-inset-bottom));
+  padding: 12px 20px calc(14px + env(safe-area-inset-bottom));
+  background: var(--bg); box-shadow: 0 -1px 0 var(--line);
+  display: flex; flex-direction: column; gap: 6px; text-align: center;
+}
 .bill .chip.static { background: #f0ece0; color: var(--paper-ink); font-family: var(--mono); }
 .bill .chip.static.lav { background: var(--paper-ink); color: var(--paper); }
 
@@ -252,9 +293,12 @@ h1, h2, h3, p { margin: 0; }
   background: linear-gradient(to top, rgba(10, 9, 14, 0.88) 0%, rgba(10, 9, 14, 0.62) 55%, rgba(10, 9, 14, 0) 100%);
 }
 .swipe-card .name { font-family: var(--display); font-size: 1.75rem; font-weight: 700; letter-spacing: -0.01em; line-height: 1.1; }
-.swipe-card .facts { display: flex; flex-wrap: wrap; gap: 6px 14px; margin-top: 8px; font-size: 0.9375rem; font-weight: 500; }
+.swipe-card .cuisine { font-size: 0.75rem; font-weight: 600; letter-spacing: 0.16em; text-transform: uppercase; opacity: 0.85; margin-bottom: 4px; }
+/* room on the right for the round info button */
+.swipe-card .facts { display: flex; flex-wrap: wrap; gap: 6px 14px; margin-top: 8px; padding-right: 60px; font-size: 0.9375rem; font-weight: 500; }
 .swipe-card .fact { display: inline-flex; align-items: center; gap: 5px; }
-.swipe-card .credit { margin-top: 8px; font-size: 0.6875rem; opacity: 0.8; }
+.why-ask { display: flex; flex-direction: column; align-items: center; gap: 8px; padding-bottom: 4px; text-align: center; }
+.why-ask .chips { justify-content: center; }
 .stamp {
   position: absolute; top: 24px; padding: 6px 14px; border-radius: 12px;
   font-weight: 700; font-size: 1.25rem; letter-spacing: 0.06em; color: #fff; pointer-events: none;
@@ -277,6 +321,25 @@ h1, h2, h3, p { margin: 0; }
 .feedback { min-height: 44px; display: flex; align-items: center; justify-content: center; text-align: center; font-size: 0.875rem; color: var(--ink-2); }
 
 /* ranking */
+.adjust {
+  display: flex; align-items: center; gap: 10px; width: 100%; min-height: 48px; padding: 8px 14px;
+  border: 0; border-radius: var(--r-ctl); background: var(--surface); text-align: left;
+  font-size: 0.8125rem; font-weight: 500;
+}
+.adjust-cta { display: inline-flex; align-items: center; gap: 4px; flex: none; color: var(--crimson-text); font-weight: 600; }
+.adjust-panel { border: 1.5px solid var(--line); border-radius: var(--r-card); padding: 14px; }
+.card .btn.slim, .fold .btn.slim { background: var(--bg); }
+/* a row that opens on a tap */
+.fold { background: var(--surface); border-radius: var(--r-card); }
+.fold-head {
+  display: flex; align-items: center; gap: 10px; width: 100%; min-height: 56px; padding: 10px 16px;
+  border: 0; background: none; text-align: left; font-weight: 600;
+}
+.fold-body { padding: 2px 16px 16px; }
+.info-btn { width: 40px; height: 40px; flex: none; border: 0; border-radius: 50%; background: none; color: var(--ink-2); display: grid; place-items: center; }
+.progress-track { display: flex; gap: 4px; }
+.progress-track i { flex: 1; height: 6px; border-radius: 3px; background: var(--bg); }
+.progress-track i.on { background: var(--lav); }
 .rank-row {
   display: flex; gap: 12px; width: 100%; text-align: left;
   padding: 12px; border: 0; border-radius: var(--r-card); background: var(--surface);
@@ -290,6 +353,8 @@ h1, h2, h3, p { margin: 0; }
 .rank-row.pinned .rank-num, .rank-num.top { background: var(--crimson); color: #fff; }
 .thumb { width: 72px; height: 72px; border-radius: 16px; object-fit: cover; flex: none; background: var(--surface-2); }
 .rank-name { font-family: var(--display); font-size: 1.125rem; font-weight: 700; line-height: 1.2; }
+/* a small heart: the member really liked this place */
+.liked-mark { display: inline-flex; vertical-align: middle; margin-left: 6px; color: var(--crimson-text); }
 .meta { display: flex; flex-wrap: wrap; gap: 2px 10px; font-size: 0.8125rem; color: var(--ink-2); }
 .meta .fact { display: inline-flex; align-items: center; gap: 4px; }
 .bar { height: 6px; border-radius: 3px; background: var(--surface-2); overflow: hidden; flex: 1; }

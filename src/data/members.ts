@@ -62,6 +62,26 @@ export function shuffled<T>(items: T[], seed: number): T[] {
   return a
 }
 
+/**
+ * More swipes for a simulated member, as if a nudge made them pick up their phone.
+ * Continues in the member's own card order and gives the same result on every run.
+ */
+export function moreSwipes(
+  memberId: string,
+  restaurants: Restaurant[],
+  features: Record<string, Features>,
+  seen: string[],
+  count: number,
+): Swipe[] {
+  const p = PERSONAS.find((x) => x.id === memberId)
+  if (!p) return []
+  const rnd = mulberry32(p.seed * 104729 + seen.length)
+  return shuffled(restaurants, p.seed)
+    .filter((r) => !seen.includes(r.id))
+    .slice(0, count)
+    .map((r) => ({ restaurantId: r.id, liked: score(p.taste, features[r.id]) + (rnd() - 0.5) * 0.3 > 0.5 }))
+}
+
 /** The other group members, with the same swipes on every run. */
 export function simulatedMembers(restaurants: Restaurant[], features: Record<string, Features>): Member[] {
   return PERSONAS.map((p) => {

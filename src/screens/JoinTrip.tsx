@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react'
 import type { TripPref } from '../types'
 import { HOTEL_AREAS } from '../data/source'
 import { useGroup, useStore } from '../store'
-import { Avatar, ChipToggle } from '../components/Bits'
+import { Avatar, ChipToggle, StepBar } from '../components/Bits'
 
 export const TRIP_PREFS: { value: TripPref; label: string }[] = [
   { value: 'traditional', label: 'Eat traditionally' },
@@ -82,6 +82,7 @@ export function TripEntry() {
     <div className="screen">
       <div className="stack" style={{ gap: 24 }}>
         <div className="stack" style={{ gap: 8 }}>
+          <StepBar step={2} />
           <p className="eyebrow">Step 2 of 3</p>
           <h1 className="title">Your trip</h1>
           <p className="muted">Join the trip your friends set up, or start one and invite them.</p>
@@ -178,6 +179,7 @@ export function InviteStep() {
     <div className="screen">
       <div className="stack" style={{ gap: 24 }}>
         <div className="stack" style={{ gap: 8 }}>
+          <StepBar step={2} />
           <p className="eyebrow">Step 2 of 3</p>
           <h1 className="title">Invite your group</h1>
           <p className="muted">Everyone who joins swipes on their own phone. You can invite more people later in Group.</p>
@@ -208,17 +210,22 @@ export function TripDetails() {
   const { state, set } = useStore()
   const owner = state.trip.role === 'owner'
   return (
-    <div className="screen">
-      <form className="stack" style={{ gap: 24 }} onSubmit={(e) => { e.preventDefault(); set({ stage: 'app' }) }}>
-        <div className="stack" style={{ gap: 8 }}>
-          <p className="eyebrow">Step 3 of 3 · Trip {state.trip.code}</p>
-          <h1 className="title">{owner ? 'Set up the trip' : 'You are in'}</h1>
-          <p className="muted">{owner ? 'Barcelona is the only city in this prototype.' : 'Two more things about your stay in Barcelona.'}</p>
+    <form className="screen-form" onSubmit={(e) => { e.preventDefault(); set({ stage: 'app' }) }}>
+      <div className="screen">
+        <div className="stack" style={{ gap: 24 }}>
+          <div className="stack" style={{ gap: 8 }}>
+            <StepBar step={3} />
+            <p className="eyebrow">Step 3 of 3 · Trip {state.trip.code}</p>
+            <h1 className="title">{owner ? 'Set up the trip' : 'You are in'}</h1>
+            <p className="muted">{owner ? 'Barcelona is the only city in this prototype.' : 'Two more things about your stay in Barcelona.'}</p>
+          </div>
+          <TripFields />
+          <button type="button" className="link" style={{ alignSelf: 'flex-start' }} onClick={() => set({ stage: owner ? 'invite' : 'trip' })}>Back</button>
         </div>
-        <TripFields />
+      </div>
+      <div className="screen-foot">
         <button className="btn primary">Start swiping</button>
-        <button type="button" className="link" style={{ alignSelf: 'flex-start' }} onClick={() => set({ stage: owner ? 'invite' : 'trip' })}>Back</button>
-      </form>
-    </div>
+      </div>
+    </form>
   )
 }

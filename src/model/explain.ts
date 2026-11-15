@@ -1,5 +1,6 @@
 import type { Features, Member, Weights } from '../types'
 import { BIAS, featurePhrase } from './features'
+import { TASTE_THRESHOLD } from './learn'
 import { rankGroup, type RankInput } from './rank'
 
 export interface Reason {
@@ -21,6 +22,23 @@ export function reasonsFor(w: Weights, x: Features, max = 2, you = false): Reaso
       positive: c > 0,
       text: featurePhrase(feature, you)[c > 0 ? 0 : 1],
     }))
+}
+
+/**
+ * What one swipe changed in the member's taste, as feature names.
+ * After a like: the features that got stronger and now count as a like.
+ * After a skip: the features that got weaker and now count as a skip.
+ * Uses the same threshold as the taste chips in Profile, so the two never disagree.
+ * Empty when the swipe did not move anything over that threshold.
+ */
+export function swipeEffect(before: Weights, after: Weights, liked: boolean, max = 2): string[] {
+  return Object.keys(after)
+    .filter((f) => f !== BIAS)
+    .map((f) => ({ f, now: after[f], change: after[f] - (before[f] ?? 0) }))
+    .filter(({ now, change }) => (liked ? change > 0 && now >= TASTE_THRESHOLD : change < 0 && now <= -TASTE_THRESHOLD))
+    .sort((a, b) => Math.abs(b.change) - Math.abs(a.change))
+    .slice(0, max)
+    .map(({ f }) => f)
 }
 
 export type MatchLevel = 'strong' | 'good' | 'mixed' | 'weak'

@@ -42,7 +42,7 @@ function Shell() {
   return (
     <div className="phone">
       {tab === 'swipe' && <SwipeScreen goToRanking={() => setTab('ranking')} />}
-      {tab === 'ranking' && <RankingScreen />}
+      {tab === 'ranking' && <RankingScreen goToSwipe={() => setTab('swipe')} />}
       {tab === 'trip' && <TripScreen />}
       {tab === 'profile' && <ProfileScreen />}
       <TabBar tab={tab} onChange={setTab} />

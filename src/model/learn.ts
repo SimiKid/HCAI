@@ -62,11 +62,12 @@ export function learn(
   for (const s of swipes) {
     const x = featuresById[s.restaurantId]
     if (!x) continue
-    w = update(w, x, s.liked)
-    // @hcai HOR-05 When the member says what a swipe was about, that part of the card is learned twice more, the rest once
+    // @hcai HOR-05 When the member says what a swipe was about, only that part of the card is learned, three times as strongly
     if (s.because) {
       const about = focus(x, s.because)
-      w = update(update(w, about, s.liked), about, s.liked)
+      for (let i = 0; i < 3; i++) w = update(w, about, s.liked)
+    } else {
+      w = update(w, x, s.liked)
     }
   }
   // @hcai AMR-09 A taste the member removed in "What the app thinks you like" is forgotten, whatever the swipes said
@@ -83,10 +84,13 @@ export function confidence(swipeCount: number): { level: ConfidenceLevel; label:
   return { level: 'high', label: 'Clear picture' }
 }
 
+/** A weight this far from zero counts as a taste: it shows as a chip in Profile and can be named after a swipe. */
+export const TASTE_THRESHOLD = 0.25
+
 /** Features sorted from most liked to most skipped, without the bias. */
 export function tasteProfile(w: Weights): { feature: string; weight: number }[] {
   return Object.entries(w)
-    .filter(([f, v]) => f !== BIAS && Math.abs(v) >= 0.25)
+    .filter(([f, v]) => f !== BIAS && Math.abs(v) >= TASTE_THRESHOLD)
     .map(([feature, weight]) => ({ feature, weight }))
     .sort((a, b) => b.weight - a.weight)
 }

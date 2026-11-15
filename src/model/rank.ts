@@ -32,6 +32,23 @@ export function conflictsFor(r: Restaurant, member: Member): Conflict[] {
   return out
 }
 
+/** The member's latest swipe on a place: true for a like, false for a skip, null when they have not swiped it. */
+export function swipeOn(member: Member, restaurantId: string): boolean | null {
+  let liked: boolean | null = null
+  for (const s of member.swipes) if (s.restaurantId === restaurantId) liked = s.liked
+  return liked
+}
+
+/** The places every member can eat at. Only these reach the swipe deck and the group ranking. */
+export function groupPlaces(restaurants: Restaurant[], members: Member[]): Restaurant[] {
+  return restaurants.filter((r) => members.every((m) => conflictsFor(r, m).length === 0))
+}
+
+/** How many of these places the member has not swiped yet. Zero means there is nothing left to ask them. */
+export function leftToSwipe(member: Member, places: Restaurant[]): number {
+  return places.filter((r) => swipeOn(member, r.id) === null).length
+}
+
 export type GroupRule = 'average' | 'least-misery'
 
 export interface RankInput {
@@ -64,7 +81,10 @@ export function rankGroup({ restaurants, members, weights, features, pinnedId, b
     let lowestMemberId = members[0]?.id ?? ''
     for (const m of members) {
       const w = boost ? addWeights(weights[m.id] ?? {}, boost) : (weights[m.id] ?? {})
-      const s = score(w, features[r.id])
+      const guess = score(w, features[r.id])
+      // @hcai HOR-02 A real swipe beats the guess: a place the member liked counts as a match for them and a skipped one does not, the guess only orders the rest
+      const swiped = swipeOn(m, r.id)
+      const s = swiped === null ? guess : swiped ? 0.9 + 0.1 * guess : 0.1 * guess
       memberScores[m.id] = s
       sum += s
       if (s < memberScores[lowestMemberId]) lowestMemberId = m.id
@@ -89,10 +109,40 @@ export type Reservation =
   | { kind: 'slot'; time: string }
   | { kind: 'none' }
 
-/** When a party of this size can expect a table tonight. */
-export function expectedReservation(r: Restaurant, partySize: number): Reservation {
-  const { walkInUpTo, slots } = r.sample.reservation
+const noon = (iso: string) => new Date(iso + 'T12:00:00')
+const pad = (n: number) => String(n).padStart(2, '0')
+
+/** The nights of a trip as ISO dates, from the first to the last day, at most a week. */
+export function tripNights(from: string, to: string): string[] {
+  const day = noon(from)
+  const last = noon(to)
+  if (Number.isNaN(day.getTime())) return []
+  const nights: string[] = []
+  while (nights.length < 7 && (nights.length === 0 || day <= last)) {
+    nights.push(`${day.getFullYear()}-${pad(day.getMonth() + 1)}-${pad(day.getDate())}`)
+    day.setDate(day.getDate() + 1)
+  }
+  return nights
+}
+
+/** Sample rule: Friday and Saturday are the busy nights. */
+export function isBusyNight(night: string): boolean {
+  const weekday = noon(night).getDay()
+  return weekday === 5 || weekday === 6
+}
+
+/** The table times of a place on one night. On a busy night the two earliest times are taken. */
+export function slotsOn(r: Restaurant, night?: string): Restaurant['sample']['reservation']['slots'] {
+  const { slots } = r.sample.reservation
+  return night && isBusyNight(night) ? slots.slice(2) : slots
+}
+
+/** When a party of this size can expect a table. Without a night, an ordinary weekday is assumed. */
+export function expectedReservation(r: Restaurant, partySize: number, night?: string): Reservation {
+  const busy = night ? isBusyNight(night) : false
+  // on a busy night a walk-in only works for a smaller party
+  const walkInUpTo = r.sample.reservation.walkInUpTo - (busy ? 2 : 0)
   if (partySize <= walkInUpTo) return { kind: 'walk-in' }
-  const slot = slots.find((s) => s.maxParty >= partySize)
+  const slot = slotsOn(r, night).find((s) => s.maxParty >= partySize)
   return slot ? { kind: 'slot', time: slot.time } : { kind: 'none' }
 }

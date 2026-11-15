@@ -1,81 +1,105 @@
 import { useMemo, useRef, useState } from 'react'
-import type { Because } from '../types'
+import type { Because, Restaurant, Swipe } from '../types'
 import { useGroup, useStore } from '../store'
 import { shuffled } from '../data/members'
-import { CUISINE_LABEL, distanceKm } from '../model/features'
-import { confidence } from '../model/learn'
-import { conflictsFor } from '../model/rank'
+import { distanceKm, featureLabel } from '../model/features'
+import { swipeEffect } from '../model/explain'
+import { confidence, learn } from '../model/learn'
+import { tableMatch, type TableMatch } from '../model/match'
+import { groupPlaces } from '../model/rank'
 import { AnimatePresence } from 'framer-motion'
 import { SwipeCard, type SwipeCardHandle } from '../components/SwipeCard'
 import { PlaceSheet } from '../components/PlaceSheet'
 import { GroupTable, type Reaction } from '../components/GroupTable'
+import { TableMatchOverlay } from '../components/TableMatch'
 import { swipes } from '../components/Bits'
 import { ConfidenceDots } from '../components/ConfidenceDots'
 import { HeartIcon, UndoIcon, XIcon } from '../components/Icons'
 
-const listNames = (names: string[]) =>
-  names.length <= 1 ? names.join('') : `${names.slice(0, -1).join(', ')} and ${names[names.length - 1]}`
-
-const WHY: { id: Because; label: string }[] = [
-  { id: 'food', label: 'The food' },
-  { id: 'vibe', label: 'The vibe' },
-  { id: 'price', label: 'The price' },
-  { id: 'near', label: 'The location' },
+/** `label` is on the chip, `phrase` is used in the sentence after a tap. */
+const WHY: { id: Because; label: string; phrase: string }[] = [
+  { id: 'food', label: 'Food', phrase: 'The food' },
+  { id: 'vibe', label: 'Vibe', phrase: 'The vibe' },
+  { id: 'price', label: 'Price', phrase: 'The price' },
+  { id: 'near', label: 'Location', phrase: 'The location' },
 ]
 
 export function SwipeScreen({ goToRanking }: { goToRanking: () => void }) {
   const { state, set, restaurants } = useStore()
-  const { actor, hotel, members } = useGroup()
+  const { actor, hotel, members, features } = useGroup()
   const [more, setMore] = useState(false)
   const [echo, setEcho] = useState<Record<string, Reaction>>({})
-  const [ask, setAsk] = useState<{ liked: boolean } | null>(null)
+  // the question names the place, because the next card is already on screen when it shows
+  const [ask, setAsk] = useState<{ liked: boolean; name: string } | null>(null)
+  const [match, setMatch] = useState<{ restaurant: Restaurant; match: TableMatch } | null>(null)
   const card = useRef<SwipeCardHandle>(null)
   const [feedback, setFeedback] = useState('')
 
-  // @hcai FAIR-09 The deck is in a fixed shuffled order, not sorted by predicted taste, so every place gets the same chance to be seen
+  // the deck only changes when someone's diet or allergies change, not on every swipe
+  const dietKey = members.map((m) => [...m.diets, ...m.allergies].join(',')).join('|')
+  // @hcai FAIR-09 The deck is in a fixed shuffled order, not sorted by predicted taste, so every place the group can eat at gets the same chance to be seen
   const deck = useMemo(
-    () => shuffled(restaurants, 7).filter((r) => conflictsFor(r, actor).length === 0),
-    [restaurants, actor.diets, actor.allergies], // eslint-disable-line react-hooks/exhaustive-deps
+    // a place that one member cannot eat at never reaches the group ranking, so nobody spends a swipe on it
+    () => groupPlaces(shuffled(restaurants, 7), members),
+    [restaurants, dietKey], // eslint-disable-line react-hooks/exhaustive-deps
   )
   const mine = state.swipes[actor.id] ?? []
-  const current = deck.length ? deck[mine.length % deck.length] : null
-  const next = deck.length > 1 ? deck[(mine.length + 1) % deck.length] : null
+  // the next cards are the places not swiped yet, so the deck ends after one pass and never repeats
+  const swipedIds = new Set(mine.map((s) => s.restaurantId))
+  const todo = deck.filter((r) => !swipedIds.has(r.id))
+  const current = todo[0] ?? null
+  const next = todo[1] ?? null
   const conf = confidence(actor.swipes.length)
   const hidden = restaurants.length - deck.length
 
+  // What a swipe changed, in the words of the taste chips in Profile. Both read the same weights
+  // with the same threshold, so this line can never say something that the Profile contradicts.
+  const effectLine = (before: Swipe[], after: Swipe[], liked: boolean): string => {
+    const weightsBefore = learn(actor.tripPrefs, before, features, actor.muted)
+    const weightsAfter = learn(actor.tripPrefs, after, features, actor.muted)
+    const named = swipeEffect(weightsBefore, weightsAfter, liked).map(featureLabel)
+    if (named.length === 0) return ''
+    return liked ? `Stronger in your likes: ${named.join(', ')}.` : `Stronger in what you skip: ${named.join(', ')}.`
+  }
+
   const decide = (liked: boolean) => {
     if (!current) return
+    const swipe: Swipe = { restaurantId: current.id, liked }
     set((s) => ({
-      swipes: { ...s.swipes, [actor.id]: [...(s.swipes[actor.id] ?? []), { restaurantId: current.id, liked }] },
+      swipes: { ...s.swipes, [actor.id]: [...(s.swipes[actor.id] ?? []), swipe] },
     }))
-    const what = `${CUISINE_LABEL[current.primaryType]} and ${current.sample.vibes[0]} places`
     // friends who liked the same place lean in only after my own swipe, so nobody swipes to fit in
-    setAsk({ liked })
+    setAsk({ liked, name: current.displayName })
+    // a table match is only shown after my own like, and only real swipes of the others count
+    const found = liked ? tableMatch(current.id, actor.id, members) : null
+    setMatch(found ? { restaurant: current, match: found } : null)
     const fans = liked
       ? members.filter((m) => m.id !== actor.id && m.swipes.some((s) => s.restaurantId === current.id && s.liked))
       : []
     setEcho(liked ? Object.fromEntries([actor, ...fans].map((m) => [m.id, 'liked' as Reaction])) : {})
-    // @hcai AMR-16 After each swipe one line says how it changes the ranking
-    setFeedback(
-      fans.length
-        ? `${listNames(fans.map((m) => m.name))} liked this too. ${what} move up for you.`
-        : liked ? `Noted. ${what} move up for you.` : `Noted. ${what} move down a little.`,
-    )
+    // @hcai AMR-16 After each swipe one line names what got stronger in the member's taste, in the same words as the chips in Profile
+    // who else liked the place already shows as hearts on the table in the header
+    setFeedback(effectLine(actor.swipes, [...actor.swipes, swipe], liked) || 'Noted. Your taste picture stays the same for now.')
   }
   // @hcai AMR-15 One optional tap after a swipe says what it was about (food, vibe, price or location), beyond like and skip
-  const because = (b: Because, label: string) => {
+  const because = (b: Because, phrase: string) => {
     set((s) => {
       const list = [...(s.swipes[actor.id] ?? [])]
       if (list.length) list[list.length - 1] = { ...list[list.length - 1], because: b }
       return { swipes: { ...s.swipes, [actor.id]: list } }
     })
-    setFeedback(ask?.liked ? `Got it. ${label} counts more for you now.` : `Got it. ${label} was the problem.`)
+    // the answer narrows the swipe to one part of the card, so the line is worked out again from that
+    const last = actor.swipes[actor.swipes.length - 1]
+    const before = actor.swipes.slice(0, -1)
+    const effect = last ? effectLine(before, [...before, { ...last, because: b }], last.liked) : ''
+    setFeedback(`Only ${phrase.toLowerCase()} counts for this one. ${effect}`.trim())
     setAsk(null)
   }
   const undo = () => {
     set((s) => ({ swipes: { ...s.swipes, [actor.id]: (s.swipes[actor.id] ?? []).slice(0, -1) } }))
     setEcho({})
     setAsk(null)
+    setMatch(null)
     setFeedback('Last swipe undone.')
   }
 
@@ -111,20 +135,15 @@ export function SwipeScreen({ goToRanking }: { goToRanking: () => void }) {
               onMore={() => setMore(true)}
             />
           </div>
-          <p className="feedback" role="status">
-            {feedback ||
-              (mine.length >= deck.length
-                ? `You have seen all ${deck.length} places. Keep going to refine your taste.`
-                : hidden > 0
-                  ? `${hidden} places are hidden because of your diet or allergies.`
-                  : 'Swipe right to like, left to skip. Tap the photo for more pictures.')}
-          </p>
+          <p className="feedback" role="status">{feedback || 'Swipe right to like, left to skip.'}</p>
           {ask && (
-            <div className="chips scroll" role="group" aria-label={ask.liked ? 'What won you over?' : 'What put you off?'} style={{ paddingBottom: 4 }}>
-              <span className="small strong" style={{ alignSelf: 'center', whiteSpace: 'nowrap' }}>{ask.liked ? 'What won you over?' : 'What put you off?'}</span>
-              {WHY.map((w) => (
-                <button key={w.id} className="chip why" onClick={() => because(w.id, w.label)}>{w.label}</button>
-              ))}
+            <div className="why-ask" role="group" aria-labelledby="why-q">
+              <p className="small muted" id="why-q">{ask.liked ? `What won you over at ${ask.name}?` : `What put you off at ${ask.name}?`}</p>
+              <div className="chips">
+                {WHY.map((w) => (
+                  <button key={w.id} className="chip why" onClick={() => because(w.id, w.phrase)}>{w.label}</button>
+                ))}
+              </div>
             </div>
           )}
           {/* @hcai DM-11 Like, skip and undo are buttons too, so the swipe gesture is never the only way */}
@@ -135,10 +154,20 @@ export function SwipeScreen({ goToRanking }: { goToRanking: () => void }) {
             <span style={{ width: 48 }} aria-hidden="true" />
           </div>
         </>
+      ) : deck.length > 0 ? (
+        <div className="card stack" style={{ marginTop: 24 }}>
+          <p className="h2">You have seen all {deck.length} places.</p>
+          <p className="muted small">
+            Your swipes are in the group ranking.
+            {hidden > 0 && ` ${hidden} more places are left out because of a diet or allergy in your group.`}
+          </p>
+          <button className="btn primary" onClick={goToRanking}>See the group ranking</button>
+          <button className="btn" onClick={undo} disabled={mine.length === 0}>Undo last swipe</button>
+        </div>
       ) : (
         <div className="card stack" style={{ marginTop: 24 }}>
-          <p className="strong">No places match your diet and allergies.</p>
-          <p className="muted small">Change them in Profile to see places again.</p>
+          <p className="strong">No places work for every diet and allergy in your group.</p>
+          <p className="muted small">Change yours in Profile to see places again.</p>
         </div>
       )}
     </div>
@@ -147,6 +176,12 @@ export function SwipeScreen({ goToRanking }: { goToRanking: () => void }) {
         <PlaceSheet restaurant={current} distanceKm={distanceKm(hotel, current.location)} hotelLabel={hotel.label}
           party={members.length} onClose={() => setMore(false)}
           onDecide={(liked) => { setMore(false); card.current?.fling(liked) }} />
+      )}
+    </AnimatePresence>
+    <AnimatePresence>
+      {match && (
+        <TableMatchOverlay restaurant={match.restaurant} viewer={actor} members={members} match={match.match}
+          onClose={() => setMatch(null)} onRanking={() => { setMatch(null); goToRanking() }} />
       )}
     </AnimatePresence>
     </>

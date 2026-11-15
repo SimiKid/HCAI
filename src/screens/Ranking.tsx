@@ -1,13 +1,14 @@
 import { useMemo, useState } from 'react'
 import { AnimatePresence } from 'framer-motion'
-import type { Weights } from '../types'
-import { useGroup, useStore } from '../store'
+import type { Member, Weights } from '../types'
+import { nightLabel, useGroup, useNight, useStore } from '../store'
 import { confidence } from '../model/learn'
 import { sharedReasons } from '../model/explain'
-import { rankGroup, type RankInput, type Ranked } from '../model/rank'
-import { Avatar, Segmented } from '../components/Bits'
+import { groupPlaces, leftToSwipe, rankGroup, swipeOn, type GroupRule, type RankInput, type Ranked } from '../model/rank'
+import { Avatar, InfoHeading, Segmented } from '../components/Bits'
 import { RankRow } from '../components/RankRow'
 import { FrontRunner, TooEarly } from '../components/FrontRunner'
+import { GroupProgress } from '../components/GroupProgress'
 import { WhySheet } from '../components/WhySheet'
 import { MapView } from '../components/MapView'
 import { ChevronIcon } from '../components/Icons'
@@ -20,10 +21,17 @@ const BOOSTS: { id: string; label: string; weights: Weights }[] = [
   { id: 'top', label: 'Top rated', weights: { rated: 3 } },
 ]
 
-export function RankingScreen() {
+/** How many places the list shows before "Show all". */
+const TOP = 10
+
+const RULE_LABEL: Record<GroupRule, string> = { average: 'Best on average', 'least-misery': 'Nobody left unhappy' }
+
+export function RankingScreen({ goToSwipe }: { goToSwipe: () => void }) {
   const { state, set, restaurants } = useStore()
   const group = useGroup()
+  const night = useNight()
   const { members, weights, features, actor } = group
+  const [adjust, setAdjust] = useState(false)
   const [view, setView] = useState<'list' | 'map'>('list')
   const [scope, setScope] = useState<'group' | 'mine'>('group')
   const [excluded, setExcluded] = useState<string[]>([])
@@ -31,6 +39,7 @@ export function RankingScreen() {
   const [openId, setOpenId] = useState<string | null>(null)
   const [showBlocked, setShowBlocked] = useState(false)
   const [showRough, setShowRough] = useState(false)
+  const [showAll, setShowAll] = useState(false)
 
   const included = scope === 'mine' ? [actor] : members.filter((m) => !excluded.includes(m.id))
   const party = scope === 'mine' ? members.length : included.length
@@ -52,10 +61,22 @@ export function RankingScreen() {
   const pinnedBy = state.pin ? members.find((m) => m.id === state.pin!.by) : undefined
   const openIndex = ranked.findIndex((r) => r.restaurant.id === openId)
 
-  // @hcai AMR-10 Until everyone at the table has 8 swipes there is no front-runner, only an unordered shortlist of three
-  const waiting = scope === 'group' ? included.filter((m) => confidence(m.swipes.length).level === 'low') : []
+  // someone with nothing left to swipe is never waited for, or a short deck (strict diets) would block the ranking for good
+  const places = groupPlaces(restaurants, members)
+  const left = (m: Member) => leftToSwipe(m, places)
+  // @hcai AMR-10 Until everyone at the table has 8 swipes, or has seen every place they can eat at, there is no front-runner, only an unordered shortlist of three
+  const waiting = scope === 'group' ? included.filter((m) => confidence(m.swipes.length).level === 'low' && left(m) > 0) : []
   const tooEarly = waiting.length > 0 && !ranked[0]?.pinned
   const shortlist = tooEarly ? [...ranked.slice(0, 3)].sort((a, b) => a.restaurant.displayName.localeCompare(b.restaurant.displayName)) : []
+
+  // number one is already on the front-runner plate, so the list starts at number two
+  const firstRow = scope === 'group' && !tooEarly ? 1 : 0
+  const rows = ranked.slice(firstRow, showAll ? ranked.length : TOP)
+  // the bar compares a place with the best and the worst place in the list, so small score gaps stay visible
+  const listScores = ranked.filter((r) => !r.pinned).map((r) => r.groupScore)
+  const best = Math.max(...listScores)
+  const worst = Math.min(...listScores)
+  const barPercent = (score: number) => (best === worst ? 100 : Math.round(15 + (85 * (score - worst)) / (best - worst)))
 
   const whyLine = (item: Ranked): string => {
     const { named, summary } = sharedReasons(included, weights, features[item.restaurant.id], actor.id)
@@ -79,41 +100,75 @@ export function RankingScreen() {
     if (next.length < members.length) setExcluded(next) // at least one member stays in
   }
 
+  // one line that says what the folded settings are set to
+  const people = included.length === members.length ? `All ${members.length} people` : `${included.length} of ${members.length} people`
+  const summary = [night.label, scope === 'group' ? people : 'Only your taste', scope === 'group' ? RULE_LABEL[state.rule] : '']
+    .filter(Boolean)
+    .join(' · ')
+
   return (
     <>
       <div className="screen" style={view === 'map' ? { display: 'flex', flexDirection: 'column' } : undefined}>
-        <div className="stack">
+        <div className="stack" style={{ gap: 12 }}>
           <h1 className="title">{scope === 'group' ? 'Group ranking' : actor.id === 'me' ? 'Your ranking' : `${actor.name}'s ranking`}</h1>
           <div className="row">
             <div className="grow"><Segmented label="Whose ranking" value={scope} onChange={setScope} options={[{ value: 'group', label: 'Group' }, { value: 'mine', label: actor.id === 'me' ? 'Mine' : actor.name }]} /></div>
             <div className="grow"><Segmented label="View" value={view} onChange={setView} options={[{ value: 'list', label: 'List' }, { value: 'map', label: 'Map' }]} /></div>
           </div>
 
-          {scope === 'group' ? (
-            // @hcai FAIR-16 The people filter lets anyone switch members off and see whose taste shapes the list, with each swipe count in view
-            <div className="stack" style={{ gap: 6 }}>
-              <div className="chips scroll" role="group" aria-label="People in the ranking">
-                {members.map((m) => {
-                  const on = !excluded.includes(m.id)
-                  return (
-                    <button key={m.id} className={on ? 'chip' : 'chip off'} aria-pressed={on} onClick={() => toggleMember(m.id)}
-                      aria-label={`${m.id === 'me' ? 'You' : m.name}, ${m.swipes.length} swipes, ${on ? 'included' : 'left out'}`}
-                      style={on ? { background: 'var(--bg)', color: 'var(--ink)', borderColor: m.color } : undefined}>
-                      <Avatar member={m} small />{m.id === 'me' ? 'You' : m.name}<span className="count">{m.swipes.length}</span>
-                    </button>
-                  )
-                })}
-              </div>
-              <p className="tiny muted">Everyone counts the same, however much they swiped. The number is their swipes. Tap a name to leave someone out.</p>
-              <Segmented label="How the group is counted" value={state.rule} onChange={(rule) => set({ rule })}
-                options={[{ value: 'average', label: 'Best on average' }, { value: 'least-misery', label: 'Nobody left unhappy' }]} />
-              <p className="tiny muted">
-                {state.rule === 'average'
-                  ? 'The highest average wins, even if one of you is lukewarm about it.'
-                  : 'A place only counts as much as it suits the least happy person.'}
-              </p>
+          {/* the settings fold into one line that always shows their state, so the front-runner is the first thing on screen */}
+          <button className="adjust" aria-expanded={adjust} aria-controls="adjust-panel" onClick={() => setAdjust(!adjust)}>
+            <span className="grow">{summary}</span>
+            <span className="adjust-cta">{adjust ? 'Done' : 'Adjust'}<ChevronIcon size={16} style={{ transform: adjust ? 'rotate(-90deg)' : 'rotate(90deg)' }} /></span>
+          </button>
+
+          {adjust && (
+            <div className="adjust-panel stack" id="adjust-panel" style={{ gap: 14 }}>
+              {night.nights.length > 1 && (
+                <div className="stack" style={{ gap: 6 }}>
+                  <InfoHeading level="label" title="Dinner on" info="Table times follow the night. Friday and Saturday are busier." />
+                  <div className="chips" role="group" aria-label="Dinner on">
+                    {night.nights.map((iso) => (
+                      <button key={iso} className="chip" aria-pressed={iso === night.iso} onClick={() => set({ night: iso })}>{nightLabel(iso)}</button>
+                    ))}
+                  </div>
+                </div>
+              )}
+              {scope === 'group' && (
+                <>
+                  {/* @hcai FAIR-16 The people filter lets anyone switch members off and see whose taste shapes the list, with each swipe count in view */}
+                  <div className="stack" style={{ gap: 6 }}>
+                    <InfoHeading level="label" title="Who counts"
+                      info="Everyone counts the same, however much they swiped. The number next to a name is their swipes. Tap a name to leave someone out." />
+                    <div className="chips" role="group" aria-label="Who counts">
+                      {members.map((m) => {
+                        const on = !excluded.includes(m.id)
+                        return (
+                          <button key={m.id} className={on ? 'chip' : 'chip off'} aria-pressed={on} onClick={() => toggleMember(m.id)}
+                            aria-label={`${m.id === 'me' ? 'You' : m.name}, ${m.swipes.length} swipes, ${on ? 'included' : 'left out'}`}
+                            style={on ? { background: 'var(--bg)', color: 'var(--ink)', borderColor: m.color } : undefined}>
+                            <Avatar member={m} small />{m.id === 'me' ? 'You' : m.name}<span className="count">{m.swipes.length}</span>
+                          </button>
+                        )
+                      })}
+                    </div>
+                  </div>
+                  <div className="stack" style={{ gap: 6 }}>
+                    <p className="label">How the group is counted</p>
+                    <Segmented label="How the group is counted" value={state.rule} onChange={(rule) => set({ rule })}
+                      options={[{ value: 'average', label: RULE_LABEL.average }, { value: 'least-misery', label: RULE_LABEL['least-misery'] }]} />
+                    <p className="tiny muted">
+                      {state.rule === 'average'
+                        ? 'The highest average wins, even if one of you is lukewarm about it.'
+                        : 'A place only counts as much as it suits the least happy person.'}
+                    </p>
+                  </div>
+                </>
+              )}
             </div>
-          ) : (
+          )}
+
+          {scope === 'mine' && (
             <div className="stack" style={{ gap: 6 }}>
               <div className="chips scroll" role="group" aria-label="Re-rank by">
                 {BOOSTS.map((b) => (
@@ -132,12 +187,14 @@ export function RankingScreen() {
           <div className="stack" style={{ marginTop: 16, gap: 10 }}>
             {tooEarly && (
               <>
-                <TooEarly members={included} waiting={waiting} />
+                <TooEarly members={included} waiting={waiting} left={left} />
+                {/* open here: without a front-runner, getting people to swipe is the next thing to do */}
+                <GroupProgress members={included} features={features} actorId={actor.id} left={left} onSwipeMore={goToSwipe} defaultOpen />
                 <h2 className="h2" style={{ marginTop: 12 }}>Shortlist so far</h2>
                 <p className="tiny muted" style={{ marginTop: -6 }}>Three places that look promising, in no particular order.</p>
                 <ol className="stack" style={{ listStyle: 'none', margin: 0, padding: 0, gap: 10 }}>
                   {shortlist.map((item) => (
-                    <RankRow key={item.restaurant.id} rank={0} unranked item={item} party={party} whyLine={whyLine(item)}
+                    <RankRow key={item.restaurant.id} rank={0} unranked item={item} whyLine={whyLine(item)} liked={swipeOn(actor, item.restaurant.id) === true}
                       onOpen={() => setOpenId(item.restaurant.id)} />
                   ))}
                 </ol>
@@ -147,16 +204,30 @@ export function RankingScreen() {
             )}
             {scope === 'group' && !tooEarly && ranked.length > 0 && (
               <>
-                <FrontRunner item={ranked[0]} members={included} party={party} pinnedBy={pinnedBy} onOpen={() => setOpenId(ranked[0].restaurant.id)} />
-                {ranked.length > 1 && <h2 className="h2" style={{ marginTop: 12 }}>Runners-up</h2>}
+                <FrontRunner item={ranked[0]} members={included} viewerId={actor.id} party={party} pinnedBy={pinnedBy} onOpen={() => setOpenId(ranked[0].restaurant.id)} />
+                <GroupProgress members={included} features={features} actorId={actor.id} left={left} onSwipeMore={goToSwipe} />
+                {ranked.length > 1 && (
+                  <div style={{ marginTop: 12 }}>
+                    <InfoHeading title="Runners-up" info="The bar compares each place with the best and the worst in this list. Tap a place to see its bill." />
+                  </div>
+                )}
               </>
             )}
-            {(!tooEarly || showRough) && <ol className="stack" style={{ listStyle: 'none', margin: 0, padding: 0, gap: 10 }}>
-              {ranked.slice(scope === 'group' && !tooEarly ? 1 : 0).map((item, j) => ({ item, i: j + (scope === 'group' && !tooEarly ? 1 : 0) })).map(({ item, i }) => (
-                <RankRow key={item.restaurant.id} rank={i + 1} item={item} party={party} whyLine={whyLine(item)}
-                  pinnedBy={pinnedBy} onOpen={() => setOpenId(item.restaurant.id)} />
-              ))}
-            </ol>}
+            {(!tooEarly || showRough) && (
+              <>
+                <ol className="stack" style={{ listStyle: 'none', margin: 0, padding: 0, gap: 10 }}>
+                  {rows.map((item, j) => (
+                    <RankRow key={item.restaurant.id} rank={firstRow + j + 1} item={item} whyLine={whyLine(item)} liked={swipeOn(actor, item.restaurant.id) === true}
+                      barPercent={barPercent(item.groupScore)} pinnedBy={pinnedBy} onOpen={() => setOpenId(item.restaurant.id)} />
+                  ))}
+                </ol>
+                {ranked.length > TOP && (
+                  <button className="link" style={{ alignSelf: 'flex-start' }} onClick={() => setShowAll(!showAll)}>
+                    {showAll ? `Show the top ${TOP} only` : `Show all ${ranked.length} places`}
+                  </button>
+                )}
+              </>
+            )}
             {blocked.length > 0 && (
               // @hcai ERR-12 Places removed by a diet or allergy are not silently dropped: the list says how many, and why for each
               <div className="card stack" style={{ gap: 8 }}>

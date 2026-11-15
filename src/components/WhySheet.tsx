@@ -1,15 +1,15 @@
-import { useEffect, useRef } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { motion } from 'framer-motion'
 import type { Member } from '../types'
-import { useStore, type Group } from '../store'
+import { useNight, useStore, type Group } from '../store'
 import { CUISINE_LABEL, distanceKm } from '../model/features'
 import { confidence } from '../model/learn'
 import { matchLevel, rankWithout, sharedReasons } from '../model/explain'
-import { expectedReservation, type RankInput, type Ranked } from '../model/rank'
+import { expectedReservation, slotsOn, swipeOn, type RankInput, type Ranked } from '../model/rank'
 import { Avatar, count, km, price, swipes } from './Bits'
-import { Gallery } from './Gallery'
+import { DataNote, Gallery } from './Gallery'
 import { reservationText } from './RankRow'
-import { CrownIcon, XIcon } from './Icons'
+import { ChevronIcon, CrownIcon, HeartIcon, XIcon } from './Icons'
 
 interface Props {
   item: Ranked
@@ -24,6 +24,7 @@ interface Props {
 /** "The bill": why a place is where it is, itemised per person like a restaurant receipt. */
 export function WhySheet({ item, rank, input, group, party, canPin, onClose }: Props) {
   const { state, set } = useStore()
+  const night = useNight()
   const r = item.restaurant
   const x = group.features[r.id]
   const closeRef = useRef<HTMLButtonElement>(null)
@@ -38,7 +39,11 @@ export function WhySheet({ item, rank, input, group, party, canPin, onClose }: P
   const lowest = input.members.find((m) => m.id === item.lowestMemberId)
   const who = (m: Member) => (m.id === 'me' ? 'You' : m.name)
   const viewerId = group.actor.id
+  // one person's reasons are open at a time, and the sheet starts with the viewer's own
+  const [openMember, setOpenMember] = useState<string | null>(viewerId)
+  const [showTimes, setShowTimes] = useState(false)
   const shared = sharedReasons(input.members, group.weights, x, viewerId)
+  const viewerSwiped = swipeOn(group.actor, r.id) !== null
   const open = (m: Member) => m.id === viewerId || m.sharesReasons
 
   // which member moves this place most when they are left out
@@ -81,29 +86,49 @@ export function WhySheet({ item, rank, input, group, party, canPin, onClose }: P
               <div className="bill-center">
                 <p className="bill-caps">The bill · Trip {state.trip.code || 'BCN'}</p>
                 <h2 className="bill-title" id="bill-h">{r.displayName}</h2>
+                {/* the verdict comes first, the details that left the list rows come after it */}
+                <p className="bill-verdict">{item.pinned ? 'Pinned to the top' : `Number ${rank} · ${matchLevel(item.groupScore).label}`}</p>
                 <p className="bill-small">
-                  {CUISINE_LABEL[r.primaryType]} · {price(r.priceLevel)} · {r.rating.toFixed(1)} stars ({count(r.userRatingCount)} reviews)
+                  {CUISINE_LABEL[r.primaryType]} in {r.neighbourhood} · {price(r.priceLevel)} · {r.rating.toFixed(1)} stars ({count(r.userRatingCount)} reviews)
                 </p>
                 <p className="bill-small">{r.formattedAddress} · {km(distanceKm(group.hotel, r.location))} from {group.hotel.label}</p>
               </div>
               <hr />
-              <p className="bill-caps" style={{ marginBottom: 10 }}>{item.pinned ? 'What the ranking says' : `Why it is number ${rank}`}</p>
-              {/* @hcai AMR-11 Every place explains its rank per member: a match word for everyone, plus the two reasons that mattered most */}
+              <p className="bill-caps" style={{ marginBottom: 6 }}>{item.pinned ? 'What the ranking says' : `Why it is number ${rank}`}</p>
+              {/* @hcai AMR-11 Every place explains its rank per member: a match word for everyone, and one tap shows the two reasons that mattered most */}
               {input.members.map((m) => {
                 const match = matchLevel(item.memberScores[m.id])
                 const reasons = shared.named.find((n) => n.member.id === m.id)?.reasons
                 const conf = confidence(m.swipes.length)
+                const isOpen = openMember === m.id
+                const swiped = swipeOn(m, r.id)
+                // a heart is a real like. Others' likes only show once the viewer has swiped this place too
+                const showLike = swiped === true && (m.id === viewerId || viewerSwiped)
+                // the viewer's own swipe comes first: it is a fact, the reasons after it are the app's guess
+                let ownSwipe = ''
+                if (m.id === viewerId) {
+                  if (swiped === null) ownSwipe = `${who(m)} ${m.id === 'me' ? 'have' : 'has'} not seen this place yet. `
+                  else ownSwipe = `${who(m)} ${swiped ? 'liked' : 'skipped'} this place. `
+                }
                 return (
                   <div key={m.id}>
-                    <div className="bill-line">
-                      <span className="who"><Avatar member={m} small />{who(m)}</span>
+                    <button className="bill-line bill-toggle" aria-expanded={isOpen} onClick={() => setOpenMember(isOpen ? null : m.id)}>
+                      <span className="who">
+                        <Avatar member={m} small />{who(m)}
+                        {showLike && <span className="liked-mark" style={{ marginLeft: 0 }} role="img" aria-label="liked it"><HeartIcon size={12} /></span>}
+                      </span>
                       <span className="dots" aria-hidden="true" />
                       <span>{match.label}</span>
-                    </div>
-                    <p className="bill-reason">
-                      {!reasons ? 'Keeps their reasons private.' : reasons.length ? sentence(reasons.map((q) => q.text)) : 'No clear signal yet.'}
-                      {conf.level === 'low' && ` Rough guess, only ${swipes(m.swipes.length)}.`}
-                    </p>
+                      <ChevronIcon size={14} style={{ flex: 'none', transform: isOpen ? 'rotate(90deg)' : undefined }} />
+                    </button>
+                    {isOpen && (
+                      <p className="bill-reason">
+                        {ownSwipe}
+                        {!reasons ? 'Keeps their reasons private.' : reasons.length ? sentence(reasons.map((q) => q.text)) : 'No clear signal yet.'}
+                        {/* a place the member really swiped is not a guess, however few swipes they have */}
+                        {conf.level === 'low' && swiped === null && ` Rough guess, only ${swipes(m.swipes.length)}.`}
+                      </p>
+                    )}
                   </div>
                 )
               })}
@@ -126,15 +151,20 @@ export function WhySheet({ item, rank, input, group, party, canPin, onClose }: P
                 </p>
               )}
               <hr />
-              <p className="bill-caps" style={{ marginBottom: 8 }}>Tables tonight</p>
-              <p>{reservationText(expectedReservation(r, party), party)}</p>
-              <div className="chips" style={{ marginTop: 10 }}>
-                {r.sample.reservation.slots.map((s) => (
-                  <span key={s.time} className={s.maxParty >= party ? 'chip static lav' : 'chip static'}>
-                    {s.time} · up to {s.maxParty}
-                  </span>
-                ))}
-              </div>
+              <p className="bill-caps" style={{ marginBottom: 8 }}>{night.label ? `Tables on ${night.label}` : 'Tables tonight'}</p>
+              <p>{reservationText(expectedReservation(r, party, night.iso), party)}</p>
+              <button className="bill-link" aria-expanded={showTimes} onClick={() => setShowTimes(!showTimes)}>
+                {showTimes ? 'Hide the times' : 'See all times'}
+              </button>
+              {showTimes && (
+                <div className="chips" style={{ marginTop: 6 }}>
+                  {slotsOn(r, night.iso).map((s) => (
+                    <span key={s.time} className={s.maxParty >= party ? 'chip static lav' : 'chip static'}>
+                      {s.time} · up to {s.maxParty}
+                    </span>
+                  ))}
+                </div>
+              )}
               <hr />
               <p className="bill-small bill-center">A guess, not a verdict. Your group has the last word.</p>
             </section>
@@ -151,15 +181,17 @@ export function WhySheet({ item, rank, input, group, party, canPin, onClose }: P
             </button>
           )}
 
+          <DataNote restaurant={r} />
+
+          {/* the one action of this sheet stays in reach at the bottom, however long the bill is */}
           {canPin && !item.pinned && (
-            <div className="stack" style={{ gap: 8 }}>
+            <div className="sheet-foot">
               <button className="btn primary" onClick={() => { set({ pin: { restaurantId: r.id, by: group.actor.id } }); onClose() }}>
                 <CrownIcon size={20} />Pin to the top for everyone
               </button>
-              <p className="small muted">Dictator mode. The whole group sees this place first, with your name on it. Anyone can undo it.</p>
+              <p className="tiny muted">Dictator mode: your name shows on it, and anyone can undo it.</p>
             </div>
           )}
-          <p className="tiny muted">Ratings, review counts, table times and “popular with” are sample values. Photos show the type of food and a similar dining room, not this restaurant. {r.photos.map((p) => p.attribution).join('; ')}.</p>
         </div>
       </motion.div>
     </>

@@ -4,7 +4,7 @@ import { HOTEL_AREAS } from './data/source'
 import { simulatedMembers } from './data/members'
 import { featuresOf } from './model/features'
 import { learn } from './model/learn'
-import type { GroupRule } from './model/rank'
+import { tripNights, type GroupRule } from './model/rank'
 
 export interface State {
   stage: 'welcome' | 'profile' | 'trip' | 'invite' | 'details' | 'app'
@@ -14,6 +14,8 @@ export interface State {
   allergies: Allergy[]
   /** `role` is 'owner' when this person started the trip, 'guest' when they joined by invite or code. */
   trip: { code: string; role: 'owner' | 'guest'; hotelId: string; from: string; to: string; prefs: TripPref[] }
+  /** The night of the trip the group plans dinner for, as an ISO date. Empty means the first night. */
+  night: string
   /** Swipes made in this app, by member id. Simulated members also have seeded swipes. */
   swipes: Record<string, Swipe[]>
   muted: Record<string, string[]>
@@ -36,6 +38,7 @@ export const initialState: State = {
   diets: [],
   allergies: [],
   trip: { code: '', role: 'guest', hotelId: 'gotic', from: '2026-11-20', to: '2026-11-23', prefs: [] },
+  night: '',
   swipes: {},
   muted: {},
   pin: null,
@@ -135,6 +138,31 @@ export function useGroup(): Group {
     const actor = members.find((m) => m.id === state.actingAs) ?? me
     return { hotel, features, members, weights, actor }
   }, [state, sims, features, hotel])
+}
+
+export interface Night {
+  /** ISO date of the chosen night, empty when the trip has no valid dates. */
+  iso: string
+  /** Short form, for example "Fri 20 Nov". */
+  label: string
+  /** For example "Friday". */
+  weekday: string
+  /** All nights of the trip, to choose from. */
+  nights: string[]
+}
+
+export function nightLabel(iso: string): string {
+  if (!iso) return ''
+  return new Date(iso + 'T12:00:00').toLocaleDateString('en-GB', { weekday: 'short', day: 'numeric', month: 'short' }).replace(',', '')
+}
+
+/** The night the group plans dinner for. Falls back to the first night when the trip dates change. */
+export function useNight(): Night {
+  const { state } = useStore()
+  const nights = tripNights(state.trip.from, state.trip.to)
+  const iso = nights.includes(state.night) ? state.night : (nights[0] ?? '')
+  const weekday = iso ? new Date(iso + 'T12:00:00').toLocaleDateString('en-GB', { weekday: 'long' }) : ''
+  return { iso, label: nightLabel(iso), weekday, nights }
 }
 
 // one tap erases everything the app learned about me, a second one deletes the whole profile

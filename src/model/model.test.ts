@@ -1,11 +1,12 @@
 import { describe, expect, it } from 'vitest'
 import type { Member, Restaurant } from '../types'
 import data from '../data/restaurants.barcelona.json'
-import { simulatedMembers } from '../data/members'
+import { moreSwipes, simulatedMembers } from '../data/members'
 import { featuresOf } from './features'
-import { confidence, learn, priorWeights, score, update } from './learn'
-import { conflictsFor, expectedReservation, rankGroup } from './rank'
-import { matchLevel, rankWithout, reasonsFor, sharedReasons } from './explain'
+import { confidence, learn, priorWeights, score, tasteProfile, update } from './learn'
+import { conflictsFor, expectedReservation, groupPlaces, isBusyNight, leftToSwipe, rankGroup, swipeOn, tripNights } from './rank'
+import { matchLevel, rankWithout, reasonsFor, sharedReasons, swipeEffect } from './explain'
+import { tableMatch } from './match'
 
 const restaurants = data as Restaurant[]
 const hotel = { latitude: 41.3833, longitude: 2.1767 }
@@ -81,7 +82,8 @@ describe('group ranking', () => {
   })
 
   it('swipe count gives no extra weight', () => {
-    const heavy = member({ id: 'a', swipes: Array(40).fill({ restaurantId: restaurants[0].id, liked: true }) })
+    // swipes on a place outside the list: only their number differs, not what is known about these places
+    const heavy = member({ id: 'a', swipes: Array(40).fill({ restaurantId: 'somewhere-else', liked: true }) })
     const one = rankGroup({ restaurants, members: [a, b], weights, features }).ranked.map((r) => r.restaurant.id)
     const two = rankGroup({ restaurants, members: [heavy, b], weights, features }).ranked.map((r) => r.restaurant.id)
     expect(two).toEqual(one)
@@ -111,6 +113,32 @@ describe('group ranking', () => {
     expect(pinned.slice(1).map((r) => r.restaurant.id)).toEqual(plain.slice(0, -1).map((r) => r.restaurant.id))
   })
 
+  it('a real swipe beats the guess for that member', () => {
+    const tapas = byType('tapas')[0].id
+    const pizza = byType('pizza')[0].id
+    // a loves pizza on paper, but skipped this pizza place and liked this tapas place
+    const swiped = member({ id: 'a', swipes: [{ restaurantId: pizza, liked: false }, { restaurantId: tapas, liked: true }] })
+    const { ranked } = rankGroup({ restaurants, members: [swiped, b], weights, features })
+    const scoreOf = (id: string) => ranked.find((r) => r.restaurant.id === id)!.memberScores.a
+    expect(scoreOf(tapas)).toBeGreaterThanOrEqual(0.9)
+    expect(scoreOf(pizza)).toBeLessThanOrEqual(0.1)
+    expect(matchLevel(scoreOf(tapas)).level).toBe('strong')
+    expect(matchLevel(scoreOf(pizza)).level).toBe('weak')
+  })
+
+  it('knows which places are left to swipe for a member', () => {
+    const vegan = member({ id: 'v', diets: ['vegan'], allergies: ['nuts'] })
+    const places = groupPlaces(restaurants, [a, vegan])
+    expect(places.length).toBeGreaterThan(0)
+    expect(places.length).toBeLessThan(8)
+    for (const r of places) expect(conflictsFor(r, vegan)).toHaveLength(0)
+    expect(leftToSwipe(a, places)).toBe(places.length)
+    const done = member({ id: 'a', swipes: places.map((r) => ({ restaurantId: r.id, liked: true })) })
+    expect(leftToSwipe(done, places)).toBe(0)
+    expect(swipeOn(done, places[0].id)).toBe(true)
+    expect(swipeOn(a, places[0].id)).toBeNull()
+  })
+
   it('a boost re-ranks without touching the learned weights', () => {
     const { ranked } = rankGroup({ restaurants, members: [a], weights, features, boost: { 'price:high': 8 } })
     expect(ranked[0].restaurant.priceLevel).toBeGreaterThanOrEqual(3)
@@ -131,13 +159,42 @@ describe('fairness rule', () => {
 })
 
 describe('asking why', () => {
-  it('a like "because of the vibe" teaches the vibe more than the cuisine', () => {
+  it('a like "because of the vibe" teaches the vibe, and nothing else on the card', () => {
     const r = byType('tapas')[0]
     const plain = learn([], [{ restaurantId: r.id, liked: true }], features)
     const vibe = learn([], [{ restaurantId: r.id, liked: true, because: 'vibe' }], features)
     const v = `vibe:${r.sample.vibes[0]}`
     expect(vibe[v]).toBeGreaterThan(plain[v])
-    expect(vibe['cuisine:tapas']).toBeCloseTo(plain['cuisine:tapas'], 10)
+    expect(plain['cuisine:tapas']).toBeGreaterThan(0)
+    expect(vibe['cuisine:tapas']).toBeUndefined()
+  })
+})
+
+describe('feedback after a swipe', () => {
+  const r = byType('tapas')[0]
+  const x = features[r.id]
+
+  it('names only what the profile now shows as a like', () => {
+    const before = {}
+    const after = learn([], [{ restaurantId: r.id, liked: true, because: 'food' }], features)
+    const named = swipeEffect(before, after, true)
+    expect(named).toContain('cuisine:tapas')
+    const chips = tasteProfile(after).filter((t) => t.weight > 0).map((t) => t.feature)
+    for (const f of named) expect(chips).toContain(f)
+  })
+
+  it('stays silent when a like does not turn a skip into a like', () => {
+    const before = { 'cuisine:tapas': -3 }
+    const after = update(before, x, true)
+    expect(after['cuisine:tapas']).toBeGreaterThan(before['cuisine:tapas'])
+    expect(swipeEffect(before, after, true)).not.toContain('cuisine:tapas')
+  })
+
+  it('names skips after a skip, never likes', () => {
+    const before = {}
+    const after = learn([], [{ restaurantId: r.id, liked: false, because: 'food' }], features)
+    expect(swipeEffect(before, after, false)).toContain('cuisine:tapas')
+    expect(swipeEffect(before, after, true)).toEqual([])
   })
 })
 
@@ -164,6 +221,50 @@ describe('reservation', () => {
       if (big.kind === 'walk-in') expect(small.kind).toBe('walk-in')
       if (small.kind === 'slot' && big.kind === 'slot') expect(big.time >= small.time).toBe(true)
     }
+  })
+
+  it('a trip has one night per day, at most a week', () => {
+    expect(tripNights('2026-11-20', '2026-11-23')).toEqual(['2026-11-20', '2026-11-21', '2026-11-22', '2026-11-23'])
+    expect(tripNights('2026-11-20', '2026-11-19')).toEqual(['2026-11-20'])
+    expect(tripNights('2026-11-20', '2026-12-31')).toHaveLength(7)
+    expect(tripNights('', '')).toEqual([])
+  })
+
+  it('a busy night never gives an earlier table', () => {
+    const friday = '2026-11-20'
+    const sunday = '2026-11-22'
+    expect(isBusyNight(friday)).toBe(true)
+    expect(isBusyNight(sunday)).toBe(false)
+    for (const r of restaurants) {
+      const quiet = expectedReservation(r, 5, sunday)
+      const busy = expectedReservation(r, 5, friday)
+      if (busy.kind === 'walk-in') expect(quiet.kind).toBe('walk-in')
+      if (quiet.kind === 'slot' && busy.kind === 'slot') expect(busy.time >= quiet.time).toBe(true)
+    }
+  })
+})
+
+describe('table match', () => {
+  const place = restaurants[0].id
+  const like = { restaurantId: place, liked: true }
+  const skip = { restaurantId: place, liked: false }
+
+  it('needs two other likes and no skip', () => {
+    const a = member({ id: 'a', swipes: [like] })
+    const b = member({ id: 'b', swipes: [like] })
+    const c = member({ id: 'c' })
+    const me = member({ id: 'me', swipes: [like] })
+    const match = tableMatch(place, 'me', [me, a, b, c])
+    expect(match?.fans.map((m) => m.id)).toEqual(['a', 'b'])
+    expect(match?.unseen.map((m) => m.id)).toEqual(['c'])
+    expect(tableMatch(place, 'me', [me, a, c])).toBeNull()
+    expect(tableMatch(place, 'me', [me, a, b, member({ id: 'd', swipes: [skip] })])).toBeNull()
+  })
+
+  it('the latest swipe on a place counts', () => {
+    const a = member({ id: 'a', swipes: [like] })
+    const changed = member({ id: 'b', swipes: [skip, like] })
+    expect(tableMatch(place, 'me', [a, changed])?.fans).toHaveLength(2)
   })
 })
 
@@ -199,5 +300,15 @@ describe('simulated members', () => {
       expect(likes).toBeGreaterThan(0)
       expect(likes).toBeLessThan(m.swipes.length)
     }
+  })
+
+  it('a nudge adds new places only and is the same on every run', () => {
+    const jonas = simulatedMembers(restaurants, features)[1]
+    const seen = jonas.swipes.map((s) => s.restaurantId)
+    const more = moreSwipes(jonas.id, restaurants, features, seen, 12)
+    expect(more).toHaveLength(12)
+    expect(more.some((s) => seen.includes(s.restaurantId))).toBe(false)
+    expect(moreSwipes(jonas.id, restaurants, features, seen, 12)).toEqual(more)
+    expect(moreSwipes('nobody', restaurants, features, [], 12)).toEqual([])
   })
 })

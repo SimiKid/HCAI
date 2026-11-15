@@ -3,8 +3,9 @@ import { motion } from 'framer-motion'
 import type { Restaurant } from '../types'
 import { CUISINE_LABEL } from '../model/features'
 import { expectedReservation } from '../model/rank'
+import { useNight } from '../store'
 import { count, km, price } from './Bits'
-import { Gallery } from './Gallery'
+import { DataNote, Gallery } from './Gallery'
 import { reservationText } from './RankRow'
 import { ClockIcon, HeartIcon, StarIcon, XIcon } from './Icons'
 
@@ -22,6 +23,7 @@ interface Props {
 /** A closer look at one place from the swipe deck, before deciding. */
 export function PlaceSheet({ restaurant: r, distanceKm, hotelLabel, party, onClose, onDecide }: Props) {
   const closeRef = useRef<HTMLButtonElement>(null)
+  const night = useNight()
   useEffect(() => {
     closeRef.current?.focus()
     const onKey = (e: KeyboardEvent) => e.key === 'Escape' && onClose()
@@ -61,15 +63,14 @@ export function PlaceSheet({ restaurant: r, distanceKm, hotelLabel, party, onClo
             </div>
             {r.sample.allergens.length > 0 && <p className="small muted">Hard to avoid here: {r.sample.allergens.join(', ')}.</p>}
           </div>
-          <p className="row" style={{ gap: 6 }}><ClockIcon size={18} />{reservationText(expectedReservation(r, party), party)}</p>
+          <p className="row" style={{ gap: 6 }}>
+            <ClockIcon size={18} />{night.label && `${night.label}: `}{reservationText(expectedReservation(r, party, night.iso), party)}
+          </p>
           <div className="row">
             <button className="btn" onClick={() => onDecide(false)}><XIcon size={20} />Skip</button>
             <button className="btn primary" onClick={() => onDecide(true)}><HeartIcon size={20} />Like</button>
           </div>
-          <p className="tiny muted">
-            Sample photos: they show the type of food and a similar dining room, not this restaurant. Vibe, diets and table times are sample values.
-            {' '}Photos: {r.photos.map((p) => p.attribution).join('; ')}.
-          </p>
+          <DataNote restaurant={r} />
         </div>
       </motion.div>
     </>

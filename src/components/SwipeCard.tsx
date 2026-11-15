@@ -2,7 +2,7 @@ import { forwardRef, useImperativeHandle, useRef, useState } from 'react'
 import { animate, motion, useMotionValue, useTransform } from 'framer-motion'
 import type { Restaurant } from '../types'
 import { CUISINE_LABEL } from '../model/features'
-import { count, km, price } from './Bits'
+import { count, price, walk } from './Bits'
 import { kindLabel } from './Gallery'
 import { InfoIcon, PinIcon, StarIcon, WalkIcon } from './Icons'
 
@@ -20,7 +20,7 @@ interface Props {
 
 /** The facts on the card, also used as its spoken description. */
 export function cardSummary(r: Restaurant, distance: number, hotelLabel: string): string {
-  return `${r.displayName}. ${CUISINE_LABEL[r.primaryType]} in ${r.neighbourhood}. Price level ${r.priceLevel} of 4. ${km(distance)} from ${hotelLabel}. Rated ${r.rating} from ${count(r.userRatingCount)} reviews.`
+  return `${r.displayName}. ${CUISINE_LABEL[r.primaryType]} in ${r.neighbourhood}. Price level ${r.priceLevel} of 4. ${walk(distance)} from ${hotelLabel}. Rated ${r.rating} from ${count(r.userRatingCount)} reviews.`
 }
 
 export const SwipeCard = forwardRef<SwipeCardHandle, Props>(function SwipeCard(
@@ -83,15 +83,16 @@ export const SwipeCard = forwardRef<SwipeCardHandle, Props>(function SwipeCard(
       )}
       <motion.span className="stamp like" style={{ opacity: likeOpacity }} aria-hidden="true">LIKE</motion.span>
       <motion.span className="stamp skip" style={{ opacity: skipOpacity }} aria-hidden="true">SKIP</motion.span>
+      {/* photo credits are in the details sheet behind the info button */}
       <div className="info" aria-hidden="true">
+        <div className="cuisine">{CUISINE_LABEL[r.primaryType]}</div>
         <div className="name">{r.displayName}</div>
         <div className="facts">
           <span className="fact"><PinIcon size={16} />{r.neighbourhood}</span>
           <span className="fact">{price(r.priceLevel)}<span style={{ opacity: 0.45 }}>{price(4 - r.priceLevel)}</span></span>
-          <span className="fact"><WalkIcon size={16} />{km(distanceKm)}</span>
+          <span className="fact"><WalkIcon size={16} />{walk(distanceKm)}</span>
           <span className="fact"><StarIcon size={15} />{r.rating.toFixed(1)} ({count(r.userRatingCount)})</span>
         </div>
-        <div className="credit" style={{ paddingRight: 56 }}>{CUISINE_LABEL[r.primaryType]} · sample photo: {shown.attribution}</div>
       </div>
       <button className="more-btn" aria-label={`More about ${r.displayName}`} onClick={() => { if (!dragged.current) onMore() }}>
         <InfoIcon size={24} />

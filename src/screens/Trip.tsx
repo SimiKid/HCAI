@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { restaurantSource } from '../data/source'
 import { useGroup, useStore } from '../store'
 import { confidence } from '../model/learn'
-import { Avatar, swipes } from '../components/Bits'
+import { Avatar, Fold, swipes } from '../components/Bits'
 import { ConfidenceDots } from '../components/ConfidenceDots'
 import { InviteCard, TripFields } from './JoinTrip'
 
@@ -61,20 +61,21 @@ export function TripScreen() {
           <InviteCard code={state.trip.code} />
         </section>
 
-        <section className="card stack" aria-labelledby="how-h" style={{ gap: 10 }}>
-          <h2 className="h2" id="how-h">How the ranking works</h2>
+        {/* the two long texts open on a tap, so the tab is first about the trip and the people */}
+        <section className="stack" aria-label="More about the app" style={{ gap: 10 }}>
+          <Fold title="How the ranking works">
           <ul className="stack small" style={{ margin: 0, paddingLeft: 18, gap: 8 }}>
             <li>The app learns from each like and skip: cuisine, vibe, price, distance and rating. It never looks at who you are.</li>
-            <li>Each person gets their own guess per place. The group score is the plain average, so everyone counts the same.</li>
+            <li>Each person gets their own guess per place. The group score is the plain average, or the lowest guess if your group chose “nobody left unhappy”. Everyone counts the same under both.</li>
             <li>Diets and allergies are not a matter of taste. A place one person cannot eat at is removed for all, without saying whose diet it was.</li>
             <li>You see your own reasons. Other people's reasons are only counted, unless they chose to share them by name.</li>
             <li>It is a guess, and a rough one with few swipes. Filter people, re-rank for yourself, or pin a place to overrule it.</li>
+            <li>In the list, the bar compares each place with the best and the worst one, so small differences show.</li>
           </ul>
-        </section>
-
-        <section className="stack" aria-labelledby="data-h" style={{ gap: 8 }}>
-          <h2 className="h2" id="data-h">About this data</h2>
-          <p className="small muted">{restaurantSource.note}</p>
+          </Fold>
+          <Fold title="About this data">
+            <p className="small muted">{restaurantSource.note} Friday and Saturday count as busy nights with fewer early tables.</p>
+          </Fold>
         </section>
       </div>
     </div>

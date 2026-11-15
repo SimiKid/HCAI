@@ -1,5 +1,38 @@
+import { useId, useState, type ReactNode } from 'react'
 import type { Member } from '../types'
 import { FoodAvatar, avatarParts } from './FoodAvatar'
+import { ChevronIcon, InfoIcon } from './Icons'
+
+/** A row that shows its content on a tap. Keeps long or secondary content one step away. */
+export function Fold({ title, children, defaultOpen = false }: { title: ReactNode; children: ReactNode; defaultOpen?: boolean }) {
+  const [open, setOpen] = useState(defaultOpen)
+  const id = useId()
+  return (
+    <div className="fold">
+      <button type="button" className="fold-head" aria-expanded={open} aria-controls={id} onClick={() => setOpen(!open)}>
+        <span className="grow">{title}</span>
+        <ChevronIcon size={18} style={{ flex: 'none', transform: open ? 'rotate(90deg)' : undefined }} />
+      </button>
+      {open && <div className="fold-body" id={id}>{children}</div>}
+    </div>
+  )
+}
+
+/** A heading with a small info button. The explanation shows on a tap, so the screen stays quiet. */
+export function InfoHeading({ title, info, level = 'h2' }: { title: string; info: string; level?: 'h2' | 'label' }) {
+  const [open, setOpen] = useState(false)
+  return (
+    <div>
+      <div className="row" style={{ gap: 2 }}>
+        {level === 'h2' ? <h2 className="h2">{title}</h2> : <p className="label">{title}</p>}
+        <button type="button" className="info-btn" aria-expanded={open} aria-label={`About: ${title}`} onClick={() => setOpen(!open)}>
+          <InfoIcon size={18} />
+        </button>
+      </div>
+      {open && <p className="tiny muted" role="note">{info}</p>}
+    </div>
+  )
+}
 
 export function Avatar({ member, small, size }: { member: Pick<Member, 'name' | 'color' | 'avatar'>; small?: boolean; size?: number }) {
   const preset = avatarParts(member.avatar).character
@@ -59,11 +92,26 @@ export function Segmented<T extends string>({
   )
 }
 
+/** Progress through the onboarding steps. The eyebrow text next to it says the same in words. */
+export function StepBar({ step, of = 3 }: { step: number; of?: number }) {
+  return (
+    <div className="steps" aria-hidden="true">
+      {Array.from({ length: of }, (_, i) => <i key={i} className={i < step ? 'on' : ''} />)}
+    </div>
+  )
+}
+
 export function Switch({ checked, onChange, label }: { checked: boolean; onChange: (v: boolean) => void; label: string }) {
   return <button type="button" role="switch" className="switch" aria-checked={checked} aria-label={label} onClick={() => onChange(!checked)} />
 }
 
+/** "Mia", "Mia and Noah", "Mia, Jonas and Noah". */
+export const listNames = (names: string[]) =>
+  names.length <= 1 ? names.join('') : `${names.slice(0, -1).join(', ')} and ${names[names.length - 1]}`
+
 export const price = (level: number) => '$'.repeat(level)
 export const km = (d: number) => (d < 1 ? `${Math.round(d * 100) * 10} m` : `${d.toFixed(1)} km`)
+/** Walking time for a distance in km, at about 4.5 km per hour. */
+export const walk = (d: number) => `${Math.max(1, Math.round(d * 13))} min walk`
 export const count = (n: number) => n.toLocaleString('en-US')
 export const swipes = (n: number) => `${n} ${n === 1 ? 'swipe' : 'swipes'}`
