@@ -19,22 +19,22 @@ interface Persona {
 // budget, a friend who only eats food they know, an organiser who wants local food.
 const PERSONAS: Persona[] = [
   {
-    id: 'mia', name: 'Mia', color: '#7C5CE0', avatar: 'avocado', diets: ['vegetarian'], allergies: [], tripPrefs: ['trendy'],
+    id: 'mia', name: 'Mia', color: '#7C5CE0', avatar: 'avocado+headphones', diets: ['vegetarian'], allergies: [], tripPrefs: ['trendy'],
     taste: { _bias: -0.3, 'cuisine:vegan': 2, 'cuisine:indian': 1.2, 'cuisine:lebanese': 1.2, 'cuisine:mexican': 1, 'vibe:trendy': 1, 'vibe:cosy': 0.6, 'cuisine:steak': -2, 'cuisine:seafood': -1.5 },
     swipeCount: 28, seed: 11,
   },
   {
-    id: 'jonas', name: 'Jonas', color: '#1F8A70', avatar: 'pizza', diets: [], allergies: [], tripPrefs: ['budget', 'near'],
+    id: 'jonas', name: 'Jonas', color: '#1F8A70', avatar: 'pizza+shades', diets: [], allergies: [], tripPrefs: ['budget', 'near'],
     taste: { _bias: -0.2, 'price:low': 2, 'price:high': -2.5, near: 1, 'cuisine:pizza': 0.8, 'cuisine:burger': 0.8, 'cuisine:mexican': 0.6 },
     swipeCount: 9, seed: 23,
   },
   {
-    id: 'elif', name: 'Elif', color: '#D9730D', avatar: 'cupcake', diets: [], allergies: [], tripPrefs: [],
+    id: 'elif', name: 'Elif', color: '#D9730D', avatar: 'egg+beret', diets: [], allergies: [], tripPrefs: [],
     taste: { _bias: -0.2, 'cuisine:pizza': 2, 'cuisine:italian': 1.8, 'cuisine:burger': 1.2, 'cuisine:steak': 1.2, 'cuisine:spanish': 0.6, 'cuisine:tapas': 0.4, 'cuisine:japanese': -2, 'cuisine:ramen': -1.5, 'cuisine:indian': -2, 'cuisine:lebanese': -1.5, 'cuisine:seafood': -1.2, 'cuisine:vegan': -1 },
     swipeCount: 17, seed: 37,
   },
   {
-    id: 'noah', name: 'Noah', color: '#2F6FDB', avatar: 'croissant', diets: [], allergies: [], tripPrefs: ['traditional', 'local'],
+    id: 'noah', name: 'Noah', color: '#2F6FDB', avatar: 'olive+moustache', diets: [], allergies: [], tripPrefs: ['traditional', 'local'],
     taste: { _bias: -0.6, 'vibe:traditional': 1.5, 'vibe:local': 1.5, 'vibe:touristy': -1.5, 'cuisine:catalan': 1.8, 'cuisine:tapas': 1.5, 'cuisine:seafood': 1.2, 'cuisine:spanish': 1, 'cuisine:pizza': -1, 'cuisine:burger': -1.5 },
     swipeCount: 36, seed: 51,
   },

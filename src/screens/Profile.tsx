@@ -3,7 +3,8 @@ import type { Allergy, Diet } from '../types'
 import { deleteProfile, eraseLearning, useGroup, useStore } from '../store'
 import { confidence, tasteProfile } from '../model/learn'
 import { featureLabel } from '../model/features'
-import { AVATARS, avatarById } from '../data/avatars'
+import { motion } from 'framer-motion'
+import { ACCESSORIES, CHARACTERS, FoodAvatar, avatarId, avatarParts } from '../components/FoodAvatar'
 import { ChipToggle, Switch, swipes } from '../components/Bits'
 import { XIcon } from '../components/Icons'
 import { ConfidenceDots } from '../components/ConfidenceDots'
@@ -25,25 +26,52 @@ const ALLERGIES: { value: Allergy; label: string }[] = [
 
 function PersonFields() {
   const { state, set } = useStore()
-  const picked = avatarById(state.avatar)
+  const { character, accessory } = avatarParts(state.avatar)
+  const pick = (c: string, a: string) => set({ avatar: avatarId(c, a) })
+  const surprise = () => {
+    const c = CHARACTERS[Math.floor(Math.random() * CHARACTERS.length)].id
+    const a = ACCESSORIES[Math.floor(Math.random() * ACCESSORIES.length)].id
+    pick(c, a)
+  }
   return (
     <>
       <div className="field">
-        <span className="label" id="avatar-label">Pick your avatar</span>
-        <div className="row" style={{ alignItems: 'flex-start', gap: 16 }}>
-          <span className="avatar-big" style={{ background: picked?.bg ?? 'var(--surface)' }} aria-hidden="true">
-            {picked?.emoji ?? (state.name.trim()[0]?.toUpperCase() || '?')}
-          </span>
-          <div className="avatar-grid grow" role="radiogroup" aria-labelledby="avatar-label">
-            {AVATARS.map((a) => (
-              <button key={a.id} type="button" role="radio" aria-checked={state.avatar === a.id} aria-label={a.label}
-                className="avatar-pick" style={{ background: a.bg }}
-                onClick={() => set({ avatar: state.avatar === a.id ? '' : a.id })}>
-                <span aria-hidden="true">{a.emoji}</span>
-              </button>
-            ))}
-          </div>
+        <div className="row between">
+          <span className="label" id="avatar-label">Who are you at the table?</span>
+          <button type="button" className="link" onClick={surprise}>Surprise me</button>
         </div>
+        <div className="avatar-stage">
+          <motion.span key={state.avatar} className="avatar-big" style={{ background: character?.bg ?? 'var(--surface)' }}
+            initial={{ scale: 0.7, rotate: -8 }} animate={{ scale: 1, rotate: 0 }} transition={{ type: 'spring', stiffness: 320, damping: 14 }}>
+            {character ? <FoodAvatar id={state.avatar} /> : <span aria-hidden="true">{state.name.trim()[0]?.toUpperCase() || '?'}</span>}
+          </motion.span>
+          <p className="small muted" aria-live="polite">
+            {character
+              ? `${character.label}${accessory ? ` with ${ACCESSORIES.find((x) => x.id === accessory)?.label.toLowerCase()}` : ''}`
+              : 'Pick a character, then dress it up.'}
+          </p>
+        </div>
+        <div className="avatar-grid" role="radiogroup" aria-labelledby="avatar-label">
+          {CHARACTERS.map((c) => (
+            <button key={c.id} type="button" role="radio" aria-checked={character?.id === c.id} aria-label={c.label}
+              className="avatar-pick" style={{ background: c.bg }} onClick={() => pick(c.id, accessory)}>
+              <FoodAvatar id={c.id} still />
+            </button>
+          ))}
+        </div>
+        {character && (
+          <>
+            <span className="label" id="acc-label" style={{ marginTop: 8 }}>Dress it up</span>
+            <div className="chips scroll" role="radiogroup" aria-labelledby="acc-label" style={{ paddingTop: 12, paddingBottom: 6 }}>
+              {ACCESSORIES.map((a) => (
+                <button key={a.id} type="button" role="radio" aria-checked={accessory === a.id} aria-label={a.label}
+                  className="avatar-pick acc" style={{ background: character.bg }} onClick={() => pick(character.id, a.id)}>
+                  <FoodAvatar id={avatarId(character.id, a.id)} still />
+                </button>
+              ))}
+            </div>
+          </>
+        )}
       </div>
       <div className="field">
         <label htmlFor="name">Your first name</label>

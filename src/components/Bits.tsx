@@ -1,13 +1,13 @@
 import type { Member } from '../types'
-import { avatarById } from '../data/avatars'
+import { FoodAvatar, avatarParts } from './FoodAvatar'
 
 export function Avatar({ member, small, size }: { member: Pick<Member, 'name' | 'color' | 'avatar'>; small?: boolean; size?: number }) {
-  const preset = avatarById(member.avatar)
-  const dim = size ? { width: size, height: size, fontSize: size * (preset ? 0.56 : 0.42) } : undefined
+  const preset = avatarParts(member.avatar).character
+  const dim = size ? { width: size, height: size, fontSize: size * 0.42 } : undefined
   if (preset)
     return (
-      <span className={small ? 'avatar sm emoji' : 'avatar emoji'} style={{ background: preset.bg, boxShadow: `0 0 0 2px ${member.color}`, ...dim }} aria-hidden="true">
-        {preset.emoji}
+      <span className={small ? 'avatar sm art' : 'avatar art'} style={{ background: preset.bg, boxShadow: `0 0 0 2px ${member.color}`, ...dim }} aria-hidden="true">
+        <FoodAvatar id={member.avatar} />
       </span>
     )
   return (

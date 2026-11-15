@@ -16,16 +16,18 @@ interface Props {
   reactions?: Record<string, Reaction>
   /** Changes when the avatars should pop in again. */
   animateKey?: string
+  /** Changes when only the plate should pop in again. */
+  plateKey?: string
 }
 
 /** The group seen from above: everyone around one table, the dish in question in the middle. */
-export function GroupTable({ members, size, seat = 32, plate, reactions = {}, animateKey = '' }: Props) {
+export function GroupTable({ members, size, seat = 32, plate, reactions = {}, animateKey = '', plateKey }: Props) {
   const radius = size / 2 - seat / 2 - 2
   const table = size - seat * 2 + seat * 0.5
   return (
     <div className="gtable" style={{ width: size, height: size }} aria-hidden="true">
       <div className="gtable-cloth" style={{ width: table, height: table }}>
-        <motion.div className="gtable-plate" key={`plate-${animateKey}`}
+        <motion.div className="gtable-plate" key={`plate-${plateKey ?? animateKey}`}
           initial={{ scale: 0.6, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} transition={{ type: 'spring', stiffness: 220, damping: 18 }}>
           {plate ? <img src={plate} alt="" /> : <ForkIcon size={Math.max(16, table * 0.26)} />}
         </motion.div>
