@@ -5,6 +5,7 @@ interface Persona {
   id: string
   name: string
   color: string
+  avatar: string
   diets: Diet[]
   allergies: Allergy[]
   tripPrefs: TripPref[]
@@ -12,30 +13,32 @@ interface Persona {
   taste: Weights
   swipeCount: number
   seed: number
+  /** Whether this persona lets the group see their reasons by name. */
+  shares: boolean
 }
 
 // Personas come from the interviews in the task analysis (1.1): vegetarian needs,
 // budget, a friend who only eats food they know, an organiser who wants local food.
 const PERSONAS: Persona[] = [
   {
-    id: 'mia', name: 'Mia', color: '#7C5CE0', diets: ['vegetarian'], allergies: [], tripPrefs: ['trendy'],
+    id: 'mia', name: 'Mia', color: '#7C5CE0', avatar: 'avocado+headphones', diets: ['vegetarian'], allergies: [], tripPrefs: ['trendy'],
     taste: { _bias: -0.3, 'cuisine:vegan': 2, 'cuisine:indian': 1.2, 'cuisine:lebanese': 1.2, 'cuisine:mexican': 1, 'vibe:trendy': 1, 'vibe:cosy': 0.6, 'cuisine:steak': -2, 'cuisine:seafood': -1.5 },
-    swipeCount: 28, seed: 11,
+    swipeCount: 28, seed: 11, shares: true,
   },
   {
-    id: 'jonas', name: 'Jonas', color: '#1F8A70', diets: [], allergies: [], tripPrefs: ['budget', 'near'],
+    id: 'jonas', name: 'Jonas', color: '#1F8A70', avatar: 'pizza+shades', diets: [], allergies: [], tripPrefs: ['budget', 'near'],
     taste: { _bias: -0.2, 'price:low': 2, 'price:high': -2.5, near: 1, 'cuisine:pizza': 0.8, 'cuisine:burger': 0.8, 'cuisine:mexican': 0.6 },
-    swipeCount: 9, seed: 23,
+    swipeCount: 9, seed: 23, shares: false,
   },
   {
-    id: 'elif', name: 'Elif', color: '#D9730D', diets: [], allergies: [], tripPrefs: [],
+    id: 'elif', name: 'Elif', color: '#D9730D', avatar: 'egg+beret', diets: [], allergies: [], tripPrefs: [],
     taste: { _bias: -0.2, 'cuisine:pizza': 2, 'cuisine:italian': 1.8, 'cuisine:burger': 1.2, 'cuisine:steak': 1.2, 'cuisine:spanish': 0.6, 'cuisine:tapas': 0.4, 'cuisine:japanese': -2, 'cuisine:ramen': -1.5, 'cuisine:indian': -2, 'cuisine:lebanese': -1.5, 'cuisine:seafood': -1.2, 'cuisine:vegan': -1 },
-    swipeCount: 17, seed: 37,
+    swipeCount: 17, seed: 37, shares: false,
   },
   {
-    id: 'noah', name: 'Noah', color: '#2F6FDB', diets: [], allergies: [], tripPrefs: ['traditional', 'local'],
+    id: 'noah', name: 'Noah', color: '#2F6FDB', avatar: 'olive+moustache', diets: [], allergies: [], tripPrefs: ['traditional', 'local'],
     taste: { _bias: -0.6, 'vibe:traditional': 1.5, 'vibe:local': 1.5, 'vibe:touristy': -1.5, 'cuisine:catalan': 1.8, 'cuisine:tapas': 1.5, 'cuisine:seafood': 1.2, 'cuisine:spanish': 1, 'cuisine:pizza': -1, 'cuisine:burger': -1.5 },
-    swipeCount: 36, seed: 51,
+    swipeCount: 36, seed: 51, shares: true,
   },
 ]
 
@@ -70,8 +73,8 @@ export function simulatedMembers(restaurants: Restaurant[], features: Record<str
       liked: score(p.taste, features[r.id]) + (rnd() - 0.5) * 0.3 > 0.5,
     }))
     return {
-      id: p.id, name: p.name, color: p.color, diets: p.diets, allergies: p.allergies,
-      tripPrefs: p.tripPrefs, swipes, muted: [], simulated: true,
+      id: p.id, name: p.name, color: p.color, avatar: p.avatar, diets: p.diets, allergies: p.allergies,
+      tripPrefs: p.tripPrefs, swipes, muted: [], sharesReasons: p.shares, simulated: true,
     }
   })
 }

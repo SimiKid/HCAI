@@ -19,7 +19,7 @@ export interface Restaurant {
   priceLevel: 1 | 2 | 3 | 4
   rating: number
   userRatingCount: number
-  photos: { src: string; attribution: string }[]
+  photos: { src: string; attribution: string; kind: 'food' | 'inside' }[]
   /** Values Google does not provide. Sample data in the prototype. */
   sample: {
     vibes: Vibe[]
@@ -30,21 +30,29 @@ export interface Restaurant {
   }
 }
 
+/** What a swipe was mostly about, when the member chose to say. */
+export type Because = 'food' | 'vibe' | 'price' | 'near'
+
 export interface Swipe {
   restaurantId: string
   liked: boolean
+  because?: Because
 }
 
 export interface Member {
   id: string
   name: string
   color: string
+  /** Id of a preset avatar, empty for the initial letter. */
+  avatar: string
   diets: Diet[]
   allergies: Allergy[]
   tripPrefs: TripPref[]
   swipes: Swipe[]
   /** Features the member told the app to forget. */
   muted: string[]
+  /** True when this member lets the group see their reasons by name. */
+  sharesReasons: boolean
   simulated: boolean
 }
 

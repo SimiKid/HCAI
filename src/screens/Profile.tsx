@@ -3,6 +3,8 @@ import type { Allergy, Diet } from '../types'
 import { deleteProfile, eraseLearning, useGroup, useStore } from '../store'
 import { confidence, tasteProfile } from '../model/learn'
 import { featureLabel } from '../model/features'
+import { motion } from 'framer-motion'
+import { ACCESSORIES, CHARACTERS, FoodAvatar, avatarId, avatarParts } from '../components/FoodAvatar'
 import { ChipToggle, Switch, swipes } from '../components/Bits'
 import { XIcon } from '../components/Icons'
 import { ConfidenceDots } from '../components/ConfidenceDots'
@@ -24,8 +26,53 @@ const ALLERGIES: { value: Allergy; label: string }[] = [
 
 function PersonFields() {
   const { state, set } = useStore()
+  const { character, accessory } = avatarParts(state.avatar)
+  const pick = (c: string, a: string) => set({ avatar: avatarId(c, a) })
+  const surprise = () => {
+    const c = CHARACTERS[Math.floor(Math.random() * CHARACTERS.length)].id
+    const a = ACCESSORIES[Math.floor(Math.random() * ACCESSORIES.length)].id
+    pick(c, a)
+  }
   return (
     <>
+      <div className="field">
+        <div className="row between">
+          <span className="label" id="avatar-label">Who are you at the table?</span>
+          <button type="button" className="link" onClick={surprise}>Surprise me</button>
+        </div>
+        <div className="avatar-stage">
+          <motion.span key={state.avatar} className="avatar-big" style={{ background: character?.bg ?? 'var(--surface)' }}
+            initial={{ scale: 0.7, rotate: -8 }} animate={{ scale: 1, rotate: 0 }} transition={{ type: 'spring', stiffness: 320, damping: 14 }}>
+            {character ? <FoodAvatar id={state.avatar} /> : <span aria-hidden="true">{state.name.trim()[0]?.toUpperCase() || '?'}</span>}
+          </motion.span>
+          <p className="small muted" aria-live="polite">
+            {character
+              ? `${character.label}${accessory ? ` with ${ACCESSORIES.find((x) => x.id === accessory)?.label.toLowerCase()}` : ''}`
+              : 'Pick a character, then dress it up.'}
+          </p>
+        </div>
+        <div className="avatar-grid" role="radiogroup" aria-labelledby="avatar-label">
+          {CHARACTERS.map((c) => (
+            <button key={c.id} type="button" role="radio" aria-checked={character?.id === c.id} aria-label={c.label}
+              className="avatar-pick" style={{ background: c.bg }} onClick={() => pick(c.id, accessory)}>
+              <FoodAvatar id={c.id} still />
+            </button>
+          ))}
+        </div>
+        {character && (
+          <>
+            <span className="label" id="acc-label" style={{ marginTop: 8 }}>Dress it up</span>
+            <div className="chips scroll" role="radiogroup" aria-labelledby="acc-label" style={{ paddingTop: 12, paddingBottom: 6 }}>
+              {ACCESSORIES.map((a) => (
+                <button key={a.id} type="button" role="radio" aria-checked={accessory === a.id} aria-label={a.label}
+                  className="avatar-pick acc" style={{ background: character.bg }} onClick={() => pick(character.id, a.id)}>
+                  <FoodAvatar id={avatarId(character.id, a.id)} still />
+                </button>
+              ))}
+            </div>
+          </>
+        )}
+      </div>
       <div className="field">
         <label htmlFor="name">Your first name</label>
         <input id="name" className="input" value={state.name} autoComplete="given-name"
@@ -39,10 +86,10 @@ function PersonFields() {
         <span className="label">Allergies</span>
         <ChipToggle label="Allergies" options={ALLERGIES} selected={state.allergies} onChange={(allergies) => set({ allergies })} />
       </div>
-      {/* @hcai AMR-16 Before saving, the form says what a diet or allergy will do: hide places for the whole group */}
       <p className="note">
-        Diets and allergies hide places you cannot eat at, for you and for the group ranking. They
-        are stored on this phone only. You can change or delete them any time in Profile.
+        Diets and allergies hide places you cannot eat at, for you and for the group ranking. The
+        group sees that a place is ruled out, not by whom. You can change or delete them any time
+        in Profile.
       </p>
     </>
   )
@@ -54,9 +101,9 @@ export function ProfileSetup() {
     <div className="screen">
       <form className="stack" style={{ gap: 24 }} onSubmit={(e) => { e.preventDefault(); set({ stage: 'trip' }) }}>
         <div className="stack" style={{ gap: 8 }}>
-          <p className="eyebrow">Step 1 of 2</p>
+          <p className="eyebrow">Step 1 of 3</p>
           <h1 className="title">About you</h1>
-          <p className="muted">Three things, so the group never ends up somewhere you cannot eat.</p>
+          <p className="muted">A face for the group, and what you can eat, so you never end up somewhere that does not work for you.</p>
         </div>
         <PersonFields />
         <button className="btn primary" disabled={!state.name.trim()}>Continue</button>
@@ -135,6 +182,14 @@ export function ProfileScreen() {
               <p className="small muted">Taste groups such as “seafood fans”. Sample data, off by default.</p>
             </div>
             <Switch checked={state.showPopularWith} onChange={(v) => set({ showPopularWith: v })} label="Show who tends to like each place" />
+          </div>
+          {/* @hcai FAIR-17 Showing my reasons to the group by name is my choice, off by default, and can be switched back any time */}
+          <div className="toggle-row">
+            <div className="grow">
+              <p className="strong">Show my reasons to the group</p>
+              <p className="small muted">Off: the bill shows your match but folds your reasons into “one person prefers…”. On: they appear next to your name.</p>
+            </div>
+            <Switch checked={actor.sharesReasons} onChange={(v) => set((s) => ({ share: { ...s.share, [actor.id]: v } }))} label="Show my reasons to the group" />
           </div>
           <div className="field">
             <span className="label" id="act-label">Demo: use the app as</span>

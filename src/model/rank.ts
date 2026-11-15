@@ -9,7 +9,7 @@ export interface Conflict {
 
 export interface Ranked {
   restaurant: Restaurant
-  /** Average of the included members' scores, 0 to 1. */
+  /** The group's score, 0 to 1: the average, or the lowest member score under "nobody left unhappy". */
   groupScore: number
   memberScores: Record<string, number>
   /** The member this place works least well for. */
@@ -32,6 +32,8 @@ export function conflictsFor(r: Restaurant, member: Member): Conflict[] {
   return out
 }
 
+export type GroupRule = 'average' | 'least-misery'
+
 export interface RankInput {
   restaurants: Restaurant[]
   members: Member[]
@@ -40,9 +42,10 @@ export interface RankInput {
   pinnedId?: string | null
   /** Extra weights for a personal re-rank, added to every included member. */
   boost?: Weights
+  rule?: GroupRule
 }
 
-export function rankGroup({ restaurants, members, weights, features, pinnedId, boost }: RankInput): {
+export function rankGroup({ restaurants, members, weights, features, pinnedId, boost, rule = 'average' }: RankInput): {
   ranked: Ranked[]
   blocked: Blocked[]
 } {
@@ -66,8 +69,9 @@ export function rankGroup({ restaurants, members, weights, features, pinnedId, b
       sum += s
       if (s < memberScores[lowestMemberId]) lowestMemberId = m.id
     }
-    // @hcai FAIR-04 (trade-off) Plain average, one member one vote: someone with 40 swipes counts the same as someone with 5
-    const groupScore = members.length ? sum / members.length : 0
+    // @hcai FAIR-04 (trade-off) One member one vote under both rules: someone with 40 swipes counts the same as someone with 5
+    // @hcai FAIR-05 The group picks its fairness rule: best on average, or nobody left unhappy (the lowest score counts)
+    const groupScore = !members.length ? 0 : rule === 'average' ? sum / members.length : memberScores[lowestMemberId]
     ranked.push({ restaurant: r, groupScore, memberScores, lowestMemberId, pinned, conflicts })
   }
   ranked.sort((a, b) => Number(b.pinned) - Number(a.pinned) || b.groupScore - a.groupScore)

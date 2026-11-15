@@ -4,7 +4,7 @@ import { useGroup, useStore } from '../store'
 import { confidence } from '../model/learn'
 import { Avatar, swipes } from '../components/Bits'
 import { ConfidenceDots } from '../components/ConfidenceDots'
-import { TripFields } from './JoinTrip'
+import { InviteCard, TripFields } from './JoinTrip'
 
 const cap = (s: string) => (s ? s[0].toUpperCase() + s.slice(1) : s)
 const fmt = (iso: string) => new Date(iso + 'T12:00:00').toLocaleDateString('en-GB', { day: 'numeric', month: 'short' })
@@ -41,7 +41,9 @@ export function TripScreen() {
                   <div className="grow">
                     <p className="strong">{m.id === 'me' ? `${m.name} (you)` : m.name}</p>
                     <p className="small muted">
-                      {cap([...m.diets, ...m.allergies.map((a) => `no ${a}`)].join(', ')) || 'No restrictions'}
+                      {m.id === 'me'
+                        ? cap([...m.diets, ...m.allergies.map((a) => `no ${a}`)].join(', ')) || 'No restrictions'
+                        : m.sharesReasons ? 'Shares their reasons' : 'Keeps their reasons private'}
                     </p>
                   </div>
                   <div style={{ textAlign: 'right' }}>
@@ -54,12 +56,18 @@ export function TripScreen() {
           </ul>
         </section>
 
+        <section className="stack" aria-labelledby="invite-h" style={{ gap: 12 }}>
+          <h2 className="h2" id="invite-h">Invite people</h2>
+          <InviteCard code={state.trip.code} />
+        </section>
+
         <section className="card stack" aria-labelledby="how-h" style={{ gap: 10 }}>
           <h2 className="h2" id="how-h">How the ranking works</h2>
           <ul className="stack small" style={{ margin: 0, paddingLeft: 18, gap: 8 }}>
             <li>The app learns from each like and skip: cuisine, vibe, price, distance and rating. It never looks at who you are.</li>
             <li>Each person gets their own guess per place. The group score is the plain average, so everyone counts the same.</li>
-            <li>Diets and allergies are not a matter of taste. A place one person cannot eat at is removed for all.</li>
+            <li>Diets and allergies are not a matter of taste. A place one person cannot eat at is removed for all, without saying whose diet it was.</li>
+            <li>You see your own reasons. Other people's reasons are only counted, unless they chose to share them by name.</li>
             <li>It is a guess, and a rough one with few swipes. Filter people, re-rank for yourself, or pin a place to overrule it.</li>
           </ul>
         </section>

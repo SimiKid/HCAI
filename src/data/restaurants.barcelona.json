@@ -15,7 +15,18 @@
   "photos": [
    {
     "src": "/photos/osm-6914132390.jpg",
-    "attribution": "Katherine Price from UK, CC BY 2.0"
+    "attribution": "Katherine Price from UK, CC BY 2.0",
+    "kind": "food"
+   },
+   {
+    "src": "/photos/osm-6914132390-inside.jpg",
+    "attribution": "DimiTalen, CC0",
+    "kind": "inside"
+   },
+   {
+    "src": "/photos/osm-6914132390-food2.jpg",
+    "attribution": "David Adam Kess, CC BY-SA 4.0",
+    "kind": "food"
    }
   ],
   "sample": {
@@ -80,7 +91,18 @@
   "photos": [
    {
     "src": "/photos/osm-10249345709.jpg",
-    "attribution": "Juan Emilio Prades Bel, CC BY 4.0"
+    "attribution": "goodiesfirst, BY 2.0",
+    "kind": "food"
+   },
+   {
+    "src": "/photos/osm-10249345709-inside.jpg",
+    "attribution": "Adam Jones, Ph.D., CC BY-SA 3.0",
+    "kind": "inside"
+   },
+   {
+    "src": "/photos/osm-10249345709-food2.jpg",
+    "attribution": "Tamorlan, CC BY 3.0",
+    "kind": "food"
    }
   ],
   "sample": {
@@ -144,7 +166,18 @@
   "photos": [
    {
     "src": "/photos/osm-6634324591.jpg",
-    "attribution": "Juan Emilio Prades Bel, CC BY-SA 4.0"
+    "attribution": "rawpixel contributor, CC0 1.0",
+    "kind": "food"
+   },
+   {
+    "src": "/photos/osm-6634324591-inside.jpg",
+    "attribution": "Adam Jones, Ph.D., CC BY-SA 3.0",
+    "kind": "inside"
+   },
+   {
+    "src": "/photos/osm-6634324591-food2.jpg",
+    "attribution": "Juan Emilio Prades Bel, CC BY 4.0",
+    "kind": "food"
    }
   ],
   "sample": {
@@ -208,7 +241,18 @@
   "photos": [
    {
     "src": "/photos/osm-6634324487.jpg",
-    "attribution": "Jessica Spengler, CC BY 2.0"
+    "attribution": "adactio, BY 2.0",
+    "kind": "food"
+   },
+   {
+    "src": "/photos/osm-6634324487-inside.jpg",
+    "attribution": "Enric, CC BY 4.0",
+    "kind": "inside"
+   },
+   {
+    "src": "/photos/osm-6634324487-food2.jpg",
+    "attribution": "Cook And Drink, CC BY-SA 4.0",
+    "kind": "food"
    }
   ],
   "sample": {
@@ -272,7 +316,13 @@
   "photos": [
    {
     "src": "/photos/osm-5109943322.jpg",
-    "attribution": "Laura Lynch, CC BY-SA 2.0"
+    "attribution": "rawpixel contributor, CC0 1.0",
+    "kind": "food"
+   },
+   {
+    "src": "/photos/osm-5109943322-inside.jpg",
+    "attribution": "David Adam Kess, CC BY-SA 4.0",
+    "kind": "inside"
    }
   ],
   "sample": {
@@ -336,7 +386,18 @@
   "photos": [
    {
     "src": "/photos/osm-10023384980.jpg",
-    "attribution": "Boca Dorada, CC BY-SA 2.0"
+    "attribution": "arquera, BY 2.0",
+    "kind": "food"
+   },
+   {
+    "src": "/photos/osm-10023384980-inside.jpg",
+    "attribution": "Enric, CC BY 4.0",
+    "kind": "inside"
+   },
+   {
+    "src": "/photos/osm-10023384980-food2.jpg",
+    "attribution": "David Berkowitz from New York, NY, USA www.marketersstudio.c, CC BY 2.0",
+    "kind": "food"
    }
   ],
   "sample": {
@@ -400,7 +461,18 @@
   "photos": [
    {
     "src": "/photos/osm-9060791908.jpg",
-    "attribution": "Juan Emilio Prades Bel, CC BY 4.0"
+    "attribution": "Juan Emilio Prades Bel, CC BY 4.0",
+    "kind": "food"
+   },
+   {
+    "src": "/photos/osm-9060791908-inside.jpg",
+    "attribution": "Missvain, CC BY 4.0",
+    "kind": "inside"
+   },
+   {
+    "src": "/photos/osm-9060791908-food2.jpg",
+    "attribution": "Sílvia Martín, CC BY 2.0",
+    "kind": "food"
    }
   ],
   "sample": {
@@ -468,7 +540,18 @@
   "photos": [
    {
     "src": "/photos/osm-4001010203.jpg",
-    "attribution": "Evan Bench from paris, france, CC BY 2.0"
+    "attribution": "Evan Bench from paris, france, CC BY 2.0",
+    "kind": "food"
+   },
+   {
+    "src": "/photos/osm-4001010203-inside.jpg",
+    "attribution": "Jordiferrer, CC BY-SA 4.0",
+    "kind": "inside"
+   },
+   {
+    "src": "/photos/osm-4001010203-food2.jpg",
+    "attribution": "Tamorlan, CC BY 3.0",
+    "kind": "food"
    }
   ],
   "sample": {
@@ -534,7 +617,18 @@
   "photos": [
    {
     "src": "/photos/osm-2866873011.jpg",
-    "attribution": "Kritzolina, CC BY-SA 4.0"
+    "attribution": "mrgarin, BY 2.0",
+    "kind": "food"
+   },
+   {
+    "src": "/photos/osm-2866873011-inside.jpg",
+    "attribution": "Jordiferrer, CC BY-SA 4.0",
+    "kind": "inside"
+   },
+   {
+    "src": "/photos/osm-2866873011-food2.jpg",
+    "attribution": "Hammunculs, CC BY-SA 4.0",
+    "kind": "food"
    }
   ],
   "sample": {
@@ -600,7 +694,13 @@
   "photos": [
    {
     "src": "/photos/osm-11020523105.jpg",
-    "attribution": "Lablascovegmenu from London, CC BY 2.0"
+    "attribution": "tales from the fifteenth floor, BY 2.0",
+    "kind": "food"
+   },
+   {
+    "src": "/photos/osm-11020523105-inside.jpg",
+    "attribution": "Zarateman, CC0",
+    "kind": "inside"
    }
   ],
   "sample": {
@@ -665,7 +765,18 @@
   "photos": [
    {
     "src": "/photos/osm-4184893894.jpg",
-    "attribution": "Juan Emilio Prades Bel, CC BY-SA 4.0"
+    "attribution": "Artur Rutkowski, CC0 1.0",
+    "kind": "food"
+   },
+   {
+    "src": "/photos/osm-4184893894-inside.jpg",
+    "attribution": "Kleon3, CC BY-SA 4.0",
+    "kind": "inside"
+   },
+   {
+    "src": "/photos/osm-4184893894-food2.jpg",
+    "attribution": "Juan Emilio Prades Bel, CC BY-SA 4.0",
+    "kind": "food"
    }
   ],
   "sample": {
@@ -731,7 +842,18 @@
   "photos": [
    {
     "src": "/photos/osm-2398528980.jpg",
-    "attribution": "Tsumugii, CC BY-SA 4.0"
+    "attribution": "rawpixel contributor, CC0 1.0",
+    "kind": "food"
+   },
+   {
+    "src": "/photos/osm-2398528980-inside.jpg",
+    "attribution": "Harrison Keely, CC BY 4.0",
+    "kind": "inside"
+   },
+   {
+    "src": "/photos/osm-2398528980-food2.jpg",
+    "attribution": "Wilfredor, CC0",
+    "kind": "food"
    }
   ],
   "sample": {
@@ -797,7 +919,18 @@
   "photos": [
    {
     "src": "/photos/osm-2247733112.jpg",
-    "attribution": "Gerda Arendt, CC BY-SA 4.0"
+    "attribution": "rawpixel contributor, CC0 1.0",
+    "kind": "food"
+   },
+   {
+    "src": "/photos/osm-2247733112-inside.jpg",
+    "attribution": "Pere López, CC BY-SA 3.0",
+    "kind": "inside"
+   },
+   {
+    "src": "/photos/osm-2247733112-food2.jpg",
+    "attribution": "Venta Aurelio, CC BY-SA 4.0",
+    "kind": "food"
    }
   ],
   "sample": {
@@ -864,7 +997,18 @@
   "photos": [
    {
     "src": "/photos/osm-4812237224.jpg",
-    "attribution": "arroutado, CC BY-SA 3.0"
+    "attribution": "arnold | inuyaki, BY 2.0",
+    "kind": "food"
+   },
+   {
+    "src": "/photos/osm-4812237224-inside.jpg",
+    "attribution": "Harrison Keely, CC BY 4.0",
+    "kind": "inside"
+   },
+   {
+    "src": "/photos/osm-4812237224-food2.jpg",
+    "attribution": "Pmazzoleni, CC BY-SA 4.0",
+    "kind": "food"
    }
   ],
   "sample": {
@@ -931,7 +1075,18 @@
   "photos": [
    {
     "src": "/photos/osm-5048602523.jpg",
-    "attribution": "NiTenIchiRyu, CC BY-SA 4.0"
+    "attribution": "rawpixel contributor, CC0 1.0",
+    "kind": "food"
+   },
+   {
+    "src": "/photos/osm-5048602523-inside.jpg",
+    "attribution": "Itto Ogami, CC BY 3.0",
+    "kind": "inside"
+   },
+   {
+    "src": "/photos/osm-5048602523-food2.jpg",
+    "attribution": "Arnaud 25, CC BY-SA 4.0",
+    "kind": "food"
    }
   ],
   "sample": {
@@ -997,7 +1152,18 @@
   "photos": [
    {
     "src": "/photos/osm-5721034923.jpg",
-    "attribution": "Kent Wang, CC BY-SA 2.0"
+    "attribution": "E Vön Zita, BY 2.0",
+    "kind": "food"
+   },
+   {
+    "src": "/photos/osm-5721034923-inside.jpg",
+    "attribution": "Ralff Nestor Nacor, CC BY-SA 4.0",
+    "kind": "inside"
+   },
+   {
+    "src": "/photos/osm-5721034923-food2.jpg",
+    "attribution": "Tamorlan, CC BY-SA 3.0",
+    "kind": "food"
    }
   ],
   "sample": {
@@ -1063,7 +1229,18 @@
   "photos": [
    {
     "src": "/photos/osm-14209595101.jpg",
-    "attribution": "Bocadorada, CC BY-SA 2.0"
+    "attribution": "tomatoes and friends, BY 2.0",
+    "kind": "food"
+   },
+   {
+    "src": "/photos/osm-14209595101-inside.jpg",
+    "attribution": "Francesc Fort, CC BY-SA 4.0",
+    "kind": "inside"
+   },
+   {
+    "src": "/photos/osm-14209595101-food2.jpg",
+    "attribution": "Daderot, CC BY-SA 4.0",
+    "kind": "food"
    }
   ],
   "sample": {
@@ -1129,7 +1306,18 @@
   "photos": [
    {
     "src": "/photos/osm-6788577586.jpg",
-    "attribution": "Javier Somoza, CC BY-SA 4.0"
+    "attribution": "rawpixel contributor, CC0 1.0",
+    "kind": "food"
+   },
+   {
+    "src": "/photos/osm-6788577586-inside.jpg",
+    "attribution": "Kgbo, CC BY-SA 4.0",
+    "kind": "inside"
+   },
+   {
+    "src": "/photos/osm-6788577586-food2.jpg",
+    "attribution": "Andy Li, CC0",
+    "kind": "food"
    }
   ],
   "sample": {
@@ -1196,7 +1384,18 @@
   "photos": [
    {
     "src": "/photos/osm-2434563732.jpg",
-    "attribution": "Wheeler Cowperthwaite, CC BY 2.0"
+    "attribution": "rawpixel contributor, CC0 1.0",
+    "kind": "food"
+   },
+   {
+    "src": "/photos/osm-2434563732-inside.jpg",
+    "attribution": "Michael Rivera, CC BY-SA 4.0",
+    "kind": "inside"
+   },
+   {
+    "src": "/photos/osm-2434563732-food2.jpg",
+    "attribution": "Wheeler Cowperthwaite, CC BY 2.0",
+    "kind": "food"
    }
   ],
   "sample": {
@@ -1263,7 +1462,18 @@
   "photos": [
    {
     "src": "/photos/osm-9721513617.jpg",
-    "attribution": "Benoît Prieur, CC0"
+    "attribution": "Jakub Kapusnak, CC0 1.0",
+    "kind": "food"
+   },
+   {
+    "src": "/photos/osm-9721513617-inside.jpg",
+    "attribution": "Kgbo, CC BY-SA 4.0",
+    "kind": "inside"
+   },
+   {
+    "src": "/photos/osm-9721513617-food2.jpg",
+    "attribution": "Infrogmation of New Orleans, CC BY-SA 2.0",
+    "kind": "food"
    }
   ],
   "sample": {
@@ -1330,7 +1540,18 @@
   "photos": [
    {
     "src": "/photos/osm-5910291400.jpg",
-    "attribution": "Fabryx98, CC BY-SA 4.0"
+    "attribution": "Jakub Kapusnak, CC0 1.0",
+    "kind": "food"
+   },
+   {
+    "src": "/photos/osm-5910291400-inside.jpg",
+    "attribution": "Daniele Pugliesi, CC BY-SA 4.0",
+    "kind": "inside"
+   },
+   {
+    "src": "/photos/osm-5910291400-food2.jpg",
+    "attribution": "Lombroso, CC BY-SA 4.0",
+    "kind": "food"
    }
   ],
   "sample": {
@@ -1397,7 +1618,18 @@
   "photos": [
    {
     "src": "/photos/osm-11309476436.jpg",
-    "attribution": "Gatorfan252525, CC BY-SA 4.0"
+    "attribution": "TFDuesing, BY 2.0",
+    "kind": "food"
+   },
+   {
+    "src": "/photos/osm-11309476436-inside.jpg",
+    "attribution": "Zache, CC BY-SA 4.0",
+    "kind": "inside"
+   },
+   {
+    "src": "/photos/osm-11309476436-food2.jpg",
+    "attribution": "Thomas, CC BY 2.0",
+    "kind": "food"
    }
   ],
   "sample": {
@@ -1464,7 +1696,18 @@
   "photos": [
    {
     "src": "/photos/osm-4374295994.jpg",
-    "attribution": "Dale Cruse, CC BY 2.0"
+    "attribution": "Clint__Budd, BY 2.0",
+    "kind": "food"
+   },
+   {
+    "src": "/photos/osm-4374295994-inside.jpg",
+    "attribution": "Missvain, CC0",
+    "kind": "inside"
+   },
+   {
+    "src": "/photos/osm-4374295994-food2.jpg",
+    "attribution": "Tony Webster from Portland, Oregon, United States, CC BY 2.0",
+    "kind": "food"
    }
   ],
   "sample": {
@@ -1531,7 +1774,18 @@
   "photos": [
    {
     "src": "/photos/osm-4788621926.jpg",
-    "attribution": "chidorian from Japan, CC BY-SA 2.0"
+    "attribution": "Skitter Photo, CC0 1.0",
+    "kind": "food"
+   },
+   {
+    "src": "/photos/osm-4788621926-inside.jpg",
+    "attribution": "Bokken, CC BY-SA 3.0",
+    "kind": "inside"
+   },
+   {
+    "src": "/photos/osm-4788621926-food2.jpg",
+    "attribution": "syvwlch, CC BY 2.0",
+    "kind": "food"
    }
   ],
   "sample": {
@@ -1596,7 +1850,18 @@
   "photos": [
    {
     "src": "/photos/osm-5327559000.jpg",
-    "attribution": "Jpatokal, CC BY-SA 4.0"
+    "attribution": "rawpixel contributor, CC0 1.0",
+    "kind": "food"
+   },
+   {
+    "src": "/photos/osm-5327559000-inside.jpg",
+    "attribution": "Lord Jaraxxus, CC BY-SA 4.0",
+    "kind": "inside"
+   },
+   {
+    "src": "/photos/osm-5327559000-food2.jpg",
+    "attribution": "Wilfredor, CC BY-SA 4.0",
+    "kind": "food"
    }
   ],
   "sample": {
@@ -1661,7 +1926,18 @@
   "photos": [
    {
     "src": "/photos/osm-6194581340.jpg",
-    "attribution": "Syced, CC0"
+    "attribution": "rawpixel contributor, CC0 1.0",
+    "kind": "food"
+   },
+   {
+    "src": "/photos/osm-6194581340-inside.jpg",
+    "attribution": "Missvain, CC BY 4.0",
+    "kind": "inside"
+   },
+   {
+    "src": "/photos/osm-6194581340-food2.jpg",
+    "attribution": "Yaco*, CC BY 2.0",
+    "kind": "food"
    }
   ],
   "sample": {
@@ -1726,7 +2002,18 @@
   "photos": [
    {
     "src": "/photos/osm-12068709006.jpg",
-    "attribution": "Shisma, CC BY 4.0"
+    "attribution": "Foodie Girl, CC0 1.0",
+    "kind": "food"
+   },
+   {
+    "src": "/photos/osm-12068709006-inside.jpg",
+    "attribution": "Eden, Janine and Jim, CC BY 4.0",
+    "kind": "inside"
+   },
+   {
+    "src": "/photos/osm-12068709006-food2.jpg",
+    "attribution": "GiveMeMollusks, CC0",
+    "kind": "food"
    }
   ],
   "sample": {
@@ -1793,7 +2080,18 @@
   "photos": [
    {
     "src": "/photos/osm-4667802489.jpg",
-    "attribution": "Jennifer from Vancouver, Canada, CC BY 2.0"
+    "attribution": "YellowGreenFarmersMarket, BY 2.0",
+    "kind": "food"
+   },
+   {
+    "src": "/photos/osm-4667802489-inside.jpg",
+    "attribution": "Donald Trung Quoc Don (Chữ Hán: 徵國單) - Wikimedia Commons - ©, CC BY-SA 4.0",
+    "kind": "inside"
+   },
+   {
+    "src": "/photos/osm-4667802489-food2.jpg",
+    "attribution": "Andy Li, CC0",
+    "kind": "food"
    }
   ],
   "sample": {
@@ -1862,7 +2160,18 @@
   "photos": [
    {
     "src": "/photos/osm-2618447074.jpg",
-    "attribution": "Zimt Zauberstab, CC BY-SA 2.0"
+    "attribution": "rawpixel contributor, CC0 1.0",
+    "kind": "food"
+   },
+   {
+    "src": "/photos/osm-2618447074-inside.jpg",
+    "attribution": "Zygmunt Put, CC BY-SA 4.0",
+    "kind": "inside"
+   },
+   {
+    "src": "/photos/osm-2618447074-food2.jpg",
+    "attribution": "Sarah Afshar, CC BY-SA 4.0",
+    "kind": "food"
    }
   ],
   "sample": {
@@ -1929,7 +2238,18 @@
   "photos": [
    {
     "src": "/photos/osm-10690659452.jpg",
-    "attribution": "Larry Miller, CC BY-SA 2.0"
+    "attribution": "Tim Sullivan, CC0 1.0",
+    "kind": "food"
+   },
+   {
+    "src": "/photos/osm-10690659452-inside.jpg",
+    "attribution": "Missvain, CC0",
+    "kind": "inside"
+   },
+   {
+    "src": "/photos/osm-10690659452-food2.jpg",
+    "attribution": "City Foodsters, CC BY 2.0",
+    "kind": "food"
    }
   ],
   "sample": {
@@ -1995,7 +2315,18 @@
   "photos": [
    {
     "src": "/photos/osm-3777075876.jpg",
-    "attribution": "Missvain, CC BY 4.0"
+    "attribution": "rawpixel contributor, CC0 1.0",
+    "kind": "food"
+   },
+   {
+    "src": "/photos/osm-3777075876-inside.jpg",
+    "attribution": "Michael Rivera, CC BY-SA 3.0",
+    "kind": "inside"
+   },
+   {
+    "src": "/photos/osm-3777075876-food2.jpg",
+    "attribution": "Nikodem Nijaki, CC BY-SA 3.0",
+    "kind": "food"
    }
   ],
   "sample": {
@@ -2061,7 +2392,18 @@
   "photos": [
    {
     "src": "/photos/osm-14364982601.jpg",
-    "attribution": "Michael Hays, CC BY 2.0"
+    "attribution": "rawpixel contributor, CC0 1.0",
+    "kind": "food"
+   },
+   {
+    "src": "/photos/osm-14364982601-inside.jpg",
+    "attribution": "Misaochan, CC BY-SA 3.0",
+    "kind": "inside"
+   },
+   {
+    "src": "/photos/osm-14364982601-food2.jpg",
+    "attribution": "Guilhem Vellut from Annecy, France, CC BY 2.0",
+    "kind": "food"
    }
   ],
   "sample": {
@@ -2130,7 +2472,18 @@
   "photos": [
    {
     "src": "/photos/osm-4573831896.jpg",
-    "attribution": "Vyacheslav Argenberg, CC BY 4.0"
+    "attribution": "usernamepc, BY 2.0",
+    "kind": "food"
+   },
+   {
+    "src": "/photos/osm-4573831896-inside.jpg",
+    "attribution": "Kritzolina, CC BY-SA 4.0",
+    "kind": "inside"
+   },
+   {
+    "src": "/photos/osm-4573831896-food2.jpg",
+    "attribution": "Gannu03, CC BY-SA 4.0",
+    "kind": "food"
    }
   ],
   "sample": {
@@ -2199,7 +2552,18 @@
   "photos": [
    {
     "src": "/photos/osm-2187210264.jpg",
-    "attribution": "PizzaMan, CC BY-SA 4.0"
+    "attribution": "Mumumío, BY 2.0",
+    "kind": "food"
+   },
+   {
+    "src": "/photos/osm-2187210264-inside.jpg",
+    "attribution": "Phillip Pessar, CC BY 2.0",
+    "kind": "inside"
+   },
+   {
+    "src": "/photos/osm-2187210264-food2.jpg",
+    "attribution": "FitTasteTic, CC BY-SA 2.0",
+    "kind": "food"
    }
   ],
   "sample": {
@@ -2268,7 +2632,18 @@
   "photos": [
    {
     "src": "/photos/osm-4278033118.jpg",
-    "attribution": "Suyash Dwivedi, CC BY-SA 4.0"
+    "attribution": "Foodie Girl, CC0 1.0",
+    "kind": "food"
+   },
+   {
+    "src": "/photos/osm-4278033118-inside.jpg",
+    "attribution": "Bahnfrend, CC BY-SA 4.0",
+    "kind": "inside"
+   },
+   {
+    "src": "/photos/osm-4278033118-food2.jpg",
+    "attribution": "HaJunkiyada, CC BY-SA 4.0",
+    "kind": "food"
    }
   ],
   "sample": {
@@ -2336,7 +2711,18 @@
   "photos": [
    {
     "src": "/photos/osm-4025265804.jpg",
-    "attribution": "Orenrosenfeld, CC BY-SA 4.0"
+    "attribution": "rawpixel contributor, CC0 1.0",
+    "kind": "food"
+   },
+   {
+    "src": "/photos/osm-4025265804-inside.jpg",
+    "attribution": "kallerna, CC BY-SA 4.0",
+    "kind": "inside"
+   },
+   {
+    "src": "/photos/osm-4025265804-food2.jpg",
+    "attribution": "Paul Lowry, CC BY 2.0",
+    "kind": "food"
    }
   ],
   "sample": {
@@ -2406,7 +2792,18 @@
   "photos": [
    {
     "src": "/photos/osm-1878684097.jpg",
-    "attribution": "Gerda Arendt, CC BY-SA 4.0"
+    "attribution": "heatheronhertravels, BY 2.0",
+    "kind": "food"
+   },
+   {
+    "src": "/photos/osm-1878684097-inside.jpg",
+    "attribution": "Infrogmation of New Orleans, CC BY-SA 4.0",
+    "kind": "inside"
+   },
+   {
+    "src": "/photos/osm-1878684097-food2.jpg",
+    "attribution": "Gerda Arendt, CC BY-SA 4.0",
+    "kind": "food"
    }
   ],
   "sample": {
@@ -2474,7 +2871,18 @@
   "photos": [
    {
     "src": "/photos/osm-4591423938.jpg",
-    "attribution": "Miansari66, CC0"
+    "attribution": "rawpixel contributor, CC0 1.0",
+    "kind": "food"
+   },
+   {
+    "src": "/photos/osm-4591423938-inside.jpg",
+    "attribution": "Pub. by Mellinger Studios, Lancaster, Penna., Public domain",
+    "kind": "inside"
+   },
+   {
+    "src": "/photos/osm-4591423938-food2.jpg",
+    "attribution": "Burkhard Mücke, CC BY-SA 4.0",
+    "kind": "food"
    }
   ],
   "sample": {
@@ -2542,7 +2950,18 @@
   "photos": [
    {
     "src": "/photos/osm-7158622885.jpg",
-    "attribution": "Horacio Cambeiro, CC BY-SA 3.0"
+    "attribution": "Marit & Toomas Hinnosaar, BY 2.0",
+    "kind": "food"
+   },
+   {
+    "src": "/photos/osm-7158622885-inside.jpg",
+    "attribution": "Harrison Keely, CC BY 4.0",
+    "kind": "inside"
+   },
+   {
+    "src": "/photos/osm-7158622885-food2.jpg",
+    "attribution": "Horacio Cambeiro, CC BY-SA 3.0",
+    "kind": "food"
    }
   ],
   "sample": {
@@ -2605,7 +3024,18 @@
   "photos": [
    {
     "src": "/photos/osm-13427550202.jpg",
-    "attribution": "Dominic Lockyer, CC BY 2.0"
+    "attribution": "Snapwire, CC0 1.0",
+    "kind": "food"
+   },
+   {
+    "src": "/photos/osm-13427550202-inside.jpg",
+    "attribution": "Bonnachoven, CC0",
+    "kind": "inside"
+   },
+   {
+    "src": "/photos/osm-13427550202-food2.jpg",
+    "attribution": "Dominic Lockyer, CC BY 2.0",
+    "kind": "food"
    }
   ],
   "sample": {

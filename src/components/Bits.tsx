@@ -1,8 +1,17 @@
 import type { Member } from '../types'
+import { FoodAvatar, avatarParts } from './FoodAvatar'
 
-export function Avatar({ member, small }: { member: Pick<Member, 'name' | 'color'>; small?: boolean }) {
+export function Avatar({ member, small, size }: { member: Pick<Member, 'name' | 'color' | 'avatar'>; small?: boolean; size?: number }) {
+  const preset = avatarParts(member.avatar).character
+  const dim = size ? { width: size, height: size, fontSize: size * 0.42 } : undefined
+  if (preset)
+    return (
+      <span className={small ? 'avatar sm art' : 'avatar art'} style={{ background: preset.bg, boxShadow: `0 0 0 2px ${member.color}`, ...dim }} aria-hidden="true">
+        <FoodAvatar id={member.avatar} />
+      </span>
+    )
   return (
-    <span className={small ? 'avatar sm' : 'avatar'} style={{ background: member.color }} aria-hidden="true">
+    <span className={small ? 'avatar sm' : 'avatar'} style={{ background: member.color, ...dim }} aria-hidden="true">
       {member.name[0]?.toUpperCase()}
     </span>
   )

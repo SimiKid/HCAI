@@ -17,16 +17,18 @@ interface Props {
   party: number
   whyLine: string
   pinnedBy?: Member
+  /** Shortlist entry: no rank number and no match bar. */
+  unranked?: boolean
   onOpen: () => void
 }
 
-export function RankRow({ rank, item, party, whyLine, pinnedBy, onOpen }: Props) {
+export function RankRow({ rank, item, party, whyLine, pinnedBy, unranked, onOpen }: Props) {
   const r = item.restaurant
   const match = matchLevel(item.groupScore)
   return (
     <li>
       <button className={item.pinned ? 'rank-row pinned' : 'rank-row'} onClick={onOpen}>
-        <span className={rank === 1 ? 'rank-num top' : 'rank-num'} aria-label={`Rank ${rank}`}>{rank}</span>
+        {!unranked && <span className={rank === 1 ? 'rank-num top' : 'rank-num'} aria-label={`Rank ${rank}`}>{rank}</span>}
         <img className="thumb" src={r.photos[0].src} alt="" loading="lazy" />
         <span className="grow stack" style={{ gap: 4 }}>
           <span className="rank-name">{r.displayName}</span>
@@ -40,7 +42,7 @@ export function RankRow({ rank, item, party, whyLine, pinnedBy, onOpen }: Props)
             <span className="match row" style={{ gap: 6, color: 'var(--crimson-text)' }}>
               <CrownIcon size={16} />Pinned by {pinnedBy?.name ?? 'someone'}
             </span>
-          ) : (
+          ) : unranked ? null : (
             <span className="row" style={{ gap: 8 }}>
               <span className="match">{match.label}</span>
               <span className={match.level === 'strong' ? 'bar strong' : 'bar'} aria-hidden="true">

@@ -4,34 +4,44 @@ import { HOTEL_AREAS } from './data/source'
 import { simulatedMembers } from './data/members'
 import { featuresOf } from './model/features'
 import { learn } from './model/learn'
+import type { GroupRule } from './model/rank'
 
 export interface State {
-  stage: 'welcome' | 'profile' | 'trip' | 'app'
+  stage: 'welcome' | 'profile' | 'trip' | 'invite' | 'details' | 'app'
   name: string
+  avatar: string
   diets: Diet[]
   allergies: Allergy[]
-  trip: { code: string; hotelId: string; from: string; to: string; prefs: TripPref[] }
+  /** `role` is 'owner' when this person started the trip, 'guest' when they joined by invite or code. */
+  trip: { code: string; role: 'owner' | 'guest'; hotelId: string; from: string; to: string; prefs: TripPref[] }
   /** Swipes made in this app, by member id. Simulated members also have seeded swipes. */
   swipes: Record<string, Swipe[]>
   muted: Record<string, string[]>
   pin: { restaurantId: string; by: string } | null
   showPopularWith: boolean
+  /** Members who let the group see their reasons by name. Missing means the member's default. */
+  share: Record<string, boolean>
+  /** How member scores become one group score. */
+  rule: GroupRule
   /** Demo only: swipe and pin as another group member. */
   actingAs: string
 }
 
-const KEY = 'restaurant-tinder-v1'
+const KEY = 'restaurant-tinder-v2'
 
 export const initialState: State = {
   stage: 'welcome',
   name: '',
+  avatar: '',
   diets: [],
   allergies: [],
-  trip: { code: 'BCN-2611', hotelId: 'gotic', from: '2026-11-20', to: '2026-11-23', prefs: [] },
+  trip: { code: '', role: 'guest', hotelId: 'gotic', from: '2026-11-20', to: '2026-11-23', prefs: [] },
   swipes: {},
   muted: {},
   pin: null,
   showPopularWith: false,
+  share: {},
+  rule: 'average',
   actingAs: 'me',
 }
 
@@ -54,7 +64,7 @@ const Ctx = createContext<Store | null>(null)
 
 export function StoreProvider({ restaurants, children }: { restaurants: Restaurant[]; children: ReactNode }) {
   const [state, setState] = useState<State>(load)
-  // @hcai MM-07 Profile, swipes and the learned taste stay in this browser's storage, nothing is sent to a server
+  // profile, swipes and the learned taste stay in this browser's storage, nothing is sent to a server
   useEffect(() => {
     try {
       localStorage.setItem(KEY, JSON.stringify(state))
@@ -101,11 +111,13 @@ export function useGroup(): Group {
       id: 'me',
       name: state.name.trim() || 'You',
       color: '#E0144C',
+      avatar: state.avatar,
       diets: state.diets,
       allergies: state.allergies,
       tripPrefs: state.trip.prefs,
       swipes: state.swipes.me ?? [],
       muted: state.muted.me ?? [],
+      sharesReasons: state.share.me ?? false,
       simulated: false,
     }
     const members = [
@@ -114,6 +126,7 @@ export function useGroup(): Group {
         ...m,
         swipes: [...m.swipes, ...(state.swipes[m.id] ?? [])],
         muted: state.muted[m.id] ?? [],
+        sharesReasons: state.share[m.id] ?? m.sharesReasons,
       })),
     ]
     const weights = Object.fromEntries(
@@ -124,7 +137,7 @@ export function useGroup(): Group {
   }, [state, sims, features, hotel])
 }
 
-// @hcai FAIR-17 One tap erases everything the app learned about me, a second one deletes the whole profile
+// one tap erases everything the app learned about me, a second one deletes the whole profile
 export function eraseLearning(s: State, memberId: string): Partial<State> {
   return {
     swipes: { ...s.swipes, [memberId]: [] },

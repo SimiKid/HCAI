@@ -1,4 +1,4 @@
-import type { Features, Swipe, TripPref, Weights } from '../types'
+import type { Because, Features, Swipe, TripPref, Weights } from '../types'
 import { BIAS } from './features'
 
 // @hcai AMR-14 Small learning rate, one swipe nudges the taste profile and never flips it
@@ -40,6 +40,18 @@ export function update(w: Weights, x: Features, liked: boolean): Weights {
   return next
 }
 
+const ABOUT: Record<Because, (feature: string) => boolean> = {
+  food: (f) => f.startsWith('cuisine:'),
+  vibe: (f) => f.startsWith('vibe:'),
+  price: (f) => f.startsWith('price:'),
+  near: (f) => f === 'near',
+}
+
+/** Only the features a swipe was about. */
+export function focus(x: Features, because: Because): Features {
+  return Object.fromEntries(Object.entries(x).filter(([f]) => ABOUT[because](f)))
+}
+
 export function learn(
   prefs: TripPref[],
   swipes: Swipe[],
@@ -49,7 +61,13 @@ export function learn(
   let w = priorWeights(prefs)
   for (const s of swipes) {
     const x = featuresById[s.restaurantId]
-    if (x) w = update(w, x, s.liked)
+    if (!x) continue
+    w = update(w, x, s.liked)
+    // @hcai HOR-05 When the member says what a swipe was about, that part of the card is learned twice more, the rest once
+    if (s.because) {
+      const about = focus(x, s.because)
+      w = update(update(w, about, s.liked), about, s.liked)
+    }
   }
   // @hcai AMR-09 A taste the member removed in "What the app thinks you like" is forgotten, whatever the swipes said
   for (const f of muted) delete w[f]
