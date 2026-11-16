@@ -1,31 +1,30 @@
 import { useEffect, useState } from 'react'
-import type { TripPref } from '../types'
+import type { Stay, TripPref } from '../types'
 import { HOTEL_AREAS } from '../data/source'
-import { useGroup, useStore } from '../store'
+import { patchPersonal, personalOf, useGroup, useStore } from '../store'
 import { Avatar, ChipToggle, StepBar } from '../components/Bits'
 
 export const TRIP_PREFS: { value: TripPref; label: string }[] = [
   { value: 'traditional', label: 'Eat traditionally' },
   { value: 'trendy', label: 'Trendy areas' },
   { value: 'local', label: 'Where locals eat' },
-  { value: 'budget', label: 'Keep it cheap' },
   { value: 'treat', label: 'Happy to splurge' },
   { value: 'near', label: 'Close to the hotel' },
-  { value: 'top', label: 'Top rated' },
 ]
 
 export function TripFields() {
   const { state, set } = useStore()
   const trip = state.trip
   const patch = (p: Partial<typeof trip>) => set({ trip: { ...trip, ...p } })
+  const prefs = personalOf(state, 'me').prefs
   return (
     <>
       <div className="field">
         <span className="label" id="area-label">Where are you staying?</span>
         <div className="chips" role="group" aria-labelledby="area-label">
           {HOTEL_AREAS.map((h) => (
-            <button key={h.id} type="button" className="chip" aria-pressed={trip.hotelId === h.id}
-              onClick={() => patch({ hotelId: h.id })}>
+            <button key={h.id} type="button" className="chip" aria-pressed={trip.stay.kind === 'area' && trip.stay.id === h.id}
+              onClick={() => patch({ stay: { kind: 'area', id: h.id } })}>
               {h.label}
             </button>
           ))}
@@ -43,7 +42,7 @@ export function TripFields() {
       </div>
       <div className="field">
         <span className="label">What are you in the mood for on this trip?</span>
-        <ChipToggle label="Trip preferences" options={TRIP_PREFS} selected={trip.prefs} onChange={(prefs) => patch({ prefs })} />
+        <ChipToggle label="Trip preferences" options={TRIP_PREFS} selected={prefs} onChange={(p) => set((s) => patchPersonal(s, 'me', { prefs: p }))} />
         <p className="small muted">A starting point for the ranking. Your swipes refine it.</p>
       </div>
     </>
@@ -51,7 +50,10 @@ export function TripFields() {
 }
 
 /** The one trip that exists in the prototype. A real backend would look codes up. */
-export const DEMO_TRIP = { code: 'BCN-2611', city: 'Barcelona', from: '2026-11-20', to: '2026-11-23', invitedBy: 'mia' }
+export const DEMO_TRIP = {
+  code: 'BCN-2611', city: 'Barcelona', from: '2026-11-20', to: '2026-11-23', invitedBy: 'mia',
+  stay: { kind: 'area', id: 'gotic' } as Stay,
+}
 
 const day = (iso: string) => new Date(iso + 'T12:00:00').toLocaleDateString('en-GB', { day: 'numeric', month: 'short' })
 const newCode = () => 'BCN-' + Math.random().toString(36).slice(2, 6).toUpperCase()
@@ -71,7 +73,7 @@ export function TripEntry() {
   const [error, setError] = useState('')
 
   const join = (c: string) =>
-    set({ stage: 'details', trip: { ...state.trip, code: c, role: 'guest', from: DEMO_TRIP.from, to: DEMO_TRIP.to } })
+    set({ stage: 'details', trip: { ...state.trip, code: c, role: 'guest', stay: DEMO_TRIP.stay, from: DEMO_TRIP.from, to: DEMO_TRIP.to } })
   const submitCode = () => {
     const c = code.trim().toUpperCase()
     if (validCode(c)) join(c)

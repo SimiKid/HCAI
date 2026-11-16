@@ -1,4 +1,4 @@
-import type { Features, LatLng, Restaurant } from '../types'
+import type { Features, LatLng, Restaurant, Vibe } from '../types'
 
 export function distanceKm(a: LatLng, b: LatLng): number {
   const rad = Math.PI / 180
@@ -40,6 +40,20 @@ export const CUISINE_LABEL: Record<string, string> = {
   steak: 'Grill',
 }
 
+/** Chip label for each vibe tag. */
+export const VIBE_LABEL: Record<Vibe, string> = {
+  traditional: 'Traditional',
+  trendy: 'Trendy',
+  local: 'Local',
+  touristy: 'Touristy',
+  posh: 'Posh',
+  casual: 'Casual',
+  cosy: 'Cosy',
+  lively: 'Lively',
+  quiet: 'Quiet',
+  family: 'Family-friendly',
+}
+
 /** Cuisines named after a place or a people: they keep their capital letter inside a sentence. */
 const PROPER_CUISINES = new Set(['catalan', 'spanish', 'italian', 'japanese', 'mexican', 'indian', 'lebanese'])
 
@@ -56,7 +70,10 @@ export function featurePhrase(feature: string, you = false): [string, string] {
     const c = PROPER_CUISINES.has(value) ? label : label.toLowerCase()
     return [`${v('likes', 'like')} ${c}`, `${v('tends', 'tend')} to skip ${c}`]
   }
-  if (kind === 'vibe') return [`${v('likes', 'like')} ${value} places`, `${v('tends', 'tend')} to skip ${value} places`]
+  if (kind === 'vibe') {
+    const vibe = (VIBE_LABEL[value as Vibe] ?? value).toLowerCase()
+    return [`${v('likes', 'like')} ${vibe} places`, `${v('tends', 'tend')} to skip ${vibe} places`]
+  }
   if (feature === 'price:low') return [`${v('prefers', 'prefer')} cheaper places`, `${v('is', 'are')} not looking for cheap places`]
   if (feature === 'price:high') return [`${v('is', 'are')} happy to pay more`, `${v('avoids', 'avoid')} pricey places`]
   if (feature === 'near') return [`${v('prefers', 'prefer')} places near the hotel`, `${v('does', 'do')} not mind a longer walk`]
@@ -68,7 +85,7 @@ export function featurePhrase(feature: string, you = false): [string, string] {
 export function featureLabel(feature: string): string {
   const [kind, value] = feature.split(':')
   if (kind === 'cuisine') return CUISINE_LABEL[value] ?? value
-  if (kind === 'vibe') return value[0].toUpperCase() + value.slice(1)
+  if (kind === 'vibe') return VIBE_LABEL[value as Vibe] ?? value[0].toUpperCase() + value.slice(1)
   if (feature === 'price:low') return 'Cheaper places'
   if (feature === 'price:high') return 'Pricier places'
   if (feature === 'near') return 'Near the hotel'

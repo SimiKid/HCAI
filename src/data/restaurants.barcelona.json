@@ -35,6 +35,11 @@
     "lively",
     "touristy"
    ],
+   "dishes": [
+    "clams",
+    "grilled prawns",
+    "patatas bravas"
+   ],
    "dietOptions": [
     "vegetarian",
     "pescatarian"
@@ -72,7 +77,15 @@
    "popularWith": [
     "Seafood fans",
     "Beach-day groups"
-   ]
+   ],
+   "booking": {
+    "walkIn": "easy",
+    "bookAhead": "same-day"
+   },
+   "topReview": {
+    "text": "Tiny old bodega with real fisherman charm. The clams and the house vermouth are worth the squeeze.",
+    "rating": 4
+   }
   }
  },
  {
@@ -108,7 +121,13 @@
   "sample": {
    "vibes": [
     "lively",
-    "touristy"
+    "touristy",
+    "casual"
+   ],
+   "dishes": [
+    "croquetas",
+    "patatas bravas",
+    "pan con tomate"
    ],
    "dietOptions": [
     "vegetarian",
@@ -147,7 +166,15 @@
    "popularWith": [
     "First-time visitors",
     "Groups of friends"
-   ]
+   ],
+   "booking": {
+    "walkIn": "sometimes",
+    "bookAhead": "day-before"
+   },
+   "topReview": {
+    "text": "Right next to Santa Maria del Mar, so it gets busy, but the croquetas were crisp and service was quick.",
+    "rating": 4
+   }
   }
  },
  {
@@ -183,7 +210,13 @@
   "sample": {
    "vibes": [
     "local",
-    "cosy"
+    "cosy",
+    "casual"
+   ],
+   "dishes": [
+    "montaditos",
+    "anchovies",
+    "vermouth"
    ],
    "dietOptions": [
     "vegetarian",
@@ -222,7 +255,15 @@
    "popularWith": [
     "Locals after work",
     "Budget travellers"
-   ]
+   ],
+   "booking": {
+    "walkIn": "easy",
+    "bookAhead": "same-day"
+   },
+   "topReview": {
+    "text": "Cheap montaditos, cold vermouth and only Catalan spoken at the bar. Exactly what we came for.",
+    "rating": 5
+   }
   }
  },
  {
@@ -259,6 +300,11 @@
    "vibes": [
     "trendy",
     "lively"
+   ],
+   "dishes": [
+    "bombas",
+    "tuna tartare",
+    "grilled octopus"
    ],
    "dietOptions": [
     "vegetarian",
@@ -297,7 +343,15 @@
    "popularWith": [
     "Food explorers",
     "Groups of friends"
-   ]
+   ],
+   "booking": {
+    "walkIn": "sometimes",
+    "bookAhead": "day-before"
+   },
+   "topReview": {
+    "text": "Modern tapas done right. The bomba and the tuna tartare were the best bites of our trip. Book ahead!",
+    "rating": 5
+   }
   }
  },
  {
@@ -328,7 +382,13 @@
   "sample": {
    "vibes": [
     "cosy",
-    "local"
+    "local",
+    "quiet"
+   ],
+   "dishes": [
+    "natural wine",
+    "cheese board",
+    "tortilla"
    ],
    "dietOptions": [
     "vegetarian",
@@ -367,7 +427,15 @@
    "popularWith": [
     "Wine lovers",
     "Small groups"
-   ]
+   ],
+   "booking": {
+    "walkIn": "easy",
+    "bookAhead": "same-day"
+   },
+   "topReview": {
+    "text": "Candlelit little wine bar. Lovely natural wines by the glass and a perfect tortilla to share.",
+    "rating": 4
+   }
   }
  },
  {
@@ -404,6 +472,11 @@
    "vibes": [
     "traditional",
     "local"
+   ],
+   "dishes": [
+    "vermouth",
+    "anchovies",
+    "cured ham"
    ],
    "dietOptions": [
     "vegetarian",
@@ -442,7 +515,15 @@
    "popularWith": [
     "Locals after work",
     "Late diners"
-   ]
+   ],
+   "booking": {
+    "walkIn": "sometimes",
+    "bookAhead": "day-before"
+   },
+   "topReview": {
+    "text": "Old-school vermouth bar with marble counters and tiled walls. Order the anchovies and the jamón.",
+    "rating": 5
+   }
   }
  },
  {
@@ -479,6 +560,11 @@
    "vibes": [
     "trendy",
     "local"
+   ],
+   "dishes": [
+    "canelons",
+    "butifarra",
+    "pa amb tomàquet"
    ],
    "dietOptions": [
     "pescatarian",
@@ -521,7 +607,15 @@
    "popularWith": [
     "Mixed-diet groups",
     "Food explorers"
-   ]
+   ],
+   "booking": {
+    "walkIn": "sometimes",
+    "bookAhead": "same-day"
+   },
+   "topReview": {
+    "text": "Catalan classics with a modern twist. The canelons were rich and the short wine list is smart.",
+    "rating": 4
+   }
   }
  },
  {
@@ -559,6 +653,11 @@
     "traditional",
     "cosy",
     "touristy"
+   ],
+   "dishes": [
+    "black rice",
+    "suquet de peix",
+    "roast duck"
    ],
    "dietOptions": [
     "pescatarian"
@@ -598,7 +697,15 @@
    "popularWith": [
     "Special occasions",
     "Meat lovers"
-   ]
+   ],
+   "booking": {
+    "walkIn": "rare",
+    "bookAhead": "before-trip"
+   },
+   "topReview": {
+    "text": "Stone arches, candles and a superb black rice. Pricey, but it felt like a proper special night.",
+    "rating": 5
+   }
   }
  },
  {
@@ -635,7 +742,12 @@
    "vibes": [
     "traditional",
     "local",
-    "fancy"
+    "posh"
+   ],
+   "dishes": [
+    "oxtail",
+    "fish stew",
+    "croquetas"
    ],
    "dietOptions": [
     "pescatarian"
@@ -675,7 +787,15 @@
    "popularWith": [
     "Classic-cuisine fans",
     "Special occasions"
-   ]
+   ],
+   "booking": {
+    "walkIn": "rare",
+    "bookAhead": "day-before"
+   },
+   "topReview": {
+    "text": "A Raval institution since 1929. The oxtail is legendary and the waiters have seen it all.",
+    "rating": 4
+   }
   }
  },
  {
@@ -706,7 +826,13 @@
   "sample": {
    "vibes": [
     "local",
-    "lively"
+    "lively",
+    "casual"
+   ],
+   "dishes": [
+    "fried artichokes",
+    "croquetas",
+    "pa amb tomàquet"
    ],
    "dietOptions": [
     "pescatarian"
@@ -746,7 +872,15 @@
    "popularWith": [
     "Locals after work",
     "Budget travellers"
-   ]
+   ],
+   "booking": {
+    "walkIn": "easy",
+    "bookAhead": "same-day"
+   },
+   "topReview": {
+    "text": "Standing room only on a Friday, but the fried artichokes and house wine cost next to nothing.",
+    "rating": 4
+   }
   }
  },
  {
@@ -781,8 +915,14 @@
   ],
   "sample": {
    "vibes": [
-    "fancy",
-    "traditional"
+    "posh",
+    "traditional",
+    "quiet"
+   ],
+   "dishes": [
+    "tasting menu",
+    "sea bass",
+    "prawn rice"
    ],
    "dietOptions": [
     "pescatarian",
@@ -823,7 +963,15 @@
    "popularWith": [
     "Special occasions",
     "Classic-cuisine fans"
-   ]
+   ],
+   "booking": {
+    "walkIn": "rare",
+    "bookAhead": "before-trip"
+   },
+   "topReview": {
+    "text": "Refined Catalan tasting menu in a calm, elegant room. Not cheap, but right for an anniversary.",
+    "rating": 5
+   }
   }
  },
  {
@@ -860,6 +1008,11 @@
    "vibes": [
     "trendy",
     "lively"
+   ],
+   "dishes": [
+    "oysters",
+    "seafood paella",
+    "grilled prawns"
    ],
    "dietOptions": [
     "pescatarian",
@@ -900,7 +1053,15 @@
    "popularWith": [
     "Seafood fans",
     "Groups of friends"
-   ]
+   ],
+   "booking": {
+    "walkIn": "rare",
+    "bookAhead": "day-before"
+   },
+   "topReview": {
+    "text": "Fresh oysters and a buzzing room. The seafood paella was generous enough for three of us.",
+    "rating": 4
+   }
   }
  },
  {
@@ -936,8 +1097,13 @@
   "sample": {
    "vibes": [
     "traditional",
-    "fancy",
+    "posh",
     "local"
+   ],
+   "dishes": [
+    "seafood tasting",
+    "clams",
+    "red prawns"
    ],
    "dietOptions": [
     "pescatarian",
@@ -978,7 +1144,15 @@
    "popularWith": [
     "Seafood fans",
     "Special occasions"
-   ]
+   ],
+   "booking": {
+    "walkIn": "rare",
+    "bookAhead": "before-trip"
+   },
+   "topReview": {
+    "text": "No menu, they just keep bringing seafood until you say stop. Expensive and completely unforgettable.",
+    "rating": 5
+   }
   }
  },
  {
@@ -1014,8 +1188,13 @@
   "sample": {
    "vibes": [
     "traditional",
-    "fancy",
+    "posh",
     "touristy"
+   ],
+   "dishes": [
+    "seafood platter",
+    "lobster rice",
+    "percebes"
    ],
    "dietOptions": [
     "pescatarian",
@@ -1056,7 +1235,15 @@
    "popularWith": [
     "Seafood fans",
     "Special occasions"
-   ]
+   ],
+   "booking": {
+    "walkIn": "rare",
+    "bookAhead": "before-trip"
+   },
+   "topReview": {
+    "text": "Waiters in white jackets and a mountain of shellfish. Formal and classic, the lobster rice is superb.",
+    "rating": 5
+   }
   }
  },
  {
@@ -1092,7 +1279,13 @@
   "sample": {
    "vibes": [
     "local",
-    "traditional"
+    "traditional",
+    "casual"
+   ],
+   "dishes": [
+    "paella",
+    "fried fish",
+    "mussels"
    ],
    "dietOptions": [
     "pescatarian",
@@ -1133,7 +1326,15 @@
    "popularWith": [
     "Seafood fans",
     "Locals after work"
-   ]
+   ],
+   "booking": {
+    "walkIn": "sometimes",
+    "bookAhead": "same-day"
+   },
+   "topReview": {
+    "text": "Neighbourhood seafood spot with fair prices. The Sunday paella sells out early, so go in time.",
+    "rating": 4
+   }
   }
  },
  {
@@ -1169,7 +1370,13 @@
   "sample": {
    "vibes": [
     "local",
-    "cosy"
+    "cosy",
+    "quiet"
+   ],
+   "dishes": [
+    "menú del día",
+    "tortilla",
+    "lentil stew"
    ],
    "dietOptions": [
     "vegetarian",
@@ -1210,7 +1417,15 @@
    "popularWith": [
     "Budget travellers",
     "Lunch crowd"
-   ]
+   ],
+   "booking": {
+    "walkIn": "easy",
+    "bookAhead": "same-day"
+   },
+   "topReview": {
+    "text": "Homemade menú del día at a price you would not expect in Eixample. Calm and quiet in the evening.",
+    "rating": 4
+   }
   }
  },
  {
@@ -1246,7 +1461,13 @@
   "sample": {
    "vibes": [
     "traditional",
-    "local"
+    "local",
+    "family"
+   ],
+   "dishes": [
+    "paella",
+    "grilled lamb",
+    "crema catalana"
    ],
    "dietOptions": [
     "vegetarian",
@@ -1287,7 +1508,15 @@
    "popularWith": [
     "Classic-cuisine fans",
     "Small groups"
-   ]
+   ],
+   "booking": {
+    "walkIn": "sometimes",
+    "bookAhead": "same-day"
+   },
+   "topReview": {
+    "text": "Family-run, with a proper wood-fired paella. Service is slow, but nobody at our table minded.",
+    "rating": 4
+   }
   }
  },
  {
@@ -1324,6 +1553,11 @@
    "vibes": [
     "trendy",
     "cosy"
+   ],
+   "dishes": [
+    "fresh pasta",
+    "burrata",
+    "tiramisu"
    ],
    "dietOptions": [
     "vegetarian",
@@ -1365,7 +1599,15 @@
    "popularWith": [
     "Date nights",
     "Pasta lovers"
-   ]
+   ],
+   "booking": {
+    "walkIn": "rare",
+    "bookAhead": "day-before"
+   },
+   "topReview": {
+    "text": "Handmade pasta in a dim, romantic room. Do not skip the burrata to start.",
+    "rating": 4
+   }
   }
  },
  {
@@ -1401,7 +1643,13 @@
   "sample": {
    "vibes": [
     "traditional",
-    "lively"
+    "lively",
+    "family"
+   ],
+   "dishes": [
+    "neapolitan pizza",
+    "pasta",
+    "tiramisu"
    ],
    "dietOptions": [
     "vegetarian",
@@ -1443,7 +1691,15 @@
    "popularWith": [
     "Families",
     "Groups of friends"
-   ]
+   ],
+   "booking": {
+    "walkIn": "easy",
+    "bookAhead": "same-day"
+   },
+   "topReview": {
+    "text": "Loud, Neapolitan and full of families. Real wood-fired pizza with a soft, blistered crust.",
+    "rating": 5
+   }
   }
  },
  {
@@ -1479,7 +1735,13 @@
   "sample": {
    "vibes": [
     "touristy",
-    "cosy"
+    "cosy",
+    "family"
+   ],
+   "dishes": [
+    "lasagne",
+    "carbonara",
+    "pizza"
    ],
    "dietOptions": [
     "vegetarian",
@@ -1521,7 +1783,15 @@
    "popularWith": [
     "First-time visitors",
     "Families"
-   ]
+   ],
+   "booking": {
+    "walkIn": "easy",
+    "bookAhead": "same-day"
+   },
+   "topReview": {
+    "text": "Friendly spot near the cathedral. Nothing fancy, but the lasagne was hearty and our kids loved it.",
+    "rating": 4
+   }
   }
  },
  {
@@ -1557,7 +1827,13 @@
   "sample": {
    "vibes": [
     "local",
-    "lively"
+    "lively",
+    "family"
+   ],
+   "dishes": [
+    "pizza",
+    "calzone",
+    "garlic bread"
    ],
    "dietOptions": [
     "vegetarian",
@@ -1599,7 +1875,15 @@
    "popularWith": [
     "Budget travellers",
     "Families"
-   ]
+   ],
+   "booking": {
+    "walkIn": "easy",
+    "bookAhead": "same-day"
+   },
+   "topReview": {
+    "text": "Good cheap pizza after an afternoon on the beach. Big tables, so easy with a group.",
+    "rating": 4
+   }
   }
  },
  {
@@ -1635,7 +1919,12 @@
   "sample": {
    "vibes": [
     "local",
-    "cosy"
+    "cosy",
+    "casual"
+   ],
+   "dishes": [
+    "margherita",
+    "pizza by the slice"
    ],
    "dietOptions": [
     "vegetarian",
@@ -1677,7 +1966,15 @@
    "popularWith": [
     "Budget travellers",
     "Locals after work"
-   ]
+   ],
+   "booking": {
+    "walkIn": "easy",
+    "bookAhead": "same-day"
+   },
+   "topReview": {
+    "text": "Paper plates, no fuss and a crispy margherita for a few euros. Locals queue out the door.",
+    "rating": 4
+   }
   }
  },
  {
@@ -1713,7 +2010,12 @@
   "sample": {
    "vibes": [
     "trendy",
-    "local"
+    "local",
+    "casual"
+   ],
+   "dishes": [
+    "gluten-free pizza",
+    "burrata pizza"
    ],
    "dietOptions": [
     "vegetarian",
@@ -1755,7 +2057,15 @@
    "popularWith": [
     "Gluten-free diners",
     "Mixed-diet groups"
-   ]
+   ],
+   "booking": {
+    "walkIn": "easy",
+    "bookAhead": "same-day"
+   },
+   "topReview": {
+    "text": "Fully gluten-free and you would never guess. Light dough and creative toppings.",
+    "rating": 5
+   }
   }
  },
  {
@@ -1791,7 +2101,13 @@
   "sample": {
    "vibes": [
     "trendy",
-    "cosy"
+    "cosy",
+    "quiet"
+   ],
+   "dishes": [
+    "omakase",
+    "nigiri",
+    "wagyu"
    ],
    "dietOptions": [
     "pescatarian"
@@ -1831,7 +2147,15 @@
    "popularWith": [
     "Sushi lovers",
     "Date nights"
-   ]
+   ],
+   "booking": {
+    "walkIn": "rare",
+    "bookAhead": "before-trip"
+   },
+   "topReview": {
+    "text": "Intimate counter, superb nigiri and a calm, careful chef. It is tiny, so book well ahead.",
+    "rating": 5
+   }
   }
  },
  {
@@ -1867,7 +2191,12 @@
   "sample": {
    "vibes": [
     "trendy",
-    "fancy"
+    "posh"
+   ],
+   "dishes": [
+    "sushi",
+    "robata skewers",
+    "cocktails"
    ],
    "dietOptions": [
     "pescatarian"
@@ -1907,7 +2236,15 @@
    "popularWith": [
     "Sushi lovers",
     "Food explorers"
-   ]
+   ],
+   "booking": {
+    "walkIn": "rare",
+    "bookAhead": "day-before"
+   },
+   "topReview": {
+    "text": "Dark, stylish room with a DJ at weekends. The sushi was good, the cocktails even better.",
+    "rating": 4
+   }
   }
  },
  {
@@ -1943,7 +2280,13 @@
   "sample": {
    "vibes": [
     "local",
-    "cosy"
+    "cosy",
+    "quiet"
+   ],
+   "dishes": [
+    "gyoza",
+    "udon",
+    "sushi"
    ],
    "dietOptions": [
     "pescatarian"
@@ -1983,7 +2326,15 @@
    "popularWith": [
     "Small groups",
     "Food explorers"
-   ]
+   ],
+   "booking": {
+    "walkIn": "easy",
+    "bookAhead": "same-day"
+   },
+   "topReview": {
+    "text": "Small family-run Japanese place. Homemade gyoza and an udon broth that is spot on.",
+    "rating": 5
+   }
   }
  },
  {
@@ -2019,7 +2370,13 @@
   "sample": {
    "vibes": [
     "trendy",
-    "lively"
+    "lively",
+    "casual"
+   ],
+   "dishes": [
+    "tonkotsu ramen",
+    "bao",
+    "gyoza"
    ],
    "dietOptions": [
     "vegetarian",
@@ -2061,7 +2418,15 @@
    "popularWith": [
     "Noodle fans",
     "Budget travellers"
-   ]
+   ],
+   "booking": {
+    "walkIn": "sometimes",
+    "bookAhead": "same-day"
+   },
+   "topReview": {
+    "text": "Rich tonkotsu, quick service and a fun crowd. Expect a short queue around nine.",
+    "rating": 4
+   }
   }
  },
  {
@@ -2099,6 +2464,11 @@
     "trendy",
     "local",
     "lively"
+   ],
+   "dishes": [
+    "vegan burger",
+    "craft beer",
+    "fries"
    ],
    "dietOptions": [
     "vegetarian",
@@ -2141,7 +2511,15 @@
    "popularWith": [
     "Plant-based eaters",
     "Craft-beer fans"
-   ]
+   ],
+   "booking": {
+    "walkIn": "easy",
+    "bookAhead": "same-day"
+   },
+   "topReview": {
+    "text": "Vegan burgers and a long craft beer list in a tiny, loud bar. Staff really know their beers.",
+    "rating": 5
+   }
   }
  },
  {
@@ -2177,7 +2555,13 @@
   "sample": {
    "vibes": [
     "local",
-    "cosy"
+    "cosy",
+    "casual"
+   ],
+   "dishes": [
+    "veggie burger",
+    "salad bowl",
+    "fresh juice"
    ],
    "dietOptions": [
     "vegetarian",
@@ -2219,7 +2603,15 @@
    "popularWith": [
     "Plant-based eaters",
     "Mixed-diet groups"
-   ]
+   ],
+   "booking": {
+    "walkIn": "easy",
+    "bookAhead": "same-day"
+   },
+   "topReview": {
+    "text": "Easy plant-based spot in the old town. Filling veggie burger and great fresh juices.",
+    "rating": 4
+   }
   }
  },
  {
@@ -2255,7 +2647,13 @@
   "sample": {
    "vibes": [
     "lively",
-    "trendy"
+    "trendy",
+    "casual"
+   ],
+   "dishes": [
+    "tacos al pastor",
+    "nachos",
+    "margaritas"
    ],
    "dietOptions": [
     "vegetarian",
@@ -2296,7 +2694,15 @@
    "popularWith": [
     "Budget travellers",
     "Groups of friends"
-   ]
+   ],
+   "booking": {
+    "walkIn": "easy",
+    "bookAhead": "same-day"
+   },
+   "topReview": {
+    "text": "Cheap tacos al pastor, strong margaritas and loud music. A perfect start to a night out.",
+    "rating": 4
+   }
   }
  },
  {
@@ -2332,7 +2738,13 @@
   "sample": {
    "vibes": [
     "trendy",
-    "lively"
+    "lively",
+    "posh"
+   ],
+   "dishes": [
+    "mole",
+    "ceviche",
+    "mezcal"
    ],
    "dietOptions": [
     "vegetarian",
@@ -2373,7 +2785,15 @@
    "popularWith": [
     "Food explorers",
     "Groups of friends"
-   ]
+   ],
+   "booking": {
+    "walkIn": "rare",
+    "bookAhead": "before-trip"
+   },
+   "topReview": {
+    "text": "Upscale Mexican by the port. The mole is deep and complex, and the mezcal list is huge.",
+    "rating": 5
+   }
   }
  },
  {
@@ -2409,7 +2829,13 @@
   "sample": {
    "vibes": [
     "cosy",
-    "local"
+    "local",
+    "quiet"
+   ],
+   "dishes": [
+    "butter chicken",
+    "dal",
+    "naan"
    ],
    "dietOptions": [
     "vegetarian",
@@ -2453,7 +2879,15 @@
    "popularWith": [
     "Spice lovers",
     "Mixed-diet groups"
-   ]
+   ],
+   "booking": {
+    "walkIn": "easy",
+    "bookAhead": "same-day"
+   },
+   "topReview": {
+    "text": "Warm welcome and a creamy butter chicken. Ask for it spicy if you really mean it.",
+    "rating": 4
+   }
   }
  },
  {
@@ -2489,7 +2923,13 @@
   "sample": {
    "vibes": [
     "local",
-    "lively"
+    "lively",
+    "casual"
+   ],
+   "dishes": [
+    "biryani",
+    "chana masala",
+    "samosas"
    ],
    "dietOptions": [
     "vegetarian",
@@ -2533,7 +2973,15 @@
    "popularWith": [
     "Spice lovers",
     "Budget travellers"
-   ]
+   ],
+   "booking": {
+    "walkIn": "easy",
+    "bookAhead": "same-day"
+   },
+   "topReview": {
+    "text": "No-frills curry house with huge portions. The biryani fed two of us for under 20 euros.",
+    "rating": 4
+   }
   }
  },
  {
@@ -2571,6 +3019,11 @@
     "trendy",
     "local",
     "cosy"
+   ],
+   "dishes": [
+    "seasonal soup",
+    "buddha bowl",
+    "vegan cake"
    ],
    "dietOptions": [
     "vegetarian",
@@ -2613,7 +3066,15 @@
    "popularWith": [
     "Plant-based eaters",
     "Lunch crowd"
-   ]
+   ],
+   "booking": {
+    "walkIn": "sometimes",
+    "bookAhead": "day-before"
+   },
+   "topReview": {
+    "text": "Bright, relaxed and fully plant-based. Even the meat-eaters in our group went back twice.",
+    "rating": 5
+   }
   }
  },
  {
@@ -2650,6 +3111,11 @@
    "vibes": [
     "trendy",
     "cosy"
+   ],
+   "dishes": [
+    "vegan paella",
+    "vegan tapas",
+    "seitan"
    ],
    "dietOptions": [
     "vegetarian",
@@ -2692,7 +3158,15 @@
    "popularWith": [
     "Plant-based eaters",
     "Mixed-diet groups"
-   ]
+   ],
+   "booking": {
+    "walkIn": "sometimes",
+    "bookAhead": "same-day"
+   },
+   "topReview": {
+    "text": "Vegan tapas and a surprisingly good vegan paella. Small room, so it fills up fast.",
+    "rating": 4
+   }
   }
  },
  {
@@ -2728,8 +3202,12 @@
   "sample": {
    "vibes": [
     "trendy",
-    "fancy",
+    "posh",
     "local"
+   ],
+   "dishes": [
+    "vegetarian tasting menu",
+    "natural wine"
    ],
    "dietOptions": [
     "vegetarian",
@@ -2773,7 +3251,15 @@
    "popularWith": [
     "Plant-based eaters",
     "Food explorers"
-   ]
+   ],
+   "booking": {
+    "walkIn": "rare",
+    "bookAhead": "day-before"
+   },
+   "topReview": {
+    "text": "Creative vegetarian tasting menu paired with natural wines. Slow food in the best sense.",
+    "rating": 4
+   }
   }
  },
  {
@@ -2809,7 +3295,13 @@
   "sample": {
    "vibes": [
     "lively",
-    "local"
+    "local",
+    "family"
+   ],
+   "dishes": [
+    "mezze",
+    "hummus",
+    "grilled halloumi"
    ],
    "dietOptions": [
     "vegetarian",
@@ -2852,7 +3344,15 @@
    "popularWith": [
     "Sharing-plate fans",
     "Mixed-diet groups"
-   ]
+   ],
+   "booking": {
+    "walkIn": "sometimes",
+    "bookAhead": "same-day"
+   },
+   "topReview": {
+    "text": "Endless mezze to share. The hummus and grilled halloumi were gone in seconds.",
+    "rating": 5
+   }
   }
  },
  {
@@ -2888,7 +3388,13 @@
   "sample": {
    "vibes": [
     "cosy",
-    "touristy"
+    "touristy",
+    "casual"
+   ],
+   "dishes": [
+    "falafel",
+    "shawarma",
+    "mint tea"
    ],
    "dietOptions": [
     "vegetarian",
@@ -2931,7 +3437,15 @@
    "popularWith": [
     "Budget travellers",
     "Small groups"
-   ]
+   ],
+   "booking": {
+    "walkIn": "easy",
+    "bookAhead": "same-day"
+   },
+   "topReview": {
+    "text": "Quick falafel wraps and mint tea in the old town. Handy for a cheap, easy dinner.",
+    "rating": 4
+   }
   }
  },
  {
@@ -2969,6 +3483,11 @@
     "traditional",
     "lively"
    ],
+   "dishes": [
+    "entraña steak",
+    "empanadas",
+    "chimichurri"
+   ],
    "dietOptions": [
     "gluten-free"
    ],
@@ -3005,7 +3524,15 @@
    "popularWith": [
     "Meat lovers",
     "Groups of friends"
-   ]
+   ],
+   "booking": {
+    "walkIn": "rare",
+    "bookAhead": "day-before"
+   },
+   "topReview": {
+    "text": "Big Argentine steaks cooked exactly as asked. Start with the empanadas.",
+    "rating": 4
+   }
   }
  },
  {
@@ -3043,6 +3570,11 @@
     "trendy",
     "cosy"
    ],
+   "dishes": [
+    "dry-aged steak",
+    "steak tartare",
+    "red wine"
+   ],
    "dietOptions": [
     "gluten-free"
    ],
@@ -3079,7 +3611,15 @@
    "popularWith": [
     "Meat lovers",
     "Date nights"
-   ]
+   ],
+   "booking": {
+    "walkIn": "rare",
+    "bookAhead": "day-before"
+   },
+   "topReview": {
+    "text": "Dry-aged beef and a smart wine list in a relaxed gastrobar. Ideal for a date night.",
+    "rating": 5
+   }
   }
  }
 ]

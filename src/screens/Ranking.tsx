@@ -1,7 +1,7 @@
 import { useMemo, useState } from 'react'
 import { AnimatePresence } from 'framer-motion'
 import type { Member, Weights } from '../types'
-import { nightLabel, useGroup, useNight, useStore } from '../store'
+import { nightLabel, useBooking, useGroup, useNight, useStore } from '../store'
 import { confidence } from '../model/learn'
 import { sharedReasons } from '../model/explain'
 import { groupPlaces, leftToSwipe, rankGroup, swipeOn, type GroupRule, type RankInput, type Ranked } from '../model/rank'
@@ -30,6 +30,7 @@ export function RankingScreen({ goToSwipe }: { goToSwipe: () => void }) {
   const { state, set, restaurants } = useStore()
   const group = useGroup()
   const night = useNight()
+  const booking = useBooking()
   const { members, weights, features, actor } = group
   const [adjust, setAdjust] = useState(false)
   const [view, setView] = useState<'list' | 'map'>('list')
@@ -54,8 +55,9 @@ export function RankingScreen({ goToSwipe }: { goToSwipe: () => void }) {
       pinnedId: scope === 'group' ? state.pin?.restaurantId : null,
       boost: scope === 'mine' ? boost : undefined,
       rule: scope === 'group' ? state.rule : 'average',
+      when: booking.when, night: booking.night, partySize: party,
     }
-  }, [restaurants, included.map((m) => m.id).join(), weights, features, state.pin, state.rule, scope, boosts]) // eslint-disable-line react-hooks/exhaustive-deps
+  }, [restaurants, included.map((m) => m.id).join(), weights, features, state.pin, state.rule, scope, boosts, booking.when, booking.night, party]) // eslint-disable-line react-hooks/exhaustive-deps
 
   const { ranked, blocked } = useMemo(() => rankGroup(input), [input])
   const pinnedBy = state.pin ? members.find((m) => m.id === state.pin!.by) : undefined

@@ -21,7 +21,7 @@ analysis finding it answers. Edit this section by hand.
 
 <!-- BEGIN GENERATED: do not edit by hand, run scripts/study-guide.sh -->
 
-32 of 117 principles applied, 32 tags in the code.
+34 of 117 principles applied, 35 tags in the code.
 
 ### Amershi et al. 2019, Guidelines for Human-AI Interaction (L04 p.66)
 
@@ -35,15 +35,15 @@ analysis finding it answers. Edit this section by hand.
 
 #### AMR-05 Match relevant social norms
 
-- `src/model/explain.ts:70` Other members' reasons are counted without names ("two people prefer cheaper places") unless they chose to share them
+- `src/model/explain.ts:84` Other members' reasons are counted without names ("two people prefer cheaper places") unless they chose to share them
 
 #### AMR-09 Support efficient correction
 
-- `src/model/learn.ts:73` A taste the member removed in "What the app thinks you like" is forgotten, whatever the swipes said
+- `src/model/learn.ts:71` A taste the member removed in "What the app thinks you like" is forgotten, whatever the swipes said
 
 #### AMR-10 Scope services when in doubt
 
-- `src/screens/Ranking.tsx:67` Until everyone at the table has 8 swipes, or has seen every place they can eat at, there is no front-runner, only an unordered shortlist of three
+- `src/screens/Ranking.tsx:69` Until everyone at the table has 8 swipes, or has seen every place they can eat at, there is no front-runner, only an unordered shortlist of three
 
 #### AMR-11 Make clear why the system did what it did
 
@@ -51,7 +51,7 @@ analysis finding it answers. Edit this section by hand.
 
 #### AMR-13 Learn from user behavior
 
-- `src/model/learn.ts:35` Each like or skip moves the weights of that card's features, more when the guess was wrong
+- `src/model/learn.ts:33` Each like or skip moves the weights of that card's features, more when the guess was wrong
 
 #### AMR-14 Update and adapt cautiously
 
@@ -67,6 +67,10 @@ analysis finding it answers. Edit this section by hand.
 
 ### Mental models and the model of the user (L04 p.4 to 19)
 
+#### MM-01 Three models must line up
+
+- `src/state.ts:6` The trip (stay, dates) is shared and set once by its starter, personal mood and must-haves live per member, so nobody mistakes their own wishes for group settings
+
 #### MM-03 Make the AI's model of the user visible
 
 - `src/screens/Profile.tsx:155` The app's picture of the member is on screen as chips, and each chip can be removed
@@ -75,7 +79,8 @@ analysis finding it answers. Edit this section by hand.
 
 #### ERR-12 Context errors: explain no-result and offer alternatives
 
-- `src/screens/Ranking.tsx:232` Places removed by a diet or allergy are not silently dropped: the list says how many, and why for each
+- `src/model/rank.ts:111` A place with no table in the chosen mode is sorted down and marked, never hidden, and ad-hoc mode puts places free tonight first
+- `src/screens/Ranking.tsx:234` Places removed by a diet or allergy are not silently dropped: the list says how many, and why for each
 
 ### Fairness, accountability, ethics (L06)
 
@@ -89,11 +94,11 @@ analysis finding it answers. Edit this section by hand.
 
 #### FAIR-04 Procedural vs. distributive justice: equality or equity
 
-- `src/model/rank.ts:92` (trade-off) One member one vote under both rules: someone with 40 swipes counts the same as someone with 5
+- `src/model/rank.ts:105` (trade-off) One member one vote under both rules: someone with 40 swipes counts the same as someone with 5
 
 #### FAIR-05 Pick a fairness notion deliberately
 
-- `src/model/rank.ts:93` The group picks its fairness rule: best on average, or nobody left unhappy (the lowest score counts)
+- `src/model/rank.ts:106` The group picks its fairness rule: best on average, or nobody left unhappy (the lowest score counts)
 
 #### FAIR-09 Measurement bias
 
@@ -101,15 +106,19 @@ analysis finding it answers. Edit this section by hand.
 
 #### FAIR-10 Aggregation bias
 
-- `src/model/rank.ts:74` Diets and allergies are a veto, not a taste: one member who cannot eat there removes the place for the group
+- `src/model/rank.ts:86` Diets and allergies are a veto, not a taste: one member who cannot eat there removes the place for the group
 
 #### FAIR-13 Harm types
 
 - `src/screens/Profile.tsx:211` "Popular with" uses taste groups, not age or gender, and stays off until a member turns it on
 
+#### FAIR-14 Recourse
+
+- `src/model/musthave.ts:107` Private must-haves in a member's own words ("paella") feed the ranking through a simple keyword match the member can predict
+
 #### FAIR-16 User auditing
 
-- `src/screens/Ranking.tsx:139` The people filter lets anyone switch members off and see whose taste shapes the list, with each swipe count in view
+- `src/screens/Ranking.tsx:141` The people filter lets anyone switch members off and see whose taste shapes the list, with each swipe count in view
 
 #### FAIR-17 Privacy: consent, control, erasure
 
@@ -117,7 +126,7 @@ analysis finding it answers. Edit this section by hand.
 
 #### FAIR-18 Confidence is not accuracy, calibrate it
 
-- `src/model/learn.ts:80` Confidence follows the number of swipes and is worded, never a percentage
+- `src/model/learn.ts:78` Confidence follows the number of swipes and is worded, never a percentage
 
 ### Explainability and trust (L07)
 
@@ -127,7 +136,7 @@ analysis finding it answers. Edit this section by hand.
 
 #### XAI-10 Unwarranted faith in numbers
 
-- `src/model/explain.ts:46` Scores are shown as words and bar lengths, the raw number never reaches the screen
+- `src/model/explain.ts:47` Scores are shown as words and bar lengths, the raw number never reaches the screen
 
 #### XAI-13 Accuracy vs. interpretability, use interpretable features
 
@@ -135,27 +144,27 @@ analysis finding it answers. Edit this section by hand.
 
 #### XAI-15 Counterfactual explanations
 
-- `src/model/explain.ts:54` Counterfactual: "without Mia this would be number 2" shows how much one person moves the rank
+- `src/model/explain.ts:55` Counterfactual: "without Mia this would be number 2" shows how much one person moves the rank
 
 #### XAI-16 Feature attribution (SHAP)
 
-- `src/model/explain.ts:12` "Why" lists the features that pushed this member's score most, up and down, in plain words
+- `src/model/explain.ts:13` "Why" lists the features that pushed this member's score most, up and down, in plain words
 
 ### Human-Centered AI framework (Shneiderman 2022, in L06 and L07)
 
 #### HCAI-02 High control and high automation together
 
-- `src/screens/Ranking.tsx:53` The ranking is automatic, and people steer it three ways: filter members, re-rank for yourself, or pin a place
+- `src/screens/Ranking.tsx:54` The ranking is automatic, and people steer it three ways: filter members, re-rank for yourself, or pin a place
 
 ### Horvitz 1999, Principles of mixed-initiative user interfaces (reading, week 4)
 
 #### HOR-02 Represent uncertainty about the user's goals
 
-- `src/model/rank.ts:85` A real swipe beats the guess: a place the member liked counts as a match for them and a skipped one does not, the guess only orders the rest
+- `src/model/rank.ts:98` A real swipe beats the guess: a place the member liked counts as a match for them and a skipped one does not, the guess only orders the rest
 
 #### HOR-05 Use dialog to resolve key uncertainties
 
-- `src/model/learn.ts:65` When the member says what a swipe was about, only that part of the card is learned, three times as strongly
+- `src/model/learn.ts:63` When the member says what a swipe was about, only that part of the card is learned, three times as strongly
 
 ### Shneiderman and Maes 1997, Direct manipulation vs. interface agents (reading, week 4)
 
@@ -177,7 +186,6 @@ analysis finding it answers. Edit this section by hand.
 - AMR-12 Remember recent interactions
 - AMR-17 Provide global controls
 - AMR-18 Notify users about changes
-- MM-01 Three models must line up
 - MM-02 Mental models are incomplete and sticky
 - MM-04 The model of the user is always incomplete
 - MM-05 Design for overlooked user groups
@@ -208,7 +216,6 @@ analysis finding it answers. Edit this section by hand.
 - FAIR-08 Representation bias
 - FAIR-11 Evaluation bias
 - FAIR-12 Deployment bias
-- FAIR-14 Recourse
 - FAIR-15 Contestability
 - FAIR-19 Model card
 - FAIR-20 Envision first: should this feature exist?

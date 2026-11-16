@@ -1,4 +1,4 @@
-import type { Restaurant } from '../types'
+import type { Place, Restaurant, Stay } from '../types'
 import fixed from './restaurants.barcelona.json'
 
 /**
@@ -14,7 +14,7 @@ export interface RestaurantSource {
 
 export class FixedSource implements RestaurantSource {
   readonly note =
-    'Real Barcelona restaurants from OpenStreetMap. Photos show the type of food and a similar dining room, not the place itself. Ratings, review counts, table times and "popular with" are sample values.'
+    'Real Barcelona restaurants from OpenStreetMap. Photos show the type of food and a similar dining room, not the place itself. Ratings, review counts, top reviews, vibe tags, dishes, table times, booking info and "popular with" are sample values.'
   async list(): Promise<Restaurant[]> {
     return fixed as Restaurant[]
   }
@@ -30,3 +30,11 @@ export const HOTEL_AREAS: { id: string; label: string; latitude: number; longitu
   { id: 'barceloneta', label: 'Barceloneta', latitude: 41.3795, longitude: 2.1894 },
   { id: 'poblesec', label: 'Poble-sec', latitude: 41.3735, longitude: 2.163 },
 ]
+
+/** The point walking times are measured from. A custom stay keeps its own label and position. */
+export function resolveStay(stay: Stay | null | undefined): Place {
+  if (stay?.kind === 'custom' && Number.isFinite(stay.latitude) && Number.isFinite(stay.longitude))
+    return { label: stay.label.trim() || 'Your stay', latitude: stay.latitude, longitude: stay.longitude }
+  const area = HOTEL_AREAS.find((h) => stay?.kind === 'area' && h.id === stay.id) ?? HOTEL_AREAS[0]
+  return { label: area.label, latitude: area.latitude, longitude: area.longitude }
+}

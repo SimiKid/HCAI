@@ -8,16 +8,14 @@ const PRIOR: Record<TripPref, Weights> = {
   traditional: { 'vibe:traditional': 1.2, 'vibe:touristy': -0.4 },
   trendy: { 'vibe:trendy': 1.2 },
   local: { 'vibe:local': 1.2, 'vibe:touristy': -0.8 },
-  budget: { 'price:low': 1.2, 'price:high': -1.2 },
   treat: { 'price:high': 1.0 },
   near: { near: 1.5 },
-  top: { rated: 1.2 },
 }
 
 /** Starting weights from what the member said about the trip, before any swipe. */
 export function priorWeights(prefs: TripPref[]): Weights {
   const w: Weights = {}
-  for (const p of prefs) for (const [f, v] of Object.entries(PRIOR[p])) w[f] = (w[f] ?? 0) + v
+  for (const p of prefs) for (const [f, v] of Object.entries(PRIOR[p] ?? {})) w[f] = (w[f] ?? 0) + v
   return w
 }
 

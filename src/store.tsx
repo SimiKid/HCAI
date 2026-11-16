@@ -1,57 +1,22 @@
 import { createContext, useContext, useEffect, useMemo, useState, type ReactNode } from 'react'
-import type { Allergy, Diet, Features, LatLng, Member, Restaurant, Swipe, TripPref, Weights } from './types'
-import { HOTEL_AREAS } from './data/source'
+import type { Features, Member, Place, Restaurant, Weights } from './types'
+import { resolveStay } from './data/source'
 import { simulatedMembers } from './data/members'
 import { featuresOf } from './model/features'
 import { learn } from './model/learn'
-import { tripNights, type GroupRule } from './model/rank'
+import { tripNights } from './model/rank'
+import { bookingNight, type BookingMode } from './model/booking'
+import { initialState, migrateState, personalOf, type State } from './state'
 
-export interface State {
-  stage: 'welcome' | 'profile' | 'trip' | 'invite' | 'details' | 'app'
-  name: string
-  avatar: string
-  diets: Diet[]
-  allergies: Allergy[]
-  /** `role` is 'owner' when this person started the trip, 'guest' when they joined by invite or code. */
-  trip: { code: string; role: 'owner' | 'guest'; hotelId: string; from: string; to: string; prefs: TripPref[] }
-  /** The night of the trip the group plans dinner for, as an ISO date. Empty means the first night. */
-  night: string
-  /** Swipes made in this app, by member id. Simulated members also have seeded swipes. */
-  swipes: Record<string, Swipe[]>
-  muted: Record<string, string[]>
-  pin: { restaurantId: string; by: string } | null
-  showPopularWith: boolean
-  /** Members who let the group see their reasons by name. Missing means the member's default. */
-  share: Record<string, boolean>
-  /** How member scores become one group score. */
-  rule: GroupRule
-  /** Demo only: swipe and pin as another group member. */
-  actingAs: string
-}
+export { initialState, migrateState, patchPersonal, patchTrip, personalOf, type State, type TripState } from './state'
 
+// same key as v2: migrateState() moves an old saved state to the new shape
 const KEY = 'restaurant-tinder-v2'
-
-export const initialState: State = {
-  stage: 'welcome',
-  name: '',
-  avatar: '',
-  diets: [],
-  allergies: [],
-  trip: { code: '', role: 'guest', hotelId: 'gotic', from: '2026-11-20', to: '2026-11-23', prefs: [] },
-  night: '',
-  swipes: {},
-  muted: {},
-  pin: null,
-  showPopularWith: false,
-  share: {},
-  rule: 'average',
-  actingAs: 'me',
-}
 
 function load(): State {
   try {
     const raw = localStorage.getItem(KEY)
-    return raw ? { ...initialState, ...JSON.parse(raw) } : initialState
+    return raw ? migrateState(JSON.parse(raw)) : initialState
   } catch {
     return initialState
   }
@@ -93,7 +58,8 @@ export function useStore(): Store {
 }
 
 export interface Group {
-  hotel: LatLng & { label: string }
+  /** Where the group stays, a preset area or a custom place. All walking times start here. */
+  hotel: Place
   features: Record<string, Features>
   members: Member[]
   weights: Record<string, Weights>
@@ -103,13 +69,15 @@ export interface Group {
 
 export function useGroup(): Group {
   const { state, restaurants } = useStore()
-  const hotel = HOTEL_AREAS.find((h) => h.id === state.trip.hotelId) ?? HOTEL_AREAS[0]
+  const stayKey = JSON.stringify(state.trip.stay)
+  const hotel = useMemo(() => resolveStay(state.trip.stay), [stayKey]) // eslint-disable-line react-hooks/exhaustive-deps
   const features = useMemo(
     () => Object.fromEntries(restaurants.map((r) => [r.id, featuresOf(r, hotel)])),
     [restaurants, hotel],
   )
   const sims = useMemo(() => simulatedMembers(restaurants, features), [restaurants, features])
   return useMemo(() => {
+    const mine = personalOf(state, 'me')
     const me: Member = {
       id: 'me',
       name: state.name.trim() || 'You',
@@ -117,7 +85,10 @@ export function useGroup(): Group {
       avatar: state.avatar,
       diets: state.diets,
       allergies: state.allergies,
-      tripPrefs: state.trip.prefs,
+      tripPrefs: mine.prefs,
+      customPrefs: mine.customPrefs,
+      mustHaves: mine.mustHaves,
+      budget: mine.budget,
       swipes: state.swipes.me ?? [],
       muted: state.muted.me ?? [],
       sharesReasons: state.share.me ?? false,
@@ -125,12 +96,19 @@ export function useGroup(): Group {
     }
     const members = [
       me,
-      ...sims.map((m) => ({
+      ...sims.map((m) => {
+        const own = personalOf(state, m.id, { prefs: m.tripPrefs, customPrefs: m.customPrefs, mustHaves: m.mustHaves, budget: m.budget })
+        return {
         ...m,
+        tripPrefs: own.prefs,
+        customPrefs: own.customPrefs,
+        mustHaves: own.mustHaves,
+        budget: own.budget,
         swipes: [...m.swipes, ...(state.swipes[m.id] ?? [])],
         muted: state.muted[m.id] ?? [],
         sharesReasons: state.share[m.id] ?? m.sharesReasons,
-      })),
+        }
+      }),
     ]
     const weights = Object.fromEntries(
       members.map((m) => [m.id, learn(m.tripPrefs, m.swipes, features, m.muted)]),
@@ -163,6 +141,21 @@ export function useNight(): Night {
   const iso = nights.includes(state.night) ? state.night : (nights[0] ?? '')
   const weekday = iso ? new Date(iso + 'T12:00:00').toLocaleDateString('en-GB', { weekday: 'long' }) : ''
   return { iso, label: nightLabel(iso), weekday, nights }
+}
+
+export interface Booking {
+  when: BookingMode
+  /** ISO date of the dinner the mode plans for: tonight, tomorrow, or the picked night of the trip. */
+  night: string
+  /** For example "Fri 20 Nov". */
+  nightLabel: string
+}
+
+/** The group's booking mode and the night it points at. Pass when, night and party size to rankGroup. */
+export function useBooking(): Booking {
+  const { state } = useStore()
+  const night = bookingNight(state.when, state.trip.from, state.trip.to, state.night)
+  return { when: state.when, night, nightLabel: nightLabel(night) }
 }
 
 // one tap erases everything the app learned about me, a second one deletes the whole profile

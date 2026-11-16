@@ -1,7 +1,8 @@
-import type { Features, Member, Weights } from '../types'
+import type { Features, Member, Restaurant, Weights } from '../types'
 import { BIAS, featurePhrase } from './features'
 import { TASTE_THRESHOLD } from './learn'
 import { rankGroup, type RankInput } from './rank'
+import { personalFit } from './musthave'
 
 export interface Reason {
   feature: string
@@ -60,6 +61,19 @@ export function rankWithout(input: RankInput, restaurantId: string, memberId: st
   return i < 0 ? null : i + 1
 }
 
+/**
+ * What a place means for the viewer's own private trip settings: matched must-haves, matched
+ * free-text preferences, over budget. Call it only with the viewer, never for another member.
+ */
+export function ownFitReasons(r: Restaurant, viewer: Member): Reason[] {
+  const fit = personalFit(r, viewer)
+  return [
+    ...fit.mustHaves.map((m) => ({ feature: 'must-have', positive: true, text: `matches your must-have "${m.text}"` })),
+    ...fit.prefs.map((m) => ({ feature: 'pref', positive: true, text: `fits "${m.text}"` })),
+    ...(fit.overBudget ? [{ feature: 'budget', positive: false, text: 'is above your budget' }] : []),
+  ]
+}
+
 export interface SharedReasons {
   /** Members whose reasons may be shown with their name: the viewer and those who opted in. */
   named: { member: Member; reasons: Reason[] }[]
@@ -68,18 +82,22 @@ export interface SharedReasons {
 }
 
 // @hcai AMR-05 Other members' reasons are counted without names ("two people prefer cheaper places") unless they chose to share them
+// Must-haves and budgets are private even for members who share: only the viewer's own show up, and only to them.
 export function sharedReasons(
   members: Member[],
   weights: Record<string, Weights>,
   x: Features,
   viewerId: string,
+  /** Pass the place to add the viewer's own must-have and budget lines to the viewer's reasons. */
+  restaurant?: Restaurant,
 ): SharedReasons {
   const named: SharedReasons['named'] = []
   const counts = new Map<string, { feature: string; positive: boolean; n: number }>()
   for (const m of members) {
     const mine = m.id === viewerId
     if (mine || m.sharesReasons) {
-      named.push({ member: m, reasons: reasonsFor(weights[m.id] ?? {}, x, 2, m.id === 'me') })
+      const taste = reasonsFor(weights[m.id] ?? {}, x, 2, m.id === 'me')
+      named.push({ member: m, reasons: mine && restaurant ? [...ownFitReasons(restaurant, m), ...taste] : taste })
       continue
     }
     const top = reasonsFor(weights[m.id] ?? {}, x, 1)[0]

@@ -1,5 +1,7 @@
 import type { Features, Member, Restaurant, Weights } from '../types'
 import { score } from './learn'
+import { bookingStatus, bookingTier, type BookingMode, type BookingStatus } from './booking'
+import { adjustForFit, personalFit } from './musthave'
 
 export interface Conflict {
   memberId: string
@@ -16,6 +18,10 @@ export interface Ranked {
   lowestMemberId: string
   pinned: boolean
   conflicts: Conflict[]
+  /** How the group can get a table in the chosen booking mode. Null when no mode was given. */
+  booking: BookingStatus | null
+  /** True when the place has no table in the chosen mode. It stays in the list, sorted down and marked. */
+  unavailable: boolean
 }
 
 export interface Blocked {
@@ -60,9 +66,15 @@ export interface RankInput {
   /** Extra weights for a personal re-rank, added to every included member. */
   boost?: Weights
   rule?: GroupRule
+  /** When the group wants to eat. Without it the order is by taste only. */
+  when?: BookingMode
+  /** The ISO date of the dinner, for the busy-night rule. See bookingNight(). */
+  night?: string
+  /** Party size for table checks. Defaults to the number of members ranked. */
+  partySize?: number
 }
 
-export function rankGroup({ restaurants, members, weights, features, pinnedId, boost, rule = 'average' }: RankInput): {
+export function rankGroup({ restaurants, members, weights, features, pinnedId, boost, rule = 'average', when, night, partySize }: RankInput): {
   ranked: Ranked[]
   blocked: Blocked[]
 } {
@@ -81,7 +93,8 @@ export function rankGroup({ restaurants, members, weights, features, pinnedId, b
     let lowestMemberId = members[0]?.id ?? ''
     for (const m of members) {
       const w = boost ? addWeights(weights[m.id] ?? {}, boost) : (weights[m.id] ?? {})
-      const guess = score(w, features[r.id])
+      // private must-haves, free-text preferences and budget move this member's guess, never anyone else's
+      const guess = adjustForFit(score(w, features[r.id]), personalFit(r, m))
       // @hcai HOR-02 A real swipe beats the guess: a place the member liked counts as a match for them and a skipped one does not, the guess only orders the rest
       const swiped = swipeOn(m, r.id)
       const s = swiped === null ? guess : swiped ? 0.9 + 0.1 * guess : 0.1 * guess
@@ -92,9 +105,12 @@ export function rankGroup({ restaurants, members, weights, features, pinnedId, b
     // @hcai FAIR-04 (trade-off) One member one vote under both rules: someone with 40 swipes counts the same as someone with 5
     // @hcai FAIR-05 The group picks its fairness rule: best on average, or nobody left unhappy (the lowest score counts)
     const groupScore = !members.length ? 0 : rule === 'average' ? sum / members.length : memberScores[lowestMemberId]
-    ranked.push({ restaurant: r, groupScore, memberScores, lowestMemberId, pinned, conflicts })
+    const booking = when ? bookingStatus(r, when, partySize ?? members.length, night) : null
+    ranked.push({ restaurant: r, groupScore, memberScores, lowestMemberId, pinned, conflicts, booking, unavailable: booking?.availability === 'full' })
   }
-  ranked.sort((a, b) => Number(b.pinned) - Number(a.pinned) || b.groupScore - a.groupScore)
+  // @hcai ERR-12 A place with no table in the chosen mode is sorted down and marked, never hidden, and ad-hoc mode puts places free tonight first
+  const tier = (x: Ranked) => (x.booking ? bookingTier(x.booking) : 0)
+  ranked.sort((a, b) => Number(b.pinned) - Number(a.pinned) || tier(a) - tier(b) || b.groupScore - a.groupScore)
   return { ranked, blocked }
 }
 
@@ -104,45 +120,5 @@ function addWeights(a: Weights, b: Weights): Weights {
   return out
 }
 
-export type Reservation =
-  | { kind: 'walk-in' }
-  | { kind: 'slot'; time: string }
-  | { kind: 'none' }
-
-const noon = (iso: string) => new Date(iso + 'T12:00:00')
-const pad = (n: number) => String(n).padStart(2, '0')
-
-/** The nights of a trip as ISO dates, from the first to the last day, at most a week. */
-export function tripNights(from: string, to: string): string[] {
-  const day = noon(from)
-  const last = noon(to)
-  if (Number.isNaN(day.getTime())) return []
-  const nights: string[] = []
-  while (nights.length < 7 && (nights.length === 0 || day <= last)) {
-    nights.push(`${day.getFullYear()}-${pad(day.getMonth() + 1)}-${pad(day.getDate())}`)
-    day.setDate(day.getDate() + 1)
-  }
-  return nights
-}
-
-/** Sample rule: Friday and Saturday are the busy nights. */
-export function isBusyNight(night: string): boolean {
-  const weekday = noon(night).getDay()
-  return weekday === 5 || weekday === 6
-}
-
-/** The table times of a place on one night. On a busy night the two earliest times are taken. */
-export function slotsOn(r: Restaurant, night?: string): Restaurant['sample']['reservation']['slots'] {
-  const { slots } = r.sample.reservation
-  return night && isBusyNight(night) ? slots.slice(2) : slots
-}
-
-/** When a party of this size can expect a table. Without a night, an ordinary weekday is assumed. */
-export function expectedReservation(r: Restaurant, partySize: number, night?: string): Reservation {
-  const busy = night ? isBusyNight(night) : false
-  // on a busy night a walk-in only works for a smaller party
-  const walkInUpTo = r.sample.reservation.walkInUpTo - (busy ? 2 : 0)
-  if (partySize <= walkInUpTo) return { kind: 'walk-in' }
-  const slot = slotsOn(r, night).find((s) => s.maxParty >= partySize)
-  return slot ? { kind: 'slot', time: slot.time } : { kind: 'none' }
-}
+// the reservation helpers moved to booking.ts, re-exported so older imports keep working
+export { expectedReservation, isBusyNight, slotsOn, tripNights, type Reservation } from './booking'
