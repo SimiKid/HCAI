@@ -125,7 +125,7 @@ export function ProfileSetup() {
             <p className="eyebrow">Step 1 of 4</p>
             <h1 className="title">About you</h1>
             <p className="muted">A face for the group, and what you can eat.</p>
-            <p className="small muted">You can adjust these for each trip later.</p>
+            <p className="small muted">These count for all your trips. Wishes for one trip, like local food or no pizza, come later.</p>
           </div>
           <PersonFields />
         </div>
