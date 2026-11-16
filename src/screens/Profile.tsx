@@ -153,7 +153,10 @@ export function ProfileScreen() {
   return (
     <div className="screen">
       <div className="stack" style={{ gap: 24 }}>
-        <h1 className="title">Profile</h1>
+        <div className="stack" style={{ gap: 6 }}>
+          <h1 className="title">Profile</h1>
+          <p className="scope-hint">These settings apply to all your trips, including your diet and your general preferences. Add preferences for one trip under Our trip.</p>
+        </div>
 
         {/* @hcai MM-03 The app's picture of the member is on screen as chips, and each chip can be removed */}
         <section className="card stack" aria-labelledby="taste-h">
