@@ -21,49 +21,47 @@ analysis finding it answers. Edit this section by hand.
 
 <!-- BEGIN GENERATED: do not edit by hand, run scripts/study-guide.sh -->
 
-34 of 117 principles applied, 35 tags in the code.
+29 of 117 principles applied, 31 tags in the code.
 
 ### Amershi et al. 2019, Guidelines for Human-AI Interaction (L04 p.66)
 
 #### AMR-01 Make clear what the system can do
 
-- `src/screens/Welcome.tsx:48` The first screen says what the app does and that it only guesses, before any data is asked for
+- `src/screens/Welcome.tsx:56` The first screen says what the app does (learns each taste, ranks one list for the group) and that it guides the group rather than deciding, before any data is asked for
 
 #### AMR-02 Make clear how well the system can do what it can do
 
-- `src/screens/Swipe.tsx:112` The header always shows how sure the app is, in words, next to the swipe count
+- `src/screens/Swipe.tsx:115` The header always shows how sure the app is, in words, next to the swipe count
+
+#### AMR-04 Show contextually relevant information
+
+- `src/screens/Ranking.tsx:135` Booking is a main control: now, tomorrow or before the trip, and every place then says how the group gets a table
 
 #### AMR-05 Match relevant social norms
 
-- `src/model/explain.ts:84` Other members' reasons are counted without names ("two people prefer cheaper places") unless they chose to share them
+- `src/model/explain.ts:82` Other members' reasons are counted without names ("two people prefer cheaper places") unless they chose to share them
+- `src/screens/JoinTrip.tsx:414` Mood, own words, must-haves and budget sit apart from the shared trip under "Only you see this", and the group only ever sees the combined ranking
+- `src/screens/Swipe.tsx:79` Others' likes show only after my own like and only as a count ("2 friends liked this"), never as faces or names, so nobody feels watched
 
 #### AMR-09 Support efficient correction
 
-- `src/model/learn.ts:71` A taste the member removed in "What the app thinks you like" is forgotten, whatever the swipes said
+- `src/model/learn.ts:68` A taste the member removed in "What the app thinks you like" is forgotten, whatever the swipes said
 
 #### AMR-10 Scope services when in doubt
 
-- `src/screens/Ranking.tsx:69` Until everyone at the table has 8 swipes, or has seen every place they can eat at, there is no front-runner, only an unordered shortlist of three
+- `src/screens/Ranking.tsx:71` Until everyone at the table has 8 swipes, or has seen every place they can eat at, there is no front-runner, only an unordered shortlist of three
 
 #### AMR-11 Make clear why the system did what it did
 
-- `src/components/WhySheet.tsx:98` Every place explains its rank per member: a match word for everyone, and one tap shows the two reasons that mattered most
-
-#### AMR-13 Learn from user behavior
-
-- `src/model/learn.ts:33` Each like or skip moves the weights of that card's features, more when the guess was wrong
-
-#### AMR-14 Update and adapt cautiously
-
-- `src/model/learn.ts:4` Small learning rate, one swipe nudges the taste profile and never flips it
+- `src/components/WhySheet.tsx:101` Every place explains its rank per member: a match word for everyone, and one tap shows the two reasons that mattered most
 
 #### AMR-15 Encourage granular feedback
 
-- `src/screens/Swipe.tsx:84` One optional tap after a swipe says what it was about (food, vibe, price or location), beyond like and skip
+- `src/screens/Swipe.tsx:87` One optional tap after a swipe says what it was about (food, vibe, price or location), beyond like and skip
 
 #### AMR-16 Convey the consequences of user actions
 
-- `src/screens/Swipe.tsx:80` After each swipe one line names what got stronger in the member's taste, in the same words as the chips in Profile
+- `src/screens/Swipe.tsx:84` After each swipe one line names what got stronger in the member's taste, in the same words as the chips in Profile
 
 ### Mental models and the model of the user (L04 p.4 to 19)
 
@@ -73,24 +71,23 @@ analysis finding it answers. Edit this section by hand.
 
 #### MM-03 Make the AI's model of the user visible
 
-- `src/screens/Profile.tsx:155` The app's picture of the member is on screen as chips, and each chip can be removed
+- `src/screens/Profile.tsx:156` The app's picture of the member is on screen as chips, and each chip can be removed
 
 ### Errors and AI failure modes (L04 p.28 to 64)
 
 #### ERR-12 Context errors: explain no-result and offer alternatives
 
 - `src/model/rank.ts:111` A place with no table in the chosen mode is sorted down and marked, never hidden, and ad-hoc mode puts places free tonight first
-- `src/screens/Ranking.tsx:234` Places removed by a diet or allergy are not silently dropped: the list says how many, and why for each
 
 ### Fairness, accountability, ethics (L06)
 
 #### FAIR-01 Accountability
 
-- `src/components/WhySheet.tsx:70` A pinned place carries the name of who pinned it and says that it overrides the ranking
+- `src/components/WhySheet.tsx:73` A pinned place carries the name of who pinned it and says that it overrides the ranking
 
 #### FAIR-03 Corrigibility
 
-- `src/components/WhySheet.tsx:78` Anyone in the group can undo a pin with one tap, so the group keeps the last word
+- `src/components/WhySheet.tsx:81` Anyone in the group can undo a pin with one tap, so the group keeps the last word
 
 #### FAIR-04 Procedural vs. distributive justice: equality or equity
 
@@ -100,17 +97,13 @@ analysis finding it answers. Edit this section by hand.
 
 - `src/model/rank.ts:106` The group picks its fairness rule: best on average, or nobody left unhappy (the lowest score counts)
 
-#### FAIR-09 Measurement bias
-
-- `src/screens/Swipe.tsx:40` The deck is in a fixed shuffled order, not sorted by predicted taste, so every place the group can eat at gets the same chance to be seen
-
 #### FAIR-10 Aggregation bias
 
 - `src/model/rank.ts:86` Diets and allergies are a veto, not a taste: one member who cannot eat there removes the place for the group
 
 #### FAIR-13 Harm types
 
-- `src/screens/Profile.tsx:211` "Popular with" uses taste groups, not age or gender, and stays off until a member turns it on
+- `src/screens/Profile.tsx:212` "Popular with" uses taste groups, not age or gender, and stays off until a member turns it on
 
 #### FAIR-14 Recourse
 
@@ -118,43 +111,31 @@ analysis finding it answers. Edit this section by hand.
 
 #### FAIR-16 User auditing
 
-- `src/screens/Ranking.tsx:141` The people filter lets anyone switch members off and see whose taste shapes the list, with each swipe count in view
+- `src/screens/Ranking.tsx:159` Anyone can switch members off and see whose taste shapes the list, with each member's swipe count on their seat
 
 #### FAIR-17 Privacy: consent, control, erasure
 
-- `src/screens/Profile.tsx:219` Showing my reasons to the group by name is my choice, off by default, and can be switched back any time
-
-#### FAIR-18 Confidence is not accuracy, calibrate it
-
-- `src/model/learn.ts:78` Confidence follows the number of swipes and is worded, never a percentage
+- `src/screens/Profile.tsx:220` Showing my reasons to the group by name is my choice, off by default, and can be switched back any time
 
 ### Explainability and trust (L07)
 
 #### XAI-09 Choose the explanation format on purpose
 
-- `src/components/WhySheet.tsx:83` The explanation is a receipt: one line per person, a dashed rule, the group result as the total
+- `src/components/WhySheet.tsx:86` The explanation is a receipt: one line per person, a dashed rule, the group result as the total
 
 #### XAI-10 Unwarranted faith in numbers
 
-- `src/model/explain.ts:47` Scores are shown as words and bar lengths, the raw number never reaches the screen
+- `src/model/explain.ts:46` Scores are shown as words and bar lengths, the raw number never reaches the screen
 
 #### XAI-13 Accuracy vs. interpretability, use interpretable features
 
 - `src/model/features.ts:15` The model only sees features a person can name (cuisine, vibe, price, distance, rating), no image embeddings
 
-#### XAI-15 Counterfactual explanations
-
-- `src/model/explain.ts:55` Counterfactual: "without Mia this would be number 2" shows how much one person moves the rank
-
-#### XAI-16 Feature attribution (SHAP)
-
-- `src/model/explain.ts:13` "Why" lists the features that pushed this member's score most, up and down, in plain words
-
 ### Human-Centered AI framework (Shneiderman 2022, in L06 and L07)
 
 #### HCAI-02 High control and high automation together
 
-- `src/screens/Ranking.tsx:54` The ranking is automatic, and people steer it three ways: filter members, re-rank for yourself, or pin a place
+- `src/screens/Ranking.tsx:56` The ranking is automatic, and people steer it three ways: filter members, re-rank for yourself, or pin a place
 
 ### Horvitz 1999, Principles of mixed-initiative user interfaces (reading, week 4)
 
@@ -162,28 +143,29 @@ analysis finding it answers. Edit this section by hand.
 
 - `src/model/rank.ts:98` A real swipe beats the guess: a place the member liked counts as a match for them and a skipped one does not, the guess only orders the rest
 
-#### HOR-05 Use dialog to resolve key uncertainties
-
-- `src/model/learn.ts:63` When the member says what a swipe was about, only that part of the card is learned, three times as strongly
-
 ### Shneiderman and Maes 1997, Direct manipulation vs. interface agents (reading, week 4)
+
+#### DM-01 Direct manipulation
+
+- `src/screens/Ranking.tsx:153` The people filter is the table itself: tap a friend's seat to leave them out, the list re-ranks at once, tap again to undo
+
+#### DM-02 Overview first, zoom and filter, details on demand
+
+- `src/screens/Dashboard.tsx:29` After setup the app opens on an overview (map of the stay and places, group progress, next step) before any swiping
 
 #### DM-04 Users keep responsibility
 
-- `src/components/FrontRunner.tsx:55` The reveal names a front-runner and how many it suits, not a decision: choosing stays with the group
-
-#### DM-11 Accessible alternatives to gestures
-
-- `src/screens/Swipe.tsx:149` Like, skip and undo are buttons too, so the swipe gesture is never the only way
+- `src/components/FrontRunner.tsx:61` The card names a front-runner and how many it suits, not a decision: choosing stays with the group
 
 ### Not applied yet
 
 - AMR-03 Time services based on context
-- AMR-04 Show contextually relevant information
 - AMR-06 Mitigate social biases
 - AMR-07 Support efficient invocation
 - AMR-08 Support efficient dismissal
 - AMR-12 Remember recent interactions
+- AMR-13 Learn from user behavior
+- AMR-14 Update and adapt cautiously
 - AMR-17 Provide global controls
 - AMR-18 Notify users about changes
 - MM-02 Mental models are incomplete and sticky
@@ -214,9 +196,11 @@ analysis finding it answers. Edit this section by hand.
 - FAIR-06 Unawareness is not enough
 - FAIR-07 Historical bias
 - FAIR-08 Representation bias
+- FAIR-09 Measurement bias
 - FAIR-11 Evaluation bias
 - FAIR-12 Deployment bias
 - FAIR-15 Contestability
+- FAIR-18 Confidence is not accuracy, calibrate it
 - FAIR-19 Model card
 - FAIR-20 Envision first: should this feature exist?
 - XAI-01 Calibrated trust
@@ -230,6 +214,8 @@ analysis finding it answers. Edit this section by hand.
 - XAI-11 Local vs. global explanations
 - XAI-12 Prefer ante-hoc (interpretable) models where possible
 - XAI-14 Example-based explanations
+- XAI-15 Counterfactual explanations
+- XAI-16 Feature attribution (SHAP)
 - XAI-17 Local surrogates are only locally faithful (LIME)
 - XAI-18 Explainability tools can be weaponised
 - HCAI-01 Augment, do not replace
@@ -239,6 +225,7 @@ analysis finding it answers. Edit this section by hand.
 - HOR-01 Automate only where it adds real value
 - HOR-03 Time services to the user's attention
 - HOR-04 Weigh costs, benefits and uncertainty before acting
+- HOR-05 Use dialog to resolve key uncertainties
 - HOR-06 Efficient direct invocation and termination
 - HOR-07 Minimise the cost of poor guesses
 - HOR-08 Scope precision to match uncertainty
@@ -249,8 +236,6 @@ analysis finding it answers. Edit this section by hand.
 - HOR-13 Act, ask or stay silent by probability thresholds
 - HOR-14 Degrade gracefully to a scoped view
 - HOR-15 Offer modes from manual to automatic
-- DM-01 Direct manipulation
-- DM-02 Overview first, zoom and filter, details on demand
 - DM-03 Dynamic queries
 - DM-05 Adaptive algorithms below a predictable surface
 - DM-06 Avoid anthropomorphism
@@ -258,6 +243,7 @@ analysis finding it answers. Edit this section by hand.
 - DM-08 Delegate details, keep goals
 - DM-09 The agent must be bypassable
 - DM-10 Show what the agent is focusing on
+- DM-11 Accessible alternatives to gestures
 - DM-12 Measure with real users
 - PROC-01 Ground features in task analysis
 - PROC-02 Elicit mental models in tests

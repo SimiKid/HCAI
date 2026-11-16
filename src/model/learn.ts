@@ -1,7 +1,6 @@
 import type { Because, Features, Swipe, TripPref, Weights } from '../types'
 import { BIAS } from './features'
 
-// @hcai AMR-14 Small learning rate, one swipe nudges the taste profile and never flips it
 export const LEARNING_RATE = 0.35
 
 const PRIOR: Record<TripPref, Weights> = {
@@ -30,7 +29,6 @@ export function score(w: Weights, x: Features): number {
   return 1 / (1 + Math.exp(-dot(w, x)))
 }
 
-// @hcai AMR-13 Each like or skip moves the weights of that card's features, more when the guess was wrong
 export function update(w: Weights, x: Features, liked: boolean): Weights {
   const error = (liked ? 1 : 0) - score(w, x)
   const next: Weights = { ...w }
@@ -60,7 +58,6 @@ export function learn(
   for (const s of swipes) {
     const x = featuresById[s.restaurantId]
     if (!x) continue
-    // @hcai HOR-05 When the member says what a swipe was about, only that part of the card is learned, three times as strongly
     if (s.because) {
       const about = focus(x, s.because)
       for (let i = 0; i < 3; i++) w = update(w, about, s.liked)
@@ -75,7 +72,6 @@ export function learn(
 
 export type ConfidenceLevel = 'low' | 'medium' | 'high'
 
-// @hcai FAIR-18 Confidence follows the number of swipes and is worded, never a percentage
 export function confidence(swipeCount: number): { level: ConfidenceLevel; label: string } {
   if (swipeCount < 8) return { level: 'low', label: 'Rough guess' }
   if (swipeCount < 20) return { level: 'medium', label: 'Getting clearer' }

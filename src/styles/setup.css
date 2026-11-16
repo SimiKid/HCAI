@@ -1,0 +1,33 @@
+/* welcome and the three setup steps */
+
+/* welcome: the hero shrinks on short phones so "Get started" stays on screen */
+.welcome .welcome-hero { min-height: 0; }
+.welcome-text { flex: none; gap: 12px; }
+.welcome-tagline { font-size: 1.125rem; font-weight: 600; line-height: 1.3; }
+.welcome-sub { font-size: 0.9375rem; opacity: 0.9; }
+
+/* a short line that says who sees a section */
+.privacy-hint { display: inline-flex; align-items: center; gap: 6px; font-size: 0.8125rem; font-weight: 600; color: var(--lav-ink); }
+.privacy-hint svg { flex: none; }
+
+.setup-section { display: flex; flex-direction: column; gap: 20px; }
+.setup-section-head { display: flex; flex-direction: column; gap: 4px; }
+
+/* the trip as a joiner sees it: filled in by the person who started it */
+.trip-given { display: flex; flex-direction: column; gap: 10px; }
+.trip-given dl { margin: 0; display: grid; grid-template-columns: auto 1fr; gap: 6px 14px; }
+.trip-given dt { color: var(--ink-2); font-size: 0.875rem; }
+.trip-given dd { margin: 0; font-weight: 600; font-size: 0.9375rem; min-width: 0; overflow-wrap: anywhere; }
+
+/* chips the member typed, each one removable */
+.chip.mine { background: var(--lav-soft); border-color: transparent; color: var(--lav-ink); padding-right: 6px; white-space: normal; text-align: left; max-width: 100%; }
+.chip.mine .chip-x { display: grid; place-items: center; width: 32px; height: 32px; margin: -4px 0; border: 0; border-radius: 50%; background: none; color: inherit; flex: none; }
+.add-row { display: flex; gap: 8px; }
+.add-row .input { flex: 1; min-width: 0; }
+.add-row .btn { width: auto; flex: none; }
+
+/* custom stay: a name and a tap on the map */
+.stay-map { height: 200px; border-radius: var(--r-ctl); overflow: hidden; background: var(--surface); z-index: 0; }
+.stay-map .leaflet-container { cursor: crosshair; }
+.welcome-tagline { text-wrap: balance; }
+@media (max-height: 700px) { .welcome-text { gap: 10px; } }

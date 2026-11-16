@@ -7,10 +7,12 @@ import { TabBar, type Tab } from './components/TabBar'
 import { Welcome } from './screens/Welcome'
 import { ProfileSetup } from './screens/Profile'
 import { InviteStep, TripDetails, TripEntry } from './screens/JoinTrip'
+import { Dashboard } from './screens/Dashboard'
 import { SwipeScreen } from './screens/Swipe'
 import { RankingScreen } from './screens/Ranking'
 import { TripScreen } from './screens/Trip'
 import { ProfileScreen } from './screens/Profile'
+import './styles/dashboard-swipe.css'
 
 export function App() {
   const [restaurants, setRestaurants] = useState<Restaurant[] | null>(null)
@@ -29,10 +31,10 @@ export function App() {
 
 function Shell() {
   const { state } = useStore()
-  const [tab, setTab] = useState<Tab>('swipe')
-  // onboarding always ends on Swipe, also after a deleted profile left another tab selected
+  const [tab, setTab] = useState<Tab>('home')
+  // onboarding always ends on the overview, also after a deleted profile left another tab selected
   useEffect(() => {
-    if (state.stage !== 'app') setTab('swipe')
+    if (state.stage !== 'app') setTab('home')
   }, [state.stage])
   if (state.stage === 'welcome') return <div className="phone"><Welcome /></div>
   if (state.stage === 'profile') return <div className="phone"><ProfileSetup /></div>
@@ -41,6 +43,7 @@ function Shell() {
   if (state.stage === 'details') return <div className="phone"><TripDetails /></div>
   return (
     <div className="phone">
+      {tab === 'home' && <Dashboard goToSwipe={() => setTab('swipe')} goToRanking={() => setTab('ranking')} />}
       {tab === 'swipe' && <SwipeScreen goToRanking={() => setTab('ranking')} />}
       {tab === 'ranking' && <RankingScreen goToSwipe={() => setTab('swipe')} />}
       {tab === 'trip' && <TripScreen />}

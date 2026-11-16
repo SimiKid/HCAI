@@ -1,0 +1,82 @@
+/* overview dashboard, swipe card extras and the mini map */
+
+/* mini map: shows only, taps and drags go to the card or screen around it */
+.minimap { width: 100%; height: 100%; background: var(--surface-2); isolation: isolate; z-index: 0; }
+.minimap, .minimap * { pointer-events: none; }
+.minimap .leaflet-control-attribution { font-size: 9px; background: rgba(255, 255, 255, 0.75); }
+.mini-focus {
+  width: 26px; height: 26px; border-radius: 50%;
+  background: #e0144c; border: 3px solid #fff;
+  box-shadow: 0 0 0 6px rgba(224, 20, 76, 0.25), 0 2px 6px rgba(0, 0, 0, 0.35);
+}
+.swipe-card .minimap { position: absolute; inset: 0; }
+.swipe-card .minimap .leaflet-top.leaflet-right { top: 18px; }
+
+/* swipe card: vibe tags, booking, top review */
+.swipe-card .vibes { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 8px; }
+.swipe-card .vibes span {
+  padding: 3px 10px; border-radius: 999px; font-size: 0.75rem; font-weight: 600;
+  background: rgba(255, 255, 255, 0.18); border: 1px solid rgba(255, 255, 255, 0.28);
+}
+.swipe-card .fact.booking { font-size: 0.8125rem; opacity: 0.92; }
+.swipe-card .fact.booking.full { opacity: 0.7; text-decoration: line-through; text-decoration-thickness: 1px; }
+.card-review { margin: 10px 0 0; padding-right: 60px; }
+.card-review blockquote {
+  margin: 0; font-size: 0.8125rem; line-height: 1.35; font-style: italic; opacity: 0.95;
+  display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
+}
+.card-review figcaption { display: flex; align-items: center; gap: 6px; margin-top: 3px; font-size: 0.6875rem; font-weight: 600; opacity: 0.8; }
+.card-review .stars { display: inline-flex; gap: 1px; color: #ffc163; }
+.card-review .stars .off { color: rgba(255, 255, 255, 0.35); }
+.sample-tag { padding: 1px 6px; border-radius: 6px; background: rgba(255, 255, 255, 0.16); letter-spacing: 0.02em; }
+/* a short phone: the card gives way so the like and skip buttons stay visible */
+@media (max-height: 720px) {
+  .deck { min-height: 190px; }
+  .swipe-card .info { padding: 40px 16px 12px; }
+  .swipe-card .name { font-size: 1.5rem; }
+  .swipe-card .facts { font-size: 0.875rem; margin-top: 6px; }
+  .card-review { margin-top: 6px; }
+  .card-review blockquote { -webkit-line-clamp: 1; }
+  .swipe-actions { padding-top: 10px; }
+  .swipe-actions .round.lg { width: 60px; height: 60px; }
+  /* the count stays on the table badge and is still read out */
+  .echo-line { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); }
+}
+
+/* after your own like: an anonymous count, never faces or names */
+.table-btn { position: relative; }
+.echo-badge {
+  position: absolute; left: 50%; bottom: -4px; translate: -50% 0;
+  display: inline-flex; align-items: center; gap: 4px; padding: 3px 9px;
+  border-radius: 999px; background: var(--crimson); color: #fff;
+  font-size: 0.75rem; font-weight: 700; box-shadow: 0 4px 10px rgba(60, 0, 20, 0.3); white-space: nowrap;
+}
+.feedback { flex-direction: column; gap: 2px; }
+.echo-line { display: inline-flex; align-items: center; gap: 5px; color: var(--crimson-text); font-weight: 600; }
+
+/* overview dashboard */
+.dash { display: flex; flex-direction: column; gap: 14px; }
+.dash > * { flex: none; }
+.dash-eyebrow { font-size: 0.75rem; font-weight: 600; letter-spacing: 0.16em; text-transform: uppercase; color: var(--crimson-text); }
+.dash-map { position: relative; height: 240px; border-radius: var(--r-card); overflow: hidden; background: var(--surface); }
+.dash-legend {
+  position: absolute; left: 10px; bottom: 10px; z-index: 1;
+  display: flex; gap: 10px; padding: 5px 10px; border-radius: 999px;
+  background: var(--bg); box-shadow: 0 2px 8px rgba(0, 0, 0, 0.18); font-size: 0.75rem; font-weight: 500;
+}
+.dash-legend span { display: inline-flex; align-items: center; gap: 5px; }
+.dash-legend i { width: 10px; height: 10px; border-radius: 50%; background: var(--lav); }
+.dash-legend i.h { border-radius: 3px; background: #15141a; box-shadow: 0 0 0 1.5px #fff; }
+@media (max-height: 720px) { .dash-map { height: 180px; } }
+.dash-people { display: flex; gap: 6px; flex-wrap: wrap; }
+.dash-people .who { position: relative; }
+.dash-people .who.clear::after {
+  content: ''; position: absolute; right: -2px; bottom: -2px; width: 10px; height: 10px;
+  border-radius: 50%; background: var(--lav); border: 2px solid var(--surface);
+}
+.dash-next { display: flex; align-items: center; gap: 12px; }
+.dash-step { width: 36px; height: 36px; border-radius: 50%; flex: none; display: grid; place-items: center; background: var(--crimson-soft); color: var(--crimson-text); }
+.dash-foot { flex: none; padding: 10px 20px 14px; background: var(--bg); }
+.dash-foot .btn { min-height: 58px; font-size: 1.0625rem; box-shadow: 0 10px 24px rgba(224, 20, 76, 0.28); }
+/* the text over the photo lets taps through to the slide buttons, also on a short card */
+.swipe-card .info { pointer-events: none; }

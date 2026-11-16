@@ -1,6 +1,6 @@
 ## Product
 
-Working title: Restaurant Tinder. A group picks a restaurant by swiping on
+Name: Forkcast (working title was Restaurant Tinder). A group picks a restaurant by swiping on
 restaurant pictures. The app ranks restaurants for the whole group.
 
 ### User journey
@@ -18,31 +18,41 @@ All listed features are in scope for the prototype.
    - Whoever starts a trip gets a trip code and an invite link to share, and
      sees who has joined. More people can be invited later from the Group tab.
    - Opening an invite link fills in the trip code.
-   - Questions about the user and the trip (hotel, area, dates).
-   - Trip-specific preferences, for example "I want to eat traditionally"
-     or "trendy areas".
+   - Whoever starts the trip sets where the group stays (a preset area or a
+     custom place on the map) and the dates. Joiners see them filled in.
+   - Personal, private preferences per trip: mood ("eat traditionally",
+     "trendy areas"), own free-text preferences, must-haves ("paella, no
+     negotiation") and a budget. Only the member sees them, editable later
+     in Profile.
+   - After setup the app opens on an Overview: a map of the stay with the
+     places around it, group progress, and the next step.
 
 3. Swipe pictures
    - The user swipes on restaurant pictures. Swipe as much as you want.
    - The app needs as little data as possible to work.
    - Each swipe trains the algorithm on the user's preferences.
    - Each card shows: location, price level (dollar signs), walking time
-     from where the group stays, reviews including numbers.
+     from where the group stays, reviews including numbers, vibe tags, one
+     sample review quote, and how the place can be booked. The second slide
+     is a mini map with the place and the group's stay.
    - The deck only has places that every group member can eat at. It ends
      after one pass and does not repeat.
    - Table match: after your own like, a full-screen moment shows when at
-     least two others liked the same place and nobody skipped it.
+     least two others liked the same place and nobody skipped it. Others'
+     likes are only ever a count, never names or faces.
 
 4. Ranked list of restaurants for the group
-   - One ranked list for the whole group. The top 10 show first.
-   - Shows the expected reservation time for the night the group picks.
+   - One ranked list for the whole group, all places in one go.
+   - Booking is a main control: "When do you want to eat?" now (ad-hoc),
+     tomorrow, or before the trip. Every place shows how the group gets a
+     table in that mode.
    - Group progress: who the app has a clear picture of (20 swipes), and a
      nudge for the others.
    - The user can re-rank the list with their own preferences.
    - Map view of the results.
    - Shows the average demographic that likes each restaurant.
    - Dictatorship mode: one user pins a restaurant to the top of the list.
-   - People filter: dissect the ranking by group member.
+   - People filter: tap a friend at the table to leave them out of the ranking.
 
 ### Decisions
 
@@ -82,17 +92,23 @@ All listed features are in scope for the prototype.
   counts real swipes, never a predicted score.
 - The full note on sample data is in Group, "About this data". Cards and
   sheets stay short and keep the photo credits.
+- Booking data per place is a sample: walk-in chance and lead time (same day,
+  day before, before the trip). In ad-hoc mode no place is hidden: free now
+  comes first, then maybes, then full places, each ordered by taste. A pinned
+  place stays on top even when full.
+- Must-haves only change the guess for that member (a real swipe still wins)
+  and are never shown to anyone else.
+- Feedback round 1 and its decisions: `docs/feedback-round-1.md`.
 
 ### Look and feel
 
 - Palette and base type follow the crimson and lavender reference. Headlines
   use Bricolage Grotesque, the bill uses DM Mono.
 - Signature: the group's table. Avatars sit around a round table seen from
-  above. On Swipe, friends who liked the same place react only after your own
-  swipe. On Ranking, number one is served on the plate in the middle as the
-  front-runner for the chosen night.
-- On Ranking, the settings (night, people filter, fairness rule) fold into
-  one line that always shows their state, so the front-runner comes first.
+  above. On Ranking, the table is the people filter, and number one is a big
+  photo card with a gold border.
+- On Ranking, group progress comes first, then the booking control and the
+  table, then the front-runner and the full list.
 - The explanation of a rank is "the bill": a receipt with one line per person
   and the group result as the total.
 

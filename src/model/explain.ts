@@ -10,7 +10,6 @@ export interface Reason {
   positive: boolean
 }
 
-// @hcai XAI-16 "Why" lists the features that pushed this member's score most, up and down, in plain words
 export function reasonsFor(w: Weights, x: Features, max = 2, you = false): Reason[] {
   return Object.keys(x)
     .filter((f) => f !== BIAS)
@@ -52,7 +51,6 @@ export function matchLevel(score: number): { level: MatchLevel; label: string } 
   return { level: 'weak', label: 'Weak match' }
 }
 
-// @hcai XAI-15 Counterfactual: "without Mia this would be number 2" shows how much one person moves the rank
 export function rankWithout(input: RankInput, restaurantId: string, memberId: string): number | null {
   const members = input.members.filter((m) => m.id !== memberId)
   if (members.length === 0) return null

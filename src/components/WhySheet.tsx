@@ -1,14 +1,14 @@
 import { useEffect, useRef, useState } from 'react'
 import { motion } from 'framer-motion'
 import type { Member } from '../types'
-import { useNight, useStore, type Group } from '../store'
+import { useBooking, useStore, type Group } from '../store'
 import { CUISINE_LABEL, distanceKm } from '../model/features'
 import { confidence } from '../model/learn'
 import { matchLevel, rankWithout, sharedReasons } from '../model/explain'
-import { expectedReservation, slotsOn, swipeOn, type RankInput, type Ranked } from '../model/rank'
+import { swipeOn, type RankInput, type Ranked } from '../model/rank'
+import { BOOKING_MODES, bookAheadLabel, bookingStatus, slotsOn, walkInLabel } from '../model/booking'
 import { Avatar, count, km, price, swipes } from './Bits'
 import { DataNote, Gallery } from './Gallery'
-import { reservationText } from './RankRow'
 import { ChevronIcon, CrownIcon, HeartIcon, XIcon } from './Icons'
 
 interface Props {
@@ -24,7 +24,7 @@ interface Props {
 /** "The bill": why a place is where it is, itemised per person like a restaurant receipt. */
 export function WhySheet({ item, rank, input, group, party, canPin, onClose }: Props) {
   const { state, set } = useStore()
-  const night = useNight()
+  const booking = useBooking()
   const r = item.restaurant
   const x = group.features[r.id]
   const closeRef = useRef<HTMLButtonElement>(null)
@@ -42,7 +42,10 @@ export function WhySheet({ item, rank, input, group, party, canPin, onClose }: P
   // one person's reasons are open at a time, and the sheet starts with the viewer's own
   const [openMember, setOpenMember] = useState<string | null>(viewerId)
   const [showTimes, setShowTimes] = useState(false)
-  const shared = sharedReasons(input.members, group.weights, x, viewerId)
+  // with the place passed in, the viewer's own must-have and budget lines come first in their reasons, nobody else's
+  const shared = sharedReasons(input.members, group.weights, x, viewerId, r)
+  const table = item.booking ?? bookingStatus(r, booking.when, party, booking.night)
+  const modeLabel = BOOKING_MODES.find((m) => m.value === booking.when)?.label ?? ''
   const viewerSwiped = swipeOn(group.actor, r.id) !== null
   const open = (m: Member) => m.id === viewerId || m.sharesReasons
 
@@ -124,7 +127,7 @@ export function WhySheet({ item, rank, input, group, party, canPin, onClose }: P
                     {isOpen && (
                       <p className="bill-reason">
                         {ownSwipe}
-                        {!reasons ? 'Keeps their reasons private.' : reasons.length ? sentence(reasons.map((q) => q.text)) : 'No clear signal yet.'}
+                        {!reasons ? 'Keeps their reasons private.' : reasons.length ? reasonText(reasons) : 'No clear signal yet.'}
                         {/* a place the member really swiped is not a guess, however few swipes they have */}
                         {conf.level === 'low' && swiped === null && ` Rough guess, only ${swipes(m.swipes.length)}.`}
                       </p>
@@ -151,14 +154,15 @@ export function WhySheet({ item, rank, input, group, party, canPin, onClose }: P
                 </p>
               )}
               <hr />
-              <p className="bill-caps" style={{ marginBottom: 8 }}>{night.label ? `Tables on ${night.label}` : 'Tables tonight'}</p>
-              <p>{reservationText(expectedReservation(r, party, night.iso), party)}</p>
+              <p className="bill-caps" style={{ marginBottom: 8 }}>Table for {party} · {modeLabel}{booking.nightLabel && `, ${booking.nightLabel}`}</p>
+              <p className="strong">{table.availability === 'full' ? `Unavailable: ${table.label}` : table.label}</p>
+              <p className="bill-small">{walkInLabel(r.sample.booking.walkIn)} · {bookAheadLabel(r.sample.booking.bookAhead)}</p>
               <button className="bill-link" aria-expanded={showTimes} onClick={() => setShowTimes(!showTimes)}>
                 {showTimes ? 'Hide the times' : 'See all times'}
               </button>
               {showTimes && (
                 <div className="chips" style={{ marginTop: 6 }}>
-                  {slotsOn(r, night.iso).map((s) => (
+                  {(booking.when === 'trip' ? r.sample.reservation.slots : slotsOn(r, booking.night)).map((s) => (
                     <span key={s.time} className={s.maxParty >= party ? 'chip static lav' : 'chip static'}>
                       {s.time} · up to {s.maxParty}
                     </span>
@@ -196,6 +200,14 @@ export function WhySheet({ item, rank, input, group, party, canPin, onClose }: P
       </motion.div>
     </>
   )
+}
+
+// the viewer's own must-have, preference and budget lines (only they get them) read as one sentence about the place, before their taste
+const OWN_FIT = new Set(['must-have', 'pref', 'budget'])
+function reasonText(reasons: { feature: string; text: string }[]): string {
+  const fit = reasons.filter((q) => OWN_FIT.has(q.feature)).map((q) => q.text)
+  const taste = reasons.filter((q) => !OWN_FIT.has(q.feature)).map((q) => q.text)
+  return [fit.length ? sentence(['it ' + fit[0], ...fit.slice(1)]) : '', taste.length ? sentence(taste) : ''].filter(Boolean).join(' ')
 }
 
 function sentence(parts: string[]): string {

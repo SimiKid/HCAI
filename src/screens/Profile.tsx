@@ -8,6 +8,7 @@ import { ACCESSORIES, CHARACTERS, FoodAvatar, avatarId, avatarParts } from '../c
 import { Avatar, ChipToggle, StepBar, Switch, swipes } from '../components/Bits'
 import { XIcon } from '../components/Icons'
 import { ConfidenceDots } from '../components/ConfidenceDots'
+import { PersonalTripFields } from './JoinTrip'
 
 const DIETS: { value: Diet; label: string }[] = [
   { value: 'vegetarian', label: 'Vegetarian' },
@@ -124,6 +125,7 @@ export function ProfileSetup() {
             <p className="eyebrow">Step 1 of 3</p>
             <h1 className="title">About you</h1>
             <p className="muted">A face for the group, and what you can eat.</p>
+            <p className="small muted">You can adjust these for each trip later.</p>
           </div>
           <PersonFields />
         </div>
@@ -140,6 +142,7 @@ export function ProfileScreen() {
   const { members, weights, actor } = useGroup()
   const [confirm, setConfirm] = useState<'erase' | 'delete' | null>(null)
   const [editing, setEditing] = useState(false)
+  const [editingTrip, setEditingTrip] = useState(false)
   const taste = tasteProfile(weights[actor.id])
   const likes = taste.filter((t) => t.weight > 0).slice(0, 8)
   const skips = taste.filter((t) => t.weight < 0).reverse().slice(0, 8)
@@ -204,6 +207,18 @@ export function ProfileScreen() {
             <button className="btn slim" aria-expanded={editing} onClick={() => setEditing(!editing)}>{editing ? 'Done' : 'Edit'}</button>
           </div>
           {editing && <PersonFields />}
+        </section>
+
+        <section className="stack" aria-label="This trip, just for you">
+          <h2 className="h2">This trip, just for you</h2>
+          <div className="card row">
+            <div className="grow">
+              <p className="strong">Mood, must-haves and budget</p>
+              <p className="small muted">Only you see this. Change it any time during the trip.</p>
+            </div>
+            <button className="btn slim" aria-expanded={editingTrip} onClick={() => setEditingTrip(!editingTrip)}>{editingTrip ? 'Done' : 'Edit'}</button>
+          </div>
+          {editingTrip && <PersonalTripFields />}
         </section>
 
         <section className="stack" aria-label="Settings">

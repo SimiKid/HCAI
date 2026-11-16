@@ -1,16 +1,17 @@
 import { useMemo, useRef, useState } from 'react'
 import type { Because, Restaurant, Swipe } from '../types'
-import { useGroup, useStore } from '../store'
+import { useBooking, useGroup, useStore } from '../store'
 import { shuffled } from '../data/members'
 import { distanceKm, featureLabel } from '../model/features'
 import { swipeEffect } from '../model/explain'
 import { confidence, learn } from '../model/learn'
 import { tableMatch, type TableMatch } from '../model/match'
 import { groupPlaces } from '../model/rank'
-import { AnimatePresence } from 'framer-motion'
+import { bookingStatus } from '../model/booking'
+import { AnimatePresence, motion } from 'framer-motion'
 import { SwipeCard, type SwipeCardHandle } from '../components/SwipeCard'
 import { PlaceSheet } from '../components/PlaceSheet'
-import { GroupTable, type Reaction } from '../components/GroupTable'
+import { GroupTable } from '../components/GroupTable'
 import { TableMatchOverlay } from '../components/TableMatch'
 import { swipes } from '../components/Bits'
 import { ConfidenceDots } from '../components/ConfidenceDots'
@@ -27,8 +28,10 @@ const WHY: { id: Because; label: string; phrase: string }[] = [
 export function SwipeScreen({ goToRanking }: { goToRanking: () => void }) {
   const { state, set, restaurants } = useStore()
   const { actor, hotel, members, features } = useGroup()
+  const booking = useBooking()
   const [more, setMore] = useState(false)
-  const [echo, setEcho] = useState<Record<string, Reaction>>({})
+  // how many others liked the place I just liked, as a number only
+  const [echo, setEcho] = useState<{ name: string; fans: number; key: number } | null>(null)
   // the question names the place, because the next card is already on screen when it shows
   const [ask, setAsk] = useState<{ liked: boolean; name: string } | null>(null)
   const [match, setMatch] = useState<{ restaurant: Restaurant; match: TableMatch } | null>(null)
@@ -37,7 +40,6 @@ export function SwipeScreen({ goToRanking }: { goToRanking: () => void }) {
 
   // the deck only changes when someone's diet or allergies change, not on every swipe
   const dietKey = members.map((m) => [...m.diets, ...m.allergies].join(',')).join('|')
-  // @hcai FAIR-09 The deck is in a fixed shuffled order, not sorted by predicted taste, so every place the group can eat at gets the same chance to be seen
   const deck = useMemo(
     // a place that one member cannot eat at never reaches the group ranking, so nobody spends a swipe on it
     () => groupPlaces(shuffled(restaurants, 7), members),
@@ -51,6 +53,7 @@ export function SwipeScreen({ goToRanking }: { goToRanking: () => void }) {
   const next = todo[1] ?? null
   const conf = confidence(actor.swipes.length)
   const hidden = restaurants.length - deck.length
+  const others = useMemo(() => deck.filter((r) => r.id !== current?.id).map((r) => r.location), [deck, current?.id])
 
   // What a swipe changed, in the words of the taste chips in Profile. Both read the same weights
   // with the same threshold, so this line can never say something that the Profile contradicts.
@@ -68,17 +71,17 @@ export function SwipeScreen({ goToRanking }: { goToRanking: () => void }) {
     set((s) => ({
       swipes: { ...s.swipes, [actor.id]: [...(s.swipes[actor.id] ?? []), swipe] },
     }))
-    // friends who liked the same place lean in only after my own swipe, so nobody swipes to fit in
+    // the why question comes after the swipe, never before it
     setAsk({ liked, name: current.displayName })
     // a table match is only shown after my own like, and only real swipes of the others count
     const found = liked ? tableMatch(current.id, actor.id, members) : null
     setMatch(found ? { restaurant: current, match: found } : null)
+    // @hcai AMR-05 Others' likes show only after my own like and only as a count ("2 friends liked this"), never as faces or names, so nobody feels watched
     const fans = liked
-      ? members.filter((m) => m.id !== actor.id && m.swipes.some((s) => s.restaurantId === current.id && s.liked))
-      : []
-    setEcho(liked ? Object.fromEntries([actor, ...fans].map((m) => [m.id, 'liked' as Reaction])) : {})
+      ? members.filter((m) => m.id !== actor.id && m.swipes.some((s) => s.restaurantId === current.id && s.liked)).length
+      : 0
+    setEcho(fans > 0 ? { name: current.displayName, fans, key: mine.length } : null)
     // @hcai AMR-16 After each swipe one line names what got stronger in the member's taste, in the same words as the chips in Profile
-    // who else liked the place already shows as hearts on the table in the header
     setFeedback(effectLine(actor.swipes, [...actor.swipes, swipe], liked) || 'Noted. Your taste picture stays the same for now.')
   }
   // @hcai AMR-15 One optional tap after a swipe says what it was about (food, vibe, price or location), beyond like and skip
@@ -97,7 +100,7 @@ export function SwipeScreen({ goToRanking }: { goToRanking: () => void }) {
   }
   const undo = () => {
     set((s) => ({ swipes: { ...s.swipes, [actor.id]: (s.swipes[actor.id] ?? []).slice(0, -1) } }))
-    setEcho({})
+    setEcho(null)
     setAsk(null)
     setMatch(null)
     setFeedback('Last swipe undone.')
@@ -113,7 +116,16 @@ export function SwipeScreen({ goToRanking }: { goToRanking: () => void }) {
           <div className="conf muted"><ConfidenceDots level={conf.level} />{conf.label} · {swipes(actor.swipes.length)}</div>
         </div>
         <button className="table-btn" onClick={goToRanking} aria-label={`Your table of ${members.length}. See the group ranking`}>
-          <GroupTable members={members} size={108} seat={26} reactions={echo} />
+          <GroupTable members={members} size={108} seat={26} />
+          <AnimatePresence>
+            {echo && (
+              <motion.span key={echo.key} className="echo-badge" aria-hidden="true"
+                initial={{ scale: 0.4, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} exit={{ opacity: 0 }}
+                transition={{ type: 'spring', stiffness: 320, damping: 16 }}>
+                <HeartIcon size={12} />{echo.fans}
+              </motion.span>
+            )}
+          </AnimatePresence>
         </button>
       </header>
 
@@ -130,12 +142,21 @@ export function SwipeScreen({ goToRanking }: { goToRanking: () => void }) {
               ref={card}
               restaurant={current}
               distanceKm={distanceKm(hotel, current.location)}
-              hotelLabel={hotel.label}
+              stay={hotel}
+              others={others}
+              booking={bookingStatus(current, booking.when, members.length, booking.night)}
               onDecide={decide}
               onMore={() => setMore(true)}
             />
           </div>
-          <p className="feedback" role="status">{feedback || 'Swipe right to like, left to skip.'}</p>
+          <p className="feedback" role="status">
+            {echo && (
+              <span className="echo-line">
+                <HeartIcon size={14} />{echo.fans === 1 ? '1 friend' : `${echo.fans} friends`} liked {echo.name} too
+              </span>
+            )}
+            <span>{feedback || 'Swipe right to like, left to skip.'}</span>
+          </p>
           {ask && (
             <div className="why-ask" role="group" aria-labelledby="why-q">
               <p className="small muted" id="why-q">{ask.liked ? `What won you over at ${ask.name}?` : `What put you off at ${ask.name}?`}</p>
@@ -146,7 +167,6 @@ export function SwipeScreen({ goToRanking }: { goToRanking: () => void }) {
               </div>
             </div>
           )}
-          {/* @hcai DM-11 Like, skip and undo are buttons too, so the swipe gesture is never the only way */}
           <div className="swipe-actions">
             <button className="round md" onClick={undo} disabled={mine.length === 0} aria-label="Undo last swipe"><UndoIcon size={22} /></button>
             <button className="round lg" onClick={() => card.current?.fling(false)} aria-label="Skip"><XIcon size={30} /></button>
