@@ -32,7 +32,7 @@ function TripPrefsPreview() {
         ? <ul className="pref-chips" aria-label="Your preferences">
             {picked.map((t) => <li key={t} className="pref-chip">{t}</li>)}
           </ul>
-        : <p className="small muted">Nothing added yet. Your preferences move places up or down for you.</p>}
+        : <p className="small muted">Nothing added yet. Wishes like local food, no pizza or healthy move places up or down for you on this trip.</p>}
       {ideas.length > 0 && (
         <div className="stack" style={{ gap: 6 }}>
           <p className="small muted">Ideas, tap to add</p>

@@ -125,7 +125,7 @@ export function ProfileSetup() {
             <p className="eyebrow">Step 1 of 4</p>
             <h1 className="title">About you</h1>
             <p className="muted">A face for the group, and what you can eat.</p>
-            <p className="small muted">These count for all your trips. Wishes for one trip, like local food or no pizza, come later.</p>
+            <p className="small muted">These count for all your trips. Wishes for one trip, like local food, no pizza or healthy, come later.</p>
           </div>
           <PersonFields />
         </div>
@@ -155,7 +155,7 @@ export function ProfileScreen() {
       <div className="stack" style={{ gap: 24 }}>
         <div className="stack" style={{ gap: 6 }}>
           <h1 className="title">Profile</h1>
-          <p className="scope-hint">These settings apply to all your trips, including your diet and your general preferences. Add preferences for one trip under Our trip.</p>
+          <p className="scope-hint">Your diet and allergies count for all your trips. Wishes for one trip, like local food, no pizza or healthy, go under Our trip.</p>
         </div>
 
         {/* @hcai MM-03 The app's picture of the member is on screen as chips, and each chip can be removed */}

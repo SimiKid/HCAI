@@ -184,7 +184,7 @@ export function PersonalTripFields() {
       <div className="field">
         <span className="label">What do you prefer on this trip?</span>
         <ChipToggle label="Trip preferences" options={TRIP_PREFS} selected={mine.prefs} onChange={(prefs) => patch({ prefs })} />
-        <TextChips label="Add your own preference" placeholder="Add your own, e.g. natural wine"
+        <TextChips label="Add your own preference" placeholder="Add your own, e.g. healthy or no pizza"
           items={mine.customPrefs} onChange={(customPrefs) => patch({ customPrefs })} />
       </div>
       <div className="field">
