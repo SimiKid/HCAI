@@ -6,8 +6,7 @@ import { StoreProvider, useStore } from './store'
 import { TabBar, type Tab } from './components/TabBar'
 import { Welcome } from './screens/Welcome'
 import { ProfileSetup } from './screens/Profile'
-import { InviteStep, TripDetails, TripEntry } from './screens/JoinTrip'
-import { Dashboard } from './screens/Dashboard'
+import { InviteStep, ReadyStep, TripDetails, TripEntry } from './screens/JoinTrip'
 import { SwipeScreen } from './screens/Swipe'
 import { RankingScreen } from './screens/Ranking'
 import { TripScreen } from './screens/Trip'
@@ -30,20 +29,21 @@ export function App() {
 }
 
 function Shell() {
-  const { state } = useStore()
-  const [tab, setTab] = useState<Tab>('home')
-  // onboarding always ends on the overview, also after a deleted profile left another tab selected
-  useEffect(() => {
-    if (state.stage !== 'app') setTab('home')
-  }, [state.stage])
+  const { state, set } = useStore()
+  const [tab, setTab] = useState<Tab>('swipe')
+  // the last setup step lets the member choose where to land: the trip overview or the swipe deck
+  const finishSetup = (to: Tab) => {
+    setTab(to)
+    set({ stage: 'app' })
+  }
   if (state.stage === 'welcome') return <div className="phone"><Welcome /></div>
   if (state.stage === 'profile') return <div className="phone"><ProfileSetup /></div>
   if (state.stage === 'trip') return <div className="phone"><TripEntry /></div>
   if (state.stage === 'invite') return <div className="phone"><InviteStep /></div>
   if (state.stage === 'details') return <div className="phone"><TripDetails /></div>
+  if (state.stage === 'ready') return <div className="phone"><ReadyStep onDone={finishSetup} /></div>
   return (
     <div className="phone">
-      {tab === 'home' && <Dashboard goToSwipe={() => setTab('swipe')} goToRanking={() => setTab('ranking')} />}
       {tab === 'swipe' && <SwipeScreen goToRanking={() => setTab('ranking')} />}
       {tab === 'ranking' && <RankingScreen goToSwipe={() => setTab('swipe')} />}
       {tab === 'trip' && <TripScreen />}

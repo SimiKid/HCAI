@@ -3,12 +3,12 @@ import { VIBES, type Member, type Restaurant } from '../types'
 import data from '../data/restaurants.barcelona.json'
 import { moreSwipes, simulatedMembers } from '../data/members'
 import { resolveStay } from '../data/source'
-import { initialState, migrateState, STATE_VERSION } from '../state'
+import { initialState, migrateState, startNewTrip, STATE_VERSION } from '../state'
 import { distanceKm, featuresOf } from './features'
-import { bookingNight, bookingStatus, bookingTier } from './booking'
+import { byLead, LEAD_LABEL, LEADS, leadOf } from './booking'
 import { matchText, personalFit } from './musthave'
 import { confidence, learn, priorWeights, score, tasteProfile, update } from './learn'
-import { conflictsFor, expectedReservation, groupPlaces, isBusyNight, leftToSwipe, rankGroup, swipeOn, tripNights, type Ranked } from './rank'
+import { conflictsFor, groupPlaces, leftToSwipe, rankGroup, swipeOn, type Ranked } from './rank'
 import { matchLevel, ownFitReasons, rankWithout, reasonsFor, sharedReasons, swipeEffect } from './explain'
 import { tableMatch } from './match'
 
@@ -217,37 +217,6 @@ describe('privacy in the group', () => {
   })
 })
 
-describe('reservation', () => {
-  it('bigger parties never get an earlier table', () => {
-    for (const r of restaurants) {
-      const small = expectedReservation(r, 2)
-      const big = expectedReservation(r, 6)
-      if (big.kind === 'walk-in') expect(small.kind).toBe('walk-in')
-      if (small.kind === 'slot' && big.kind === 'slot') expect(big.time >= small.time).toBe(true)
-    }
-  })
-
-  it('a trip has one night per day, at most a week', () => {
-    expect(tripNights('2026-11-20', '2026-11-23')).toEqual(['2026-11-20', '2026-11-21', '2026-11-22', '2026-11-23'])
-    expect(tripNights('2026-11-20', '2026-11-19')).toEqual(['2026-11-20'])
-    expect(tripNights('2026-11-20', '2026-12-31')).toHaveLength(7)
-    expect(tripNights('', '')).toEqual([])
-  })
-
-  it('a busy night never gives an earlier table', () => {
-    const friday = '2026-11-20'
-    const sunday = '2026-11-22'
-    expect(isBusyNight(friday)).toBe(true)
-    expect(isBusyNight(sunday)).toBe(false)
-    for (const r of restaurants) {
-      const quiet = expectedReservation(r, 5, sunday)
-      const busy = expectedReservation(r, 5, friday)
-      if (busy.kind === 'walk-in') expect(quiet.kind).toBe('walk-in')
-      if (quiet.kind === 'slot' && busy.kind === 'slot') expect(busy.time >= quiet.time).toBe(true)
-    }
-  })
-})
-
 describe('table match', () => {
   const place = restaurants[0].id
   const like = { restaurantId: place, liked: true }
@@ -340,77 +309,48 @@ describe('sample data for round 1', () => {
   })
 })
 
-describe('booking mode', () => {
-  const weekday = '2026-11-19' // Thursday
-  const saturday = '2026-11-21'
-  const easy = restaurants.find((r) => r.sample.booking.walkIn === 'easy' && r.sample.reservation.walkInUpTo === 4)!
-  const ahead = restaurants.find((r) => r.sample.booking.bookAhead === 'before-trip')!
-  const dayBefore = restaurants.find((r) => r.sample.booking.bookAhead === 'day-before' && r.sample.booking.walkIn === 'rare')!
-
-  it('now: a small party walks in, a busy night needs a smaller party', () => {
-    expect(bookingStatus(easy, 'now', 4, weekday).availability).toBe('walk-in')
-    expect(bookingStatus(easy, 'now', 4, saturday).availability).not.toBe('walk-in')
-    expect(bookingStatus(easy, 'now', 2, saturday).availability).toBe('walk-in')
-  })
-
-  it('now: a place that books out before the trip has no table tonight', () => {
-    const s = bookingStatus(ahead, 'now', 5, weekday)
-    expect(s.availability).toBe('full')
-    expect(s.score).toBe(0)
-  })
-
-  it('tomorrow: a day-ahead booking works, a before-the-trip place does not', () => {
-    expect(bookingStatus(dayBefore, 'tomorrow', 4, weekday).availability).toBe('book')
-    expect(bookingStatus(ahead, 'tomorrow', 4, weekday).availability).toBe('full')
-  })
-
-  it('before the trip: even the busiest place can be booked', () => {
-    const s = bookingStatus(ahead, 'trip', 5)
-    expect(s.availability).toBe('book')
-    expect(s.label).toBe('Book before you travel')
-  })
-
-  it('a busy night never gives an earlier booking', () => {
+describe('how early to book', () => {
+  it('every place has one of four lead times, and easy walk-ins need no booking', () => {
     for (const r of restaurants) {
-      const a = bookingStatus(r, 'tomorrow', 5, weekday)
-      const b = bookingStatus(r, 'tomorrow', 5, saturday)
-      if (a.time && b.time) expect(b.time >= a.time).toBe(true)
-      expect(b.score).toBeLessThanOrEqual(a.score)
+      const lead = leadOf(r)
+      expect(LEADS).toContain(lead)
+      if (r.sample.booking.walkIn === 'easy') expect(lead).toBe('walk-in')
+      else expect(lead).toBe(r.sample.booking.bookAhead)
     }
-  })
-
-  it('picks tonight and tomorrow from the trip dates', () => {
-    const before = new Date('2026-11-16T18:00:00')
-    expect(bookingNight('now', '2026-11-20', '2026-11-23', '', before)).toBe('2026-11-20')
-    expect(bookingNight('tomorrow', '2026-11-20', '2026-11-23', '', before)).toBe('2026-11-21')
-    const during = new Date('2026-11-22T18:00:00')
-    expect(bookingNight('now', '2026-11-20', '2026-11-23', '', during)).toBe('2026-11-22')
-    expect(bookingNight('trip', '2026-11-20', '2026-11-23', '2026-11-21', during)).toBe('2026-11-21')
+    expect(Object.values(LEAD_LABEL)).toEqual(['Walk in', 'Book the same day', 'Book a day ahead', 'Book before you go'])
   })
 
   const sims = simulatedMembers(restaurants, features)
   const weights = Object.fromEntries(sims.map((m) => [m.id, learn(m.tripPrefs, m.swipes, features)]))
   const base = { restaurants, members: sims, weights, features }
 
-  it('ad-hoc mode puts every place free tonight above the ones that are not', () => {
-    const { ranked } = rankGroup({ ...base, when: 'now', night: saturday })
-    const tiers = ranked.map((x) => bookingTier(x.booking!))
-    expect(tiers).toEqual([...tiers].sort((a, b) => a - b))
-    expect(ranked.some((x) => x.unavailable)).toBe(true)
-    // marked, never hidden
-    expect(ranked.length).toBe(rankGroup(base).ranked.length)
-  })
-
-  it('a pin stays on top even when the place is full', () => {
-    const full = rankGroup({ ...base, when: 'now', night: saturday }).ranked.find((x) => x.unavailable)!
-    const { ranked } = rankGroup({ ...base, when: 'now', night: saturday, pinnedId: full.restaurant.id })
-    expect(ranked[0].restaurant.id).toBe(full.restaurant.id)
-    expect(ranked[0].unavailable).toBe(true)
-  })
-
-  it('without a mode the order is by taste only and no booking is attached', () => {
+  it('the group ranking is by taste only and every place carries its lead time', () => {
     const { ranked } = rankGroup(base)
-    expect(ranked.every((x) => x.booking === null && !x.unavailable)).toBe(true)
+    const scores = ranked.map((x) => x.groupScore)
+    expect(scores).toEqual([...scores].sort((a, b) => b - a))
+    for (const x of ranked) expect(x.lead).toBe(leadOf(x.restaurant))
+  })
+
+  it('book early first: earliest lead time first, the group order kept inside each group', () => {
+    const { ranked } = rankGroup(base)
+    const groups = byLead(ranked)
+    const order = groups.map((g) => LEADS.indexOf(g.lead))
+    expect(order).toEqual([...order].sort((a, b) => a - b))
+    expect(groups[0].lead).toBe('before-trip')
+    // nothing hidden, nothing twice
+    expect(groups.flatMap((g) => g.items).length).toBe(ranked.length)
+    for (const g of groups) {
+      const pos = g.items.map((x) => ranked.indexOf(x))
+      expect(pos).toEqual([...pos].sort((a, b) => a - b))
+      expect(g.items.every((x) => x.lead === g.lead)).toBe(true)
+    }
+  })
+
+  it('a pin stays on top of the group ranking', () => {
+    const last = rankGroup(base).ranked.at(-1)!
+    const { ranked } = rankGroup({ ...base, pinnedId: last.restaurant.id })
+    expect(ranked[0].restaurant.id).toBe(last.restaurant.id)
+    expect(ranked[0].pinned).toBe(true)
   })
 })
 
@@ -492,8 +432,10 @@ describe('saved state', () => {
     expect(s.trip.stay).toEqual({ kind: 'area', id: 'born' })
     expect(s.personal.me).toEqual({ prefs: ['local'], customPrefs: [], mustHaves: [], budget: { maxPriceLevel: 2 } })
     expect(s.muted.me).toEqual(['vibe:posh', 'near'])
-    expect(s.when).toBe('trip')
-    expect(s.seenDashboard).toBe(false)
+    expect('when' in s).toBe(false)
+    expect('seenDashboard' in s).toBe(false)
+    expect(s.bookEarly).toBe(false)
+    expect(s.pastTrips).toEqual([])
     expect(s.rule).toBe('least-misery')
     expect(s.swipes.me).toHaveLength(1)
     expect(s.v).toBe(STATE_VERSION)
@@ -501,8 +443,37 @@ describe('saved state', () => {
 
   it('survives garbage and keeps a current state as it is', () => {
     expect(migrateState('nonsense')).toEqual(initialState)
-    expect(migrateState({ stage: 42, trip: null, when: 'never' }).stage).toBe('welcome')
-    const custom = { ...initialState, trip: { ...initialState.trip, stay: { kind: 'custom' as const, label: 'Hostel', latitude: 41.39, longitude: 2.17 } }, when: 'now' as const }
+    expect(migrateState({ stage: 42, trip: null, when: 'never', night: 7, pastTrips: 'x' }).stage).toBe('welcome')
+    const custom = {
+      ...initialState, bookEarly: true,
+      trip: { ...initialState.trip, stay: { kind: 'custom' as const, label: 'Hostel', latitude: 41.39, longitude: 2.17 } },
+      pastTrips: [{ code: 'BCN-OLD1', stay: { kind: 'area' as const, id: 'born' }, from: '2026-05-01', to: '2026-05-03' }],
+    }
     expect(migrateState(JSON.parse(JSON.stringify(custom)))).toEqual(custom)
+  })
+
+  it('a v3 state with a booking mode and a night loads and keeps everything else', () => {
+    const v3 = { ...initialState, v: 3, stage: 'app', name: 'Ana', when: 'now', night: '2026-11-21', seenDashboard: true, trip: { ...initialState.trip, code: 'BCN-AAAA' } }
+    const s = migrateState(JSON.parse(JSON.stringify(v3)))
+    expect(s.stage).toBe('app')
+    expect(s.name).toBe('Ana')
+    expect(s.trip.code).toBe('BCN-AAAA')
+    expect(s.v).toBe(STATE_VERSION)
+    expect(Object.keys(s).sort()).toEqual(Object.keys(initialState).sort())
+  })
+
+  it('a new trip keeps the profile, lists the old trip and starts fresh', () => {
+    const before = {
+      ...initialState, stage: 'app' as const, name: 'Ana', diets: ['vegan' as const], avatar: 'pizza', share: { me: true }, muted: { me: ['near'] },
+      trip: { code: 'BCN-AAAA', role: 'owner' as const, stay: { kind: 'area' as const, id: 'born' }, from: '2026-11-20', to: '2026-11-23' },
+      personal: { me: { prefs: ['local' as const], customPrefs: [], mustHaves: [{ text: 'paella' }], budget: null } },
+      swipes: { me: [{ restaurantId: 'x', liked: true }] }, pin: { restaurantId: 'x', by: 'me' }, rule: 'least-misery' as const,
+    }
+    const s = { ...before, ...startNewTrip(before) }
+    expect(s.stage).toBe('trip')
+    expect([s.name, s.diets, s.avatar, s.share, s.muted]).toEqual([before.name, before.diets, before.avatar, before.share, before.muted])
+    expect(s.pastTrips).toEqual([{ code: 'BCN-AAAA', stay: { kind: 'area', id: 'born' }, from: '2026-11-20', to: '2026-11-23' }])
+    expect(s.trip).toEqual(initialState.trip)
+    expect([s.personal, s.swipes, s.pin, s.rule]).toEqual([{}, {}, null, 'average'])
   })
 })

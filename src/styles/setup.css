@@ -31,3 +31,8 @@
 .stay-map .leaflet-container { cursor: crosshair; }
 .welcome-tagline { text-wrap: balance; }
 @media (max-height: 700px) { .welcome-text { gap: 10px; } }
+
+/* Profile, your trips: the current one and earlier ones */
+.trip-tag { flex: none; padding: 3px 10px; border-radius: var(--r-pill); background: var(--bg); color: var(--ink-2); font-size: 0.75rem; font-weight: 600; }
+.trip-tag.now { background: var(--crimson-soft); color: var(--crimson-text); }
+.past-trip { background: none; box-shadow: inset 0 0 0 1.5px var(--line); }

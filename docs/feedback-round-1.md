@@ -69,6 +69,26 @@ moment, the clean style of setup steps 1 and 2.
 | G7 | Review findings: bill privacy, veto under filters, pin vs. veto, counterfactual, bar scaling | Not now | later | |
 | G8 | Average demographic display | Leave as is, decide before the report | later | FAIR-07, FAIR-13, FAIR-20 |
 
+## Round 1b (16 Nov 2026)
+
+Second pass on the same prototype after trying round 1. Some round 1
+decisions are replaced: E1 (overview dashboard), G1 (big front-runner card),
+G3 hint wording and G4/G6 (booking modes).
+
+| # | Feedback | Decision | Status | Why |
+|---|---|---|---|---|
+| H1 | The Overview tab is one tab too many | Overview tab and dashboard removed. Its map of the stay and the places around it moves to the Group tab, renamed **Our trip**. "Clear picture" progress stays only on Ranking, so it is not shown twice. Replaces E1 | do | DM-02, ERR-03 |
+| H2 | After setup, let me choose: look around or swipe | Setup step 4 of 4: "You're all set! Ready to swipe?" with "Start swiping" (Swipe) and "Group overview" (Our trip). The first-visit "Swipe now" logic is gone | do | AMR-01, HCAI-02 |
+| H3 | The front-runner card is too big | Number one is a list row of the same size as the others, with a gold border and a small gold "Front-runner" marker on the border. Replaces G1 | do | DM-04, ERR-04 |
+| H4 | Booking modes and picking nights are too much | No more "When do you want to eat?" and no dates or nights anywhere. Every place says how early to reserve: "Walk in", "Book the same day", "Book a day ahead", "Book before you go", the same words on the card, row, sheet and bill. One switch on Ranking, "Book early first": groups the list by lead time, earliest first, keeps the group order inside each group with a small header per group. Rows keep their group rank number, the front-runner marker stays on the overall number one, a pin stays on top. Replaces G4/G6 | do | AMR-04, ERR-04, DM-03 |
+| H5 | Trip wishes do not belong in Profile | Mood, own words, must-haves and budget move to Our trip, "Just for you", still "Only you see this". Profile keeps the person (name, avatar, diet, allergies, settings, data) and gets "Your trips": the current trip and past ones (stay and dates only). "Start a new trip" asks first, keeps the profile, and runs the trip setup again. Swipes, wishes, pin and fairness rule start fresh because the deck is per trip | do | MM-01, AMR-05, FAIR-17 |
+| H6 | "Tap a friend to leave them out" is not clear | Heading "Who counts in this ranking", copy "Everyone counts. Tap a person to leave them out, tap again to bring them back." Every seat has a badge: a green check when the person counts, a dark cross when left out, plus a small legend | do | DM-01, NOR-02, FAIR-16 |
+
+Model and data: `BookingMode`, nights and the busy-night rule are gone.
+`leadOf()` and `byLead()` in `src/model/booking.ts` replace them. Saved
+state moves to version 4: old `when`, `night` and `seenDashboard` fields
+are dropped on load, `pastTrips` and `bookEarly` are new.
+
 ## Not pursued
 
 Sample-data mismatches (photo labels, addresses) and the confidence label on a

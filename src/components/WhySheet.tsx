@@ -1,12 +1,12 @@
 import { useEffect, useRef, useState } from 'react'
 import { motion } from 'framer-motion'
 import type { Member } from '../types'
-import { useBooking, useStore, type Group } from '../store'
+import { useStore, type Group } from '../store'
 import { CUISINE_LABEL, distanceKm } from '../model/features'
 import { confidence } from '../model/learn'
 import { matchLevel, rankWithout, sharedReasons } from '../model/explain'
 import { swipeOn, type RankInput, type Ranked } from '../model/rank'
-import { BOOKING_MODES, bookAheadLabel, bookingStatus, slotsOn, walkInLabel } from '../model/booking'
+import { LEAD_LABEL } from '../model/booking'
 import { Avatar, count, km, price, swipes } from './Bits'
 import { DataNote, Gallery } from './Gallery'
 import { ChevronIcon, CrownIcon, HeartIcon, XIcon } from './Icons'
@@ -24,7 +24,6 @@ interface Props {
 /** "The bill": why a place is where it is, itemised per person like a restaurant receipt. */
 export function WhySheet({ item, rank, input, group, party, canPin, onClose }: Props) {
   const { state, set } = useStore()
-  const booking = useBooking()
   const r = item.restaurant
   const x = group.features[r.id]
   const closeRef = useRef<HTMLButtonElement>(null)
@@ -44,8 +43,6 @@ export function WhySheet({ item, rank, input, group, party, canPin, onClose }: P
   const [showTimes, setShowTimes] = useState(false)
   // with the place passed in, the viewer's own must-have and budget lines come first in their reasons, nobody else's
   const shared = sharedReasons(input.members, group.weights, x, viewerId, r)
-  const table = item.booking ?? bookingStatus(r, booking.when, party, booking.night)
-  const modeLabel = BOOKING_MODES.find((m) => m.value === booking.when)?.label ?? ''
   const viewerSwiped = swipeOn(group.actor, r.id) !== null
   const open = (m: Member) => m.id === viewerId || m.sharesReasons
 
@@ -154,15 +151,14 @@ export function WhySheet({ item, rank, input, group, party, canPin, onClose }: P
                 </p>
               )}
               <hr />
-              <p className="bill-caps" style={{ marginBottom: 8 }}>Table for {party} · {modeLabel}{booking.nightLabel && `, ${booking.nightLabel}`}</p>
-              <p className="strong">{table.availability === 'full' ? `Unavailable: ${table.label}` : table.label}</p>
-              <p className="bill-small">{walkInLabel(r.sample.booking.walkIn)} · {bookAheadLabel(r.sample.booking.bookAhead)}</p>
+              <p className="bill-caps" style={{ marginBottom: 8 }}>How to book · Table for {party}</p>
+              <p className="strong">{LEAD_LABEL[item.lead]}</p>
               <button className="bill-link" aria-expanded={showTimes} onClick={() => setShowTimes(!showTimes)}>
-                {showTimes ? 'Hide the times' : 'See all times'}
+                {showTimes ? 'Hide the table times' : 'See the table times'}
               </button>
               {showTimes && (
                 <div className="chips" style={{ marginTop: 6 }}>
-                  {(booking.when === 'trip' ? r.sample.reservation.slots : slotsOn(r, booking.night)).map((s) => (
+                  {r.sample.reservation.slots.map((s) => (
                     <span key={s.time} className={s.maxParty >= party ? 'chip static lav' : 'chip static'}>
                       {s.time} · up to {s.maxParty}
                     </span>

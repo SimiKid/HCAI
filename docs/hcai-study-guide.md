@@ -21,7 +21,7 @@ analysis finding it answers. Edit this section by hand.
 
 <!-- BEGIN GENERATED: do not edit by hand, run scripts/study-guide.sh -->
 
-29 of 117 principles applied, 31 tags in the code.
+28 of 117 principles applied, 30 tags in the code.
 
 ### Amershi et al. 2019, Guidelines for Human-AI Interaction (L04 p.66)
 
@@ -31,17 +31,17 @@ analysis finding it answers. Edit this section by hand.
 
 #### AMR-02 Make clear how well the system can do what it can do
 
-- `src/screens/Swipe.tsx:115` The header always shows how sure the app is, in words, next to the swipe count
+- `src/screens/Swipe.tsx:113` The header always shows how sure the app is, in words, next to the swipe count
 
 #### AMR-04 Show contextually relevant information
 
-- `src/screens/Ranking.tsx:135` Booking is a main control: now, tomorrow or before the trip, and every place then says how the group gets a table
+- `src/model/booking.ts:9` Every place says how early to reserve in the same four short labels on the swipe card, the list and the bill, no dates to pick
 
 #### AMR-05 Match relevant social norms
 
 - `src/model/explain.ts:82` Other members' reasons are counted without names ("two people prefer cheaper places") unless they chose to share them
-- `src/screens/JoinTrip.tsx:414` Mood, own words, must-haves and budget sit apart from the shared trip under "Only you see this", and the group only ever sees the combined ranking
-- `src/screens/Swipe.tsx:79` Others' likes show only after my own like and only as a count ("2 friends liked this"), never as faces or names, so nobody feels watched
+- `src/screens/JoinTrip.tsx:415` Mood, own words, must-haves and budget sit apart from the shared trip under "Only you see this", and the group only ever sees the combined ranking
+- `src/screens/Swipe.tsx:77` Others' likes show only after my own like and only as a count ("2 friends liked this"), never as faces or names, so nobody feels watched
 
 #### AMR-09 Support efficient correction
 
@@ -49,61 +49,61 @@ analysis finding it answers. Edit this section by hand.
 
 #### AMR-10 Scope services when in doubt
 
-- `src/screens/Ranking.tsx:71` Until everyone at the table has 8 swipes, or has seen every place they can eat at, there is no front-runner, only an unordered shortlist of three
+- `src/screens/Ranking.tsx:68` Until everyone at the table has 8 swipes, or has seen every place they can eat at, there is no front-runner, only an unordered shortlist of three
 
 #### AMR-11 Make clear why the system did what it did
 
-- `src/components/WhySheet.tsx:101` Every place explains its rank per member: a match word for everyone, and one tap shows the two reasons that mattered most
+- `src/components/WhySheet.tsx:98` Every place explains its rank per member: a match word for everyone, and one tap shows the two reasons that mattered most
 
 #### AMR-15 Encourage granular feedback
 
-- `src/screens/Swipe.tsx:87` One optional tap after a swipe says what it was about (food, vibe, price or location), beyond like and skip
+- `src/screens/Swipe.tsx:85` One optional tap after a swipe says what it was about (food, vibe, price or location), beyond like and skip
 
 #### AMR-16 Convey the consequences of user actions
 
-- `src/screens/Swipe.tsx:84` After each swipe one line names what got stronger in the member's taste, in the same words as the chips in Profile
+- `src/screens/Swipe.tsx:82` After each swipe one line names what got stronger in the member's taste, in the same words as the chips in Profile
 
 ### Mental models and the model of the user (L04 p.4 to 19)
 
 #### MM-01 Three models must line up
 
-- `src/state.ts:6` The trip (stay, dates) is shared and set once by its starter, personal mood and must-haves live per member, so nobody mistakes their own wishes for group settings
+- `src/state.ts:5` The profile holds the person (name, diet, allergies), each trip holds its shared stay and dates set once by its starter, and every member's private mood and must-haves live with the trip, so nobody mistakes their own wishes for group settings
 
 #### MM-03 Make the AI's model of the user visible
 
-- `src/screens/Profile.tsx:156` The app's picture of the member is on screen as chips, and each chip can be removed
+- `src/screens/Profile.tsx:158` The app's picture of the member is on screen as chips, and each chip can be removed
 
 ### Errors and AI failure modes (L04 p.28 to 64)
 
-#### ERR-12 Context errors: explain no-result and offer alternatives
+#### ERR-04 Separate unpredictable AI suggestions from the predictable UI
 
-- `src/model/rank.ts:111` A place with no table in the chosen mode is sorted down and marked, never hidden, and ad-hoc mode puts places free tonight first
+- `src/screens/Ranking.tsx:215` "Book early first" is a predictable second sort the group switches on: it only groups the list by how early to reserve, keeps the group order inside each group and the front-runner marker on the overall number one
 
 ### Fairness, accountability, ethics (L06)
 
 #### FAIR-01 Accountability
 
-- `src/components/WhySheet.tsx:73` A pinned place carries the name of who pinned it and says that it overrides the ranking
+- `src/components/WhySheet.tsx:70` A pinned place carries the name of who pinned it and says that it overrides the ranking
 
 #### FAIR-03 Corrigibility
 
-- `src/components/WhySheet.tsx:81` Anyone in the group can undo a pin with one tap, so the group keeps the last word
+- `src/components/WhySheet.tsx:78` Anyone in the group can undo a pin with one tap, so the group keeps the last word
 
 #### FAIR-04 Procedural vs. distributive justice: equality or equity
 
-- `src/model/rank.ts:105` (trade-off) One member one vote under both rules: someone with 40 swipes counts the same as someone with 5
+- `src/model/rank.ts:97` (trade-off) One member one vote under both rules: someone with 40 swipes counts the same as someone with 5
 
 #### FAIR-05 Pick a fairness notion deliberately
 
-- `src/model/rank.ts:106` The group picks its fairness rule: best on average, or nobody left unhappy (the lowest score counts)
+- `src/model/rank.ts:98` The group picks its fairness rule: best on average, or nobody left unhappy (the lowest score counts)
 
 #### FAIR-10 Aggregation bias
 
-- `src/model/rank.ts:86` Diets and allergies are a veto, not a taste: one member who cannot eat there removes the place for the group
+- `src/model/rank.ts:78` Diets and allergies are a veto, not a taste: one member who cannot eat there removes the place for the group
 
 #### FAIR-13 Harm types
 
-- `src/screens/Profile.tsx:212` "Popular with" uses taste groups, not age or gender, and stays off until a member turns it on
+- `src/screens/Profile.tsx:248` "Popular with" uses taste groups, not age or gender, and stays off until a member turns it on
 
 #### FAIR-14 Recourse
 
@@ -111,17 +111,17 @@ analysis finding it answers. Edit this section by hand.
 
 #### FAIR-16 User auditing
 
-- `src/screens/Ranking.tsx:159` Anyone can switch members off and see whose taste shapes the list, with each member's swipe count on their seat
+- `src/screens/Ranking.tsx:136` Anyone can switch members off and see whose taste shapes the list, with each member's swipe count on their seat
 
 #### FAIR-17 Privacy: consent, control, erasure
 
-- `src/screens/Profile.tsx:220` Showing my reasons to the group by name is my choice, off by default, and can be switched back any time
+- `src/screens/Profile.tsx:256` Showing my reasons to the group by name is my choice, off by default, and can be switched back any time
 
 ### Explainability and trust (L07)
 
 #### XAI-09 Choose the explanation format on purpose
 
-- `src/components/WhySheet.tsx:86` The explanation is a receipt: one line per person, a dashed rule, the group result as the total
+- `src/components/WhySheet.tsx:83` The explanation is a receipt: one line per person, a dashed rule, the group result as the total
 
 #### XAI-10 Unwarranted faith in numbers
 
@@ -135,27 +135,23 @@ analysis finding it answers. Edit this section by hand.
 
 #### HCAI-02 High control and high automation together
 
-- `src/screens/Ranking.tsx:56` The ranking is automatic, and people steer it three ways: filter members, re-rank for yourself, or pin a place
+- `src/screens/Ranking.tsx:54` The ranking is automatic, and people steer it three ways: filter members, re-rank for yourself, or pin a place
 
 ### Horvitz 1999, Principles of mixed-initiative user interfaces (reading, week 4)
 
 #### HOR-02 Represent uncertainty about the user's goals
 
-- `src/model/rank.ts:98` A real swipe beats the guess: a place the member liked counts as a match for them and a skipped one does not, the guess only orders the rest
+- `src/model/rank.ts:90` A real swipe beats the guess: a place the member liked counts as a match for them and a skipped one does not, the guess only orders the rest
 
 ### Shneiderman and Maes 1997, Direct manipulation vs. interface agents (reading, week 4)
 
 #### DM-01 Direct manipulation
 
-- `src/screens/Ranking.tsx:153` The people filter is the table itself: tap a friend's seat to leave them out, the list re-ranks at once, tap again to undo
-
-#### DM-02 Overview first, zoom and filter, details on demand
-
-- `src/screens/Dashboard.tsx:29` After setup the app opens on an overview (map of the stay and places, group progress, next step) before any swiping
+- `src/screens/Ranking.tsx:142` The people filter is the table itself: every seat shows a check or a cross, a tap leaves that person out and the list re-ranks at once, a second tap brings them back
 
 #### DM-04 Users keep responsibility
 
-- `src/components/FrontRunner.tsx:61` The card names a front-runner and how many it suits, not a decision: choosing stays with the group
+- `src/components/RankRow.tsx:56` Number one is marked as the front-runner, a row like the others and not a decision: choosing stays with the group
 
 ### Not applied yet
 
@@ -176,7 +172,6 @@ analysis finding it answers. Edit this section by hand.
 - ERR-01 Feedforward and feedback across the seven stages of action
 - ERR-02 Slips vs. mistakes
 - ERR-03 Consistency enables habituation
-- ERR-04 Separate unpredictable AI suggestions from the predictable UI
 - ERR-05 Correcting the AI must cost no more than not using it
 - ERR-06 Gulf of envisioning
 - ERR-07 Failures beyond the users
@@ -184,6 +179,7 @@ analysis finding it answers. Edit this section by hand.
 - ERR-09 Goal misgeneralization
 - ERR-10 Training data errors: let users correct data
 - ERR-11 Input errors: check inputs against expectations
+- ERR-12 Context errors: explain no-result and offer alternatives
 - ERR-13 System hierarchy errors: show which sources drive the result
 - ERR-14 Error audit
 - NOR-01 Affordances
@@ -236,6 +232,7 @@ analysis finding it answers. Edit this section by hand.
 - HOR-13 Act, ask or stay silent by probability thresholds
 - HOR-14 Degrade gracefully to a scoped view
 - HOR-15 Offer modes from manual to automatic
+- DM-02 Overview first, zoom and filter, details on demand
 - DM-03 Dynamic queries
 - DM-05 Adaptive algorithms below a predictable surface
 - DM-06 Avoid anthropomorphism

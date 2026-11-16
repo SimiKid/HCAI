@@ -11,21 +11,28 @@ All listed features are in scope for the prototype.
 1. Create a profile
    - Questions about the user.
    - Core person information: allergies, diets.
+   - The profile belongs to the person and outlives a trip. Profile lists
+     "Your trips": the current one and past ones (stay and dates only). "Start
+     a new trip" keeps the profile and runs the trip setup again. One active
+     trip at a time.
 
 2. Join a group or trip
    - Three ways in: accept an invitation, type a trip code, or start a new
      trip.
    - Whoever starts a trip gets a trip code and an invite link to share, and
-     sees who has joined. More people can be invited later from the Group tab.
+     sees who has joined. More people can be invited later from Our trip.
    - Opening an invite link fills in the trip code.
    - Whoever starts the trip sets where the group stays (a preset area or a
      custom place on the map) and the dates. Joiners see them filled in.
    - Personal, private preferences per trip: mood ("eat traditionally",
      "trendy areas"), own free-text preferences, must-haves ("paella, no
      negotiation") and a budget. Only the member sees them, editable later
-     in Profile.
-   - After setup the app opens on an Overview: a map of the stay with the
-     places around it, group progress, and the next step.
+     in Our trip under "Just for you".
+   - Setup has four steps. Step 4: "You're all set! Ready to swipe?" with
+     "Start swiping" (lands on Swipe) and "Group overview" (lands on Our
+     trip).
+   - The Our trip tab: the trip (stay, dates, people), a map of the stay with
+     the places around it, "Just for you", the members and the invite.
 
 3. Swipe pictures
    - The user swipes on restaurant pictures. Swipe as much as you want.
@@ -33,7 +40,7 @@ All listed features are in scope for the prototype.
    - Each swipe trains the algorithm on the user's preferences.
    - Each card shows: location, price level (dollar signs), walking time
      from where the group stays, reviews including numbers, vibe tags, one
-     sample review quote, and how the place can be booked. The second slide
+     sample review quote, and how early to reserve. The second slide
      is a mini map with the place and the group's stay.
    - The deck only has places that every group member can eat at. It ends
      after one pass and does not repeat.
@@ -43,16 +50,19 @@ All listed features are in scope for the prototype.
 
 4. Ranked list of restaurants for the group
    - One ranked list for the whole group, all places in one go.
-   - Booking is a main control: "When do you want to eat?" now (ad-hoc),
-     tomorrow, or before the trip. Every place shows how the group gets a
-     table in that mode.
+   - Booking: every place shows how early to reserve ("Walk in", "Book the
+     same day", "Book a day ahead", "Book before you go"). One switch, "Book
+     early first", groups the list by that, earliest first, and keeps the
+     group order inside each group.
    - Group progress: who the app has a clear picture of (20 swipes), and a
      nudge for the others.
    - The user can re-rank the list with their own preferences.
    - Map view of the results.
    - Shows the average demographic that likes each restaurant.
    - Dictatorship mode: one user pins a restaurant to the top of the list.
-   - People filter: tap a friend at the table to leave them out of the ranking.
+   - People filter: "Who counts in this ranking". Every seat at the table has
+     a check or a cross, a tap leaves that person out, a second tap brings
+     them back.
 
 ### Decisions
 
@@ -86,29 +96,37 @@ All listed features are in scope for the prototype.
   two cannot disagree.
 - The group chooses its fairness rule: "best on average" or "nobody left
   unhappy" (the lowest member score counts). Members are equal under both.
-- Table times are sample values with one rule: on Friday and Saturday the two
-  earliest times are taken and walk-ins only work for smaller parties.
+- Table times are sample values, shown in the bill with the largest party
+  per time. There is no busy-night rule any more.
 - A nudge makes a simulated friend swipe 12 more places. A table match only
   counts real swipes, never a predicted score.
 - The full note on sample data is in Group, "About this data". Cards and
   sheets stay short and keep the photo credits.
-- Booking data per place is a sample: walk-in chance and lead time (same day,
-  day before, before the trip). In ad-hoc mode no place is hidden: free now
-  comes first, then maybes, then full places, each ordered by taste. A pinned
-  place stays on top even when full.
+- Booking data per place is a sample: walk-in chance and lead time. Easy
+  walk-in reads "Walk in", otherwise the lead time. No dates or nights to
+  pick anywhere. "Book early first" is a second sort on top of the group
+  ranking, never a change to it: rows keep their group rank number, the
+  front-runner marker stays on the overall number one and a pinned place
+  stays on top. Off by default, saved per phone.
+- Starting a new trip keeps name, avatar, diet, allergies, settings and
+  forgotten tastes. Swipes, private wishes, the pin and the fairness rule
+  belong to the trip and start fresh, since the deck is per trip.
 - Must-haves only change the guess for that member (a real swipe still wins)
   and are never shown to anyone else.
-- Feedback round 1 and its decisions: `docs/feedback-round-1.md`.
+- Feedback round 1 and 1b and their decisions: `docs/feedback-round-1.md`.
 
 ### Look and feel
 
 - Palette and base type follow the crimson and lavender reference. Headlines
   use Bricolage Grotesque, the bill uses DM Mono.
 - Signature: the group's table. Avatars sit around a round table seen from
-  above. On Ranking, the table is the people filter, and number one is a big
-  photo card with a gold border.
-- On Ranking, group progress comes first, then the booking control and the
-  table, then the front-runner and the full list.
+  above. On Ranking, the table is the people filter, with a check or a cross
+  badge on every seat.
+- On Ranking, group progress comes first, then the table, then "Book early
+  first" and the full list. Number one is a row of the same size as the
+  others, with a gold border and a small gold "Front-runner" marker on it.
+- Four tabs: Swipe, Ranking, Our trip, Profile. Our trip holds the map of the
+  stay; group progress ("clear picture") lives only on Ranking.
 - The explanation of a rank is "the bill": a receipt with one line per person
   and the group result as the total.
 

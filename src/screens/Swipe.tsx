@@ -1,13 +1,12 @@
 import { useMemo, useRef, useState } from 'react'
 import type { Because, Restaurant, Swipe } from '../types'
-import { useBooking, useGroup, useStore } from '../store'
+import { useGroup, useStore } from '../store'
 import { shuffled } from '../data/members'
 import { distanceKm, featureLabel } from '../model/features'
 import { swipeEffect } from '../model/explain'
 import { confidence, learn } from '../model/learn'
 import { tableMatch, type TableMatch } from '../model/match'
 import { groupPlaces } from '../model/rank'
-import { bookingStatus } from '../model/booking'
 import { AnimatePresence, motion } from 'framer-motion'
 import { SwipeCard, type SwipeCardHandle } from '../components/SwipeCard'
 import { PlaceSheet } from '../components/PlaceSheet'
@@ -28,7 +27,6 @@ const WHY: { id: Because; label: string; phrase: string }[] = [
 export function SwipeScreen({ goToRanking }: { goToRanking: () => void }) {
   const { state, set, restaurants } = useStore()
   const { actor, hotel, members, features } = useGroup()
-  const booking = useBooking()
   const [more, setMore] = useState(false)
   // how many others liked the place I just liked, as a number only
   const [echo, setEcho] = useState<{ name: string; fans: number; key: number } | null>(null)
@@ -144,7 +142,6 @@ export function SwipeScreen({ goToRanking }: { goToRanking: () => void }) {
               distanceKm={distanceKm(hotel, current.location)}
               stay={hotel}
               others={others}
-              booking={bookingStatus(current, booking.when, members.length, booking.night)}
               onDecide={decide}
               onMore={() => setMore(true)}
             />
@@ -194,7 +191,7 @@ export function SwipeScreen({ goToRanking }: { goToRanking: () => void }) {
     <AnimatePresence>
       {more && current && (
         <PlaceSheet restaurant={current} distanceKm={distanceKm(hotel, current.location)} hotelLabel={hotel.label}
-          party={members.length} onClose={() => setMore(false)}
+          onClose={() => setMore(false)}
           onDecide={(liked) => { setMore(false); card.current?.fling(liked) }} />
       )}
     </AnimatePresence>

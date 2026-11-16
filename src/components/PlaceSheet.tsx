@@ -2,11 +2,10 @@ import { useEffect, useRef } from 'react'
 import { motion } from 'framer-motion'
 import type { Restaurant } from '../types'
 import { CUISINE_LABEL } from '../model/features'
-import { BOOKING_MODES, bookingStatus } from '../model/booking'
-import { useBooking } from '../store'
+import { leadOf } from '../model/booking'
 import { count, km, price } from './Bits'
 import { DataNote, Gallery } from './Gallery'
-import { BookingLine } from './RankRow'
+import { LeadLine } from './RankRow'
 import { HeartIcon, StarIcon, XIcon } from './Icons'
 
 const cap = (s: string) => s[0].toUpperCase() + s.slice(1)
@@ -15,17 +14,13 @@ interface Props {
   restaurant: Restaurant
   distanceKm: number
   hotelLabel: string
-  party: number
   onClose: () => void
   onDecide: (liked: boolean) => void
 }
 
 /** A closer look at one place from the swipe deck, before deciding. */
-export function PlaceSheet({ restaurant: r, distanceKm, hotelLabel, party, onClose, onDecide }: Props) {
+export function PlaceSheet({ restaurant: r, distanceKm, hotelLabel, onClose, onDecide }: Props) {
   const closeRef = useRef<HTMLButtonElement>(null)
-  const booking = useBooking()
-  const table = bookingStatus(r, booking.when, party, booking.night)
-  const modeLabel = BOOKING_MODES.find((m) => m.value === booking.when)?.label ?? ''
   useEffect(() => {
     closeRef.current?.focus()
     const onKey = (e: KeyboardEvent) => e.key === 'Escape' && onClose()
@@ -66,8 +61,8 @@ export function PlaceSheet({ restaurant: r, distanceKm, hotelLabel, party, onClo
             {r.sample.allergens.length > 0 && <p className="small muted">Hard to avoid here: {r.sample.allergens.join(', ')}.</p>}
           </div>
           <div className="stack" style={{ gap: 4 }}>
-            <p className="label">Table for {party} · {modeLabel}{booking.nightLabel && `, ${booking.nightLabel}`}</p>
-            <BookingLine status={table} />
+            <p className="label">How to book</p>
+            <LeadLine lead={leadOf(r)} />
           </div>
           <div className="row">
             <button className="btn" onClick={() => onDecide(false)}><XIcon size={20} />Skip</button>

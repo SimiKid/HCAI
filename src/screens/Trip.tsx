@@ -1,33 +1,75 @@
-import { useState } from 'react'
+import { useMemo, useState } from 'react'
 import { restaurantSource } from '../data/source'
-import { useGroup, useStore } from '../store'
+import { personalOf, useGroup, useStore } from '../store'
 import { confidence } from '../model/learn'
-import { Avatar, Fold, swipes } from '../components/Bits'
+import { groupPlaces } from '../model/rank'
+import { Avatar, Fold, price, swipes, tripDates } from '../components/Bits'
 import { ConfidenceDots } from '../components/ConfidenceDots'
-import { InviteCard, TripFields } from './JoinTrip'
+import { MiniMap } from '../components/MiniMap'
+import { InviteCard, LockIcon, PersonalTripFields, TRIP_PREFS, TripFields } from './JoinTrip'
 
 const cap = (s: string) => (s ? s[0].toUpperCase() + s.slice(1) : s)
-const fmt = (iso: string) => new Date(iso + 'T12:00:00').toLocaleDateString('en-GB', { day: 'numeric', month: 'short' })
 
+/** One line about this member's own wishes for the trip, only ever shown to them. */
+function mySummary(p: ReturnType<typeof personalOf>): string {
+  const moods = [...p.prefs.map((v) => TRIP_PREFS.find((t) => t.value === v)?.label ?? v), ...p.customPrefs]
+  const parts = [
+    moods.join(', '),
+    p.mustHaves.length > 0 && `Must-have: ${p.mustHaves.map((h) => h.text).join(', ')}`,
+    p.budget && `Up to ${price(p.budget.maxPriceLevel)}`,
+  ].filter(Boolean)
+  return parts.length ? cap(parts.join(' · ')) : 'Nothing picked yet. Mood, must-haves and budget move places up or down for you.'
+}
+
+/** The trip: where the group stays and the places around it, your own wishes for it, and the people. */
 export function TripScreen() {
-  const { state } = useStore()
+  const { state, restaurants } = useStore()
   const { members, hotel } = useGroup()
   const [editing, setEditing] = useState(false)
+  const [editingMine, setEditingMine] = useState(false)
+  const places = useMemo(() => groupPlaces(restaurants, members), [restaurants, members])
+  const spots = useMemo(() => places.map((r) => r.location), [places])
   return (
     <div className="screen">
       <div className="stack" style={{ gap: 24 }}>
-        <h1 className="title">Group</h1>
+        <h1 className="title">Our trip</h1>
 
-        <section className="card stack" aria-label="Trip">
-          <div className="row between">
-            <div>
-              <p className="eyebrow">Trip {state.trip.code}</p>
-              <p className="h2">Barcelona · {hotel.label}</p>
-              <p className="small muted">{fmt(state.trip.from)} to {fmt(state.trip.to)}</p>
+        <section className="stack" aria-label="Trip" style={{ gap: 12 }}>
+          <div className="card stack">
+            <div className="row between">
+              <div>
+                <p className="eyebrow">Trip {state.trip.code}</p>
+                <p className="h2">Barcelona · {hotel.label}</p>
+                <p className="small muted">{[tripDates(state.trip.from, state.trip.to), `${members.length} people`].filter(Boolean).join(' · ')}</p>
+              </div>
+              <button className="btn slim" style={{ background: 'var(--bg)' }} aria-expanded={editing} onClick={() => setEditing(!editing)}>{editing ? 'Done' : 'Edit'}</button>
             </div>
-            <button className="btn slim" style={{ background: 'var(--bg)' }} onClick={() => setEditing(!editing)}>{editing ? 'Done' : 'Edit'}</button>
+            {editing && <TripFields />}
           </div>
-          {editing && <TripFields />}
+          <div className="trip-map">
+            <MiniMap stay={hotel} others={spots} bottomInset={44}
+              label={`Map: ${places.length} places around ${hotel.label}, where your group stays`} />
+            <div className="trip-legend" aria-hidden="true">
+              <span><i className="h" />Your stay</span>
+              <span><i />{places.length} places for your group</span>
+            </div>
+          </div>
+        </section>
+
+        {/* private: the member's own wishes for this trip, never shown to the group */}
+        <section className="stack" aria-labelledby="mine-h" style={{ gap: 12 }}>
+          <div className="setup-section-head">
+            <h2 className="h2" id="mine-h">Just for you</h2>
+            <p className="privacy-hint"><LockIcon />Only you see this</p>
+          </div>
+          <div className="card row">
+            <div className="grow">
+              <p className="strong">Mood, must-haves and budget</p>
+              <p className="small muted">{mySummary(personalOf(state, 'me'))}</p>
+            </div>
+            <button className="btn slim" style={{ background: 'var(--bg)' }} aria-expanded={editingMine} onClick={() => setEditingMine(!editingMine)}>{editingMine ? 'Done' : 'Edit'}</button>
+          </div>
+          {editingMine && <div className="setup-section"><PersonalTripFields /></div>}
         </section>
 
         <section className="stack" aria-labelledby="members-h">
@@ -71,10 +113,11 @@ export function TripScreen() {
             <li>You see your own reasons. Other people's reasons are only counted, unless they chose to share them by name.</li>
             <li>It is a guess, and a rough one with few swipes. Filter people, re-rank for yourself, or pin a place to overrule it.</li>
             <li>In the list, the bar compares each place with the best and the worst one, so small differences show.</li>
+            <li>“Book early first” only groups the list by how early you have to reserve. Inside each group the order stays the same.</li>
           </ul>
           </Fold>
           <Fold title="About this data">
-            <p className="small muted">{restaurantSource.note} Friday and Saturday count as busy nights with fewer early tables.</p>
+            <p className="small muted">{restaurantSource.note}</p>
           </Fold>
         </section>
       </div>

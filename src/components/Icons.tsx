@@ -26,3 +26,4 @@ export const WalkIcon = (p: P) => <Svg {...p}><circle cx="13" cy="4.5" r="1.6" /
 export const InfoIcon = (p: P) => <Svg {...p}><circle cx="12" cy="12" r="8.5" /><path d="M12 11v5M12 8h.01" /></Svg>
 export const ChevronIcon = (p: P) => <Svg {...p}><path d="m9 6 6 6-6 6" /></Svg>
 export const ForkIcon = (p: P) => <Svg {...p}><path d="M7 3v7a2.5 2.5 0 0 0 5 0V3M9.5 3v18M17 3c-1.7 1.5-2.5 3.8-2.5 6.5 0 2 1 3 2.5 3.2V21" /></Svg>
+export const CheckIcon = (p: P) => <Svg {...p}><path d="m5 12.5 4.5 4.5L19 7.5" /></Svg>

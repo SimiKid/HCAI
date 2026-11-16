@@ -1,19 +1,19 @@
 import { useMemo, useState } from 'react'
 import { AnimatePresence } from 'framer-motion'
 import type { Member, Weights } from '../types'
-import { nightLabel, useBooking, useGroup, useNight, useStore } from '../store'
+import { useGroup, useStore } from '../store'
 import { confidence } from '../model/learn'
 import { ownFitReasons, sharedReasons } from '../model/explain'
-import { BOOKING_MODES } from '../model/booking'
+import { byLead, LEAD_LABEL } from '../model/booking'
 import { groupPlaces, leftToSwipe, rankGroup, swipeOn, type GroupRule, type RankInput, type Ranked } from '../model/rank'
-import { InfoHeading, Segmented } from '../components/Bits'
+import { InfoHeading, Segmented, Switch } from '../components/Bits'
 import { RankRow } from '../components/RankRow'
-import { FrontRunner, TooEarly } from '../components/FrontRunner'
+import { TooEarly } from '../components/FrontRunner'
 import { GroupProgress } from '../components/GroupProgress'
 import { GroupTable } from '../components/GroupTable'
 import { WhySheet } from '../components/WhySheet'
 import { MapView } from '../components/MapView'
-import { ChevronIcon } from '../components/Icons'
+import { CheckIcon, ChevronIcon, XIcon } from '../components/Icons'
 import '../styles/ranking.css'
 
 const BOOSTS: { id: string; label: string; weights: Weights }[] = [
@@ -27,13 +27,11 @@ const BOOSTS: { id: string; label: string; weights: Weights }[] = [
 const RULE_LABEL: Record<GroupRule, string> = { average: 'Best on average', 'least-misery': 'Nobody left unhappy' }
 
 const cap = (s: string) => s[0].toUpperCase() + s.slice(1)
+const listStyle = { listStyle: 'none', margin: 0, padding: 0, gap: 10 } as const
 
 export function RankingScreen({ goToSwipe }: { goToSwipe: () => void }) {
   const { state, set, restaurants } = useStore()
   const group = useGroup()
-  const booking = useBooking()
-  // the nights of the trip, for picking one when the group books ahead
-  const { nights } = useNight()
   const { members, weights, features, actor } = group
   const [view, setView] = useState<'list' | 'map'>('list')
   const [scope, setScope] = useState<'group' | 'mine'>('group')
@@ -57,9 +55,8 @@ export function RankingScreen({ goToSwipe }: { goToSwipe: () => void }) {
       pinnedId: scope === 'group' ? state.pin?.restaurantId : null,
       boost: scope === 'mine' ? boost : undefined,
       rule: scope === 'group' ? state.rule : 'average',
-      when: booking.when, night: booking.night, partySize: party,
     }
-  }, [restaurants, included.map((m) => m.id).join(), weights, features, state.pin, state.rule, scope, boosts, booking.when, booking.night, party]) // eslint-disable-line react-hooks/exhaustive-deps
+  }, [restaurants, included.map((m) => m.id).join(), weights, features, state.pin, state.rule, scope, boosts]) // eslint-disable-line react-hooks/exhaustive-deps
 
   const { ranked, blocked } = useMemo(() => rankGroup(input), [input])
   const pinnedBy = state.pin ? members.find((m) => m.id === state.pin!.by) : undefined
@@ -73,9 +70,8 @@ export function RankingScreen({ goToSwipe }: { goToSwipe: () => void }) {
   const tooEarly = waiting.length > 0 && !ranked[0]?.pinned
   const shortlist = tooEarly ? [...ranked.slice(0, 3)].sort((a, b) => a.restaurant.displayName.localeCompare(b.restaurant.displayName)) : []
 
-  // number one is already on the front-runner card, so the list starts at number two
-  const firstRow = scope === 'group' && !tooEarly ? 1 : 0
-  const rows = ranked.slice(firstRow)
+  // the group's number one gets the front-runner marker, also when "Book early first" moves it down the screen
+  const frontId = scope === 'group' && !tooEarly && ranked[0] && !ranked[0].pinned ? ranked[0].restaurant.id : null
   // the bar compares a place with the best and the worst place in the list, so small score gaps stay visible
   const listScores = ranked.filter((r) => !r.pinned).map((r) => r.groupScore)
   const best = Math.max(...listScores)
@@ -111,10 +107,13 @@ export function RankingScreen({ goToSwipe }: { goToSwipe: () => void }) {
   const nameOf = (m: Member) => (m.id === 'me' ? 'You' : m.name)
   const out = members.filter((m) => excluded.includes(m.id))
 
-  const whenHint =
-    booking.when === 'now' ? `Tonight, ${booking.nightLabel}. Places you can get into now come first.`
-    : booking.when === 'tomorrow' ? `${booking.nightLabel}. Book today for tomorrow night.`
-    : `Book ahead for ${booking.nightLabel}.`
+  // every row keeps its place in the group ranking as its number, whichever way the list is sorted
+  const row = (item: Ranked) => (
+    <RankRow key={item.restaurant.id} rank={ranked.indexOf(item) + 1} item={item} whyLine={whyLine(item)}
+      liked={swipeOn(actor, item.restaurant.id) === true} mine={mineFor(item)} barPercent={barPercent(item.groupScore)}
+      front={item.restaurant.id === frontId} pinnedBy={pinnedBy} onOpen={() => setOpenId(item.restaurant.id)} />
+  )
+  const pinnedRows = ranked.filter((r) => r.pinned)
 
   return (
     <>
@@ -132,38 +131,29 @@ export function RankingScreen({ goToSwipe }: { goToSwipe: () => void }) {
             <div className="grow"><Segmented label="View" value={view} onChange={setView} options={[{ value: 'list', label: 'List' }, { value: 'map', label: 'Map' }]} /></div>
           </div>
 
-          {/* @hcai AMR-04 Booking is a main control: now, tomorrow or before the trip, and every place then says how the group gets a table */}
-          <section className="rk-panel" aria-labelledby="when-h">
-            <p className="label" id="when-h">When do you want to eat?</p>
-            <Segmented label="When do you want to eat?" value={state.when} onChange={(when) => set({ when })}
-              options={BOOKING_MODES.map((m) => ({ value: m.value, label: m.label }))} />
-            {booking.when === 'trip' && nights.length > 1 ? (
-              <div className="chips scroll" role="group" aria-label="Dinner on">
-                <span className="rk-hint" style={{ alignSelf: 'center' }}>Dinner on</span>
-                {nights.map((iso) => (
-                  <button key={iso} className="chip" aria-pressed={iso === booking.night} onClick={() => set({ night: iso })}>{nightLabel(iso)}</button>
-                ))}
-              </div>
-            ) : <p className="rk-hint">{whenHint}</p>}
-          </section>
-
           {scope === 'group' && (
             <section className="rk-panel" aria-labelledby="who-h">
+              {/* @hcai FAIR-16 Anyone can switch members off and see whose taste shapes the list, with each member's swipe count on their seat */}
+              <div id="who-h">
+                <InfoHeading level="label" title="Who counts in this ranking"
+                  info="Everyone counts the same, however much they swiped. The number on a seat is that person's swipes." />
+              </div>
               <div className="rk-people">
-                {/* @hcai DM-01 The people filter is the table itself: tap a friend's seat to leave them out, the list re-ranks at once, tap again to undo */}
-                <GroupTable members={members} size={164} seat={40} onSeat={toggleMember} off={excluded} label="Who counts"
+                {/* @hcai DM-01 The people filter is the table itself: every seat shows a check or a cross, a tap leaves that person out and the list re-ranks at once, a second tap brings them back */}
+                <GroupTable members={members} size={164} seat={40} onSeat={toggleMember} off={excluded} label="Who counts in this ranking"
                   tags={Object.fromEntries(members.map((m) => [m.id, `${nameOf(m)} ${m.swipes.length}`]))}
-                  seatLabel={(m) => `${nameOf(m)}, ${m.swipes.length} swipes, ${excluded.includes(m.id) ? 'left out' : 'counts'}`}
+                  seatLabel={(m) => `${nameOf(m)}, ${m.swipes.length} swipes, ${excluded.includes(m.id) ? 'left out, tap to bring back' : 'counts, tap to leave out'}`}
                   center={<span className="gtable-center" aria-hidden="true"><b>{included.length}/{members.length}</b><span>count</span></span>} />
                 <div className="rk-people-text">
-                  {/* @hcai FAIR-16 Anyone can switch members off and see whose taste shapes the list, with each member's swipe count on their seat */}
-                  <div id="who-h">
-                    <InfoHeading level="label" title="Who counts"
-                      info="Everyone counts the same, however much they swiped. The number on a seat is that person's swipes." />
-                  </div>
                   <span className="rk-count">{out.length === 0 ? `All ${members.length}` : `${included.length} of ${members.length}`}</span>
                   <span className="rk-hint" role="status">
-                    {out.length === 0 ? 'Tap a friend to leave them out.' : `Without ${out.map(nameOf).join(' and ')}. Tap again to bring them back.`}
+                    {out.length === 0
+                      ? 'Everyone counts. Tap a person to leave them out, tap again to bring them back.'
+                      : `Without ${out.map(nameOf).join(' and ')}. Tap again to bring them back.`}
+                  </span>
+                  <span className="rk-legend" aria-hidden="true">
+                    <span><i className="in"><CheckIcon size={11} strokeWidth={3} /></i>Counts</span>
+                    <span><i className="out"><XIcon size={11} strokeWidth={3} /></i>Left out</span>
                   </span>
                   <button className="rk-rule" aria-expanded={showRule} aria-controls="rule-panel" onClick={() => setShowRule(!showRule)}>
                     {RULE_LABEL[state.rule]}<ChevronIcon size={14} style={{ transform: showRule ? 'rotate(-90deg)' : 'rotate(90deg)' }} />
@@ -207,7 +197,7 @@ export function RankingScreen({ goToSwipe }: { goToSwipe: () => void }) {
                 <TooEarly waiting={waiting} left={left} />
                 <h2 className="h2" style={{ marginTop: 12 }}>Shortlist so far</h2>
                 <p className="tiny muted" style={{ marginTop: -6 }}>Three places that look promising, in no particular order.</p>
-                <ol className="stack" style={{ listStyle: 'none', margin: 0, padding: 0, gap: 10 }}>
+                <ol className="stack" style={listStyle}>
                   {shortlist.map((item) => (
                     <RankRow key={item.restaurant.id} rank={0} unranked item={item} whyLine={whyLine(item)} liked={swipeOn(actor, item.restaurant.id) === true}
                       mine={mineFor(item)} onOpen={() => setOpenId(item.restaurant.id)} />
@@ -217,24 +207,33 @@ export function RankingScreen({ goToSwipe }: { goToSwipe: () => void }) {
                 {showRough && <h2 className="h2" style={{ marginTop: 12 }}>Rough ranking</h2>}
               </>
             )}
-            {scope === 'group' && !tooEarly && ranked.length > 0 && (
+            {!tooEarly && ranked.length > 0 && (
+              <InfoHeading title={`All ${ranked.length} places`} info="The bar compares each place with the best and the worst in this list. Tap a place to see its bill." />
+            )}
+            {(!tooEarly || showRough) && ranked.length > 0 && (
               <>
-                <FrontRunner item={ranked[0]} members={included} viewerId={actor.id} booking={booking} pinnedBy={pinnedBy}
-                  mine={mineFor(ranked[0])} onOpen={() => setOpenId(ranked[0].restaurant.id)} />
-                {ranked.length > 1 && (
-                  <div style={{ marginTop: 12 }}>
-                    <InfoHeading title={`All ${ranked.length} places`} info="The bar compares each place with the best and the worst in this list. Places without a table in your chosen time sink to the bottom. Tap a place to see its bill." />
+                {/* @hcai ERR-04 "Book early first" is a predictable second sort the group switches on: it only groups the list by how early to reserve, keeps the group order inside each group and the front-runner marker on the overall number one */}
+                <div className="rk-sort">
+                  <div className="grow">
+                    <p className="strong">Book early first</p>
+                    <p className="tiny muted">Places you have to reserve earliest come first. The group order stays inside each.</p>
                   </div>
+                  <Switch checked={state.bookEarly} onChange={(bookEarly) => set({ bookEarly })} label="Book early first" />
+                </div>
+                {!state.bookEarly ? (
+                  <ol className="stack" style={listStyle}>{ranked.map(row)}</ol>
+                ) : (
+                  <>
+                    {pinnedRows.length > 0 && <ol className="stack" style={listStyle}>{pinnedRows.map(row)}</ol>}
+                    {byLead(ranked.filter((r) => !r.pinned)).map((g) => (
+                      <section key={g.lead} className="stack" style={{ gap: 10 }} aria-labelledby={`lead-${g.lead}`}>
+                        <h3 className="lead-head" id={`lead-${g.lead}`}>{LEAD_LABEL[g.lead]}<span className="n">· {g.items.length}</span></h3>
+                        <ol className="stack" style={listStyle}>{g.items.map(row)}</ol>
+                      </section>
+                    ))}
+                  </>
                 )}
               </>
-            )}
-            {(!tooEarly || showRough) && (
-              <ol className="stack" style={{ listStyle: 'none', margin: 0, padding: 0, gap: 10 }}>
-                {rows.map((item, j) => (
-                  <RankRow key={item.restaurant.id} rank={firstRow + j + 1} item={item} whyLine={whyLine(item)} liked={swipeOn(actor, item.restaurant.id) === true}
-                    mine={mineFor(item)} barPercent={barPercent(item.groupScore)} pinnedBy={pinnedBy} onOpen={() => setOpenId(item.restaurant.id)} />
-                ))}
-              </ol>
             )}
             {blocked.length > 0 && (
               <div className="card stack" style={{ gap: 8 }}>
@@ -259,7 +258,7 @@ export function RankingScreen({ goToSwipe }: { goToSwipe: () => void }) {
         ) : (
           <div style={{ flex: '1 0 auto', marginTop: 16, display: 'flex', flexDirection: 'column', gap: 8 }}>
             <MapView ranked={ranked} hotel={group.hotel} onOpen={setOpenId} />
-            <p className="tiny muted">Top {Math.min(15, ranked.length)} of {ranked.length}. H is where you stay. Grey pins have no table at that time. Tap a number for details.</p>
+            <p className="tiny muted">Top {Math.min(15, ranked.length)} of {ranked.length}. H is where you stay. Tap a number for details.</p>
           </div>
         )}
       </div>

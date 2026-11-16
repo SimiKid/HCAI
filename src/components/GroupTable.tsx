@@ -3,7 +3,7 @@ import { motion } from 'framer-motion'
 import type { Member } from '../types'
 import type { MatchLevel } from '../model/explain'
 import { Avatar } from './Bits'
-import { ForkIcon, HeartIcon, XIcon } from './Icons'
+import { CheckIcon, ForkIcon, HeartIcon, XIcon } from './Icons'
 
 export type Reaction = MatchLevel | 'liked'
 
@@ -21,7 +21,7 @@ interface Props {
   plateKey?: string
   /** Makes every seat a button. Used on Ranking to switch a member on or off. */
   onSeat?: (memberId: string) => void
-  /** Members shown as left out: greyed, dashed seat and a cross badge. */
+  /** Members shown as left out: greyed, dashed seat and a cross badge. With onSeat, everyone else gets a check badge. */
   off?: string[]
   /** A short name tag under each seat, by member id. */
   tags?: Record<string, string>
@@ -61,8 +61,11 @@ export function GroupTable({
         const body = (
           <>
             <Avatar member={m} size={seat} />
+            {/* a tappable seat always shows its state: a check when the person counts, a cross when left out */}
             {isOff ? (
-              <span className="gtable-badge out" style={{ width: seat * 0.5, height: seat * 0.5 }}><XIcon size={seat * 0.3} /></span>
+              <span className="gtable-badge out" style={{ width: seat * 0.5, height: seat * 0.5 }}><XIcon size={seat * 0.3} strokeWidth={2.6} /></span>
+            ) : interactive ? (
+              <span className="gtable-badge in" style={{ width: seat * 0.5, height: seat * 0.5 }}><CheckIcon size={seat * 0.32} strokeWidth={2.8} /></span>
             ) : r && (
               <span className={warm ? 'gtable-badge warm' : 'gtable-badge'} style={{ width: seat * 0.5, height: seat * 0.5 }}>
                 {warm ? <HeartIcon size={seat * 0.32} /> : <span style={{ fontSize: seat * 0.34, lineHeight: 1 }}>{r === 'mixed' ? '~' : '–'}</span>}

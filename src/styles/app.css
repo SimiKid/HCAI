@@ -220,10 +220,7 @@ h1, h2, h3, p { margin: 0; }
 .table-btn { border: 0; background: none; padding: 0; border-radius: 50%; }
 
 /* front-runner */
-.front { display: flex; flex-direction: column; align-items: center; text-align: center; gap: 6px; width: 100%; border: 0; background: none; padding: 8px 0 4px; color: inherit; }
 .front-name { font-family: var(--display); font-size: 2rem; font-weight: 700; letter-spacing: -0.02em; line-height: 1.08; }
-.front .meta { justify-content: center; }
-.front-cta { margin-top: 6px; display: inline-flex; align-items: center; gap: 6px; min-height: 44px; padding: 0 18px; border-radius: 999px; background: var(--crimson); color: #fff; font-weight: 600; font-size: 0.9375rem; }
 
 /* the bill */
 .bill-wrap { filter: drop-shadow(0 6px 14px rgba(21, 20, 26, 0.16)); margin: 0 -4px; }

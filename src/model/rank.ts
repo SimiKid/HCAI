@@ -1,6 +1,6 @@
 import type { Features, Member, Restaurant, Weights } from '../types'
 import { score } from './learn'
-import { bookingStatus, bookingTier, type BookingMode, type BookingStatus } from './booking'
+import { leadOf, type Lead } from './booking'
 import { adjustForFit, personalFit } from './musthave'
 
 export interface Conflict {
@@ -18,10 +18,8 @@ export interface Ranked {
   lowestMemberId: string
   pinned: boolean
   conflicts: Conflict[]
-  /** How the group can get a table in the chosen booking mode. Null when no mode was given. */
-  booking: BookingStatus | null
-  /** True when the place has no table in the chosen mode. It stays in the list, sorted down and marked. */
-  unavailable: boolean
+  /** How early the group has to reserve it. */
+  lead: Lead
 }
 
 export interface Blocked {
@@ -66,15 +64,9 @@ export interface RankInput {
   /** Extra weights for a personal re-rank, added to every included member. */
   boost?: Weights
   rule?: GroupRule
-  /** When the group wants to eat. Without it the order is by taste only. */
-  when?: BookingMode
-  /** The ISO date of the dinner, for the busy-night rule. See bookingNight(). */
-  night?: string
-  /** Party size for table checks. Defaults to the number of members ranked. */
-  partySize?: number
 }
 
-export function rankGroup({ restaurants, members, weights, features, pinnedId, boost, rule = 'average', when, night, partySize }: RankInput): {
+export function rankGroup({ restaurants, members, weights, features, pinnedId, boost, rule = 'average' }: RankInput): {
   ranked: Ranked[]
   blocked: Blocked[]
 } {
@@ -105,12 +97,10 @@ export function rankGroup({ restaurants, members, weights, features, pinnedId, b
     // @hcai FAIR-04 (trade-off) One member one vote under both rules: someone with 40 swipes counts the same as someone with 5
     // @hcai FAIR-05 The group picks its fairness rule: best on average, or nobody left unhappy (the lowest score counts)
     const groupScore = !members.length ? 0 : rule === 'average' ? sum / members.length : memberScores[lowestMemberId]
-    const booking = when ? bookingStatus(r, when, partySize ?? members.length, night) : null
-    ranked.push({ restaurant: r, groupScore, memberScores, lowestMemberId, pinned, conflicts, booking, unavailable: booking?.availability === 'full' })
+    ranked.push({ restaurant: r, groupScore, memberScores, lowestMemberId, pinned, conflicts, lead: leadOf(r) })
   }
-  // @hcai ERR-12 A place with no table in the chosen mode is sorted down and marked, never hidden, and ad-hoc mode puts places free tonight first
-  const tier = (x: Ranked) => (x.booking ? bookingTier(x.booking) : 0)
-  ranked.sort((a, b) => Number(b.pinned) - Number(a.pinned) || tier(a) - tier(b) || b.groupScore - a.groupScore)
+  // taste only: how early to book is an optional second sort on top of this order, see byLead()
+  ranked.sort((a, b) => Number(b.pinned) - Number(a.pinned) || b.groupScore - a.groupScore)
   return { ranked, blocked }
 }
 
@@ -119,6 +109,3 @@ function addWeights(a: Weights, b: Weights): Weights {
   for (const f in b) out[f] = (out[f] ?? 0) + b[f]
   return out
 }
-
-// the reservation helpers moved to booking.ts, re-exported so older imports keep working
-export { expectedReservation, isBusyNight, slotsOn, tripNights, type Reservation } from './booking'

@@ -6,6 +6,7 @@ import { matchText } from '../model/musthave'
 import { patchPersonal, patchTrip, personalOf, useGroup, useStore } from '../store'
 import { Avatar, ChipToggle, StepBar, price } from '../components/Bits'
 import { XIcon } from '../components/Icons'
+import { GroupTable } from '../components/GroupTable'
 import '../styles/setup.css'
 
 export const TRIP_PREFS: { value: TripPref; label: string }[] = [
@@ -23,7 +24,7 @@ const CITY_BOUNDS = L.latLngBounds([41.32, 2.05], [41.47, 2.25])
 const round = (n: number) => Math.round(n * 1e5) / 1e5
 const noEnter = (e: React.KeyboardEvent) => { if (e.key === 'Enter') e.preventDefault() }
 
-const LockIcon = () => (
+export const LockIcon = () => (
   <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" aria-hidden="true">
     <rect x="5" y="10.5" width="14" height="10" rx="2.5" /><path d="M8 10.5V8a4 4 0 0 1 8 0v2.5" />
   </svg>
@@ -104,7 +105,7 @@ function StayPicker() {
   )
 }
 
-/** The shared trip: where the group stays and when. Set by whoever starts the trip, edited later in Group. */
+/** The shared trip: where the group stays and when. Set by whoever starts the trip, edited later in Our trip. */
 export function TripFields() {
   const { state, set } = useStore()
   const trip = state.trip
@@ -244,7 +245,7 @@ export function TripEntry() {
       <div className="stack" style={{ gap: 24 }}>
         <div className="stack" style={{ gap: 8 }}>
           <StepBar step={2} />
-          <p className="eyebrow">Step 2 of 3</p>
+          <p className="eyebrow">Step 2 of 4</p>
           <h1 className="title">Your trip</h1>
           <p className="muted">Join the trip your friends set up, or start one and invite them.</p>
         </div>
@@ -289,7 +290,7 @@ export function TripEntry() {
   )
 }
 
-/** Code, link and share button. Used in the invite step and on the Group tab. */
+/** Code, link and share button. Used in the invite step and on the Our trip tab. */
 export function InviteCard({ code }: { code: string }) {
   const [status, setStatus] = useState('')
   const link = inviteLink(code)
@@ -341,9 +342,9 @@ export function InviteStep() {
       <div className="stack" style={{ gap: 24 }}>
         <div className="stack" style={{ gap: 8 }}>
           <StepBar step={2} />
-          <p className="eyebrow">Step 2 of 3</p>
+          <p className="eyebrow">Step 2 of 4</p>
           <h1 className="title">Invite your group</h1>
-          <p className="muted">Everyone who joins swipes on their own phone. You can invite more people later in Group.</p>
+          <p className="muted">Everyone who joins swipes on their own phone. You can invite more people later in Our trip.</p>
         </div>
         <InviteCard code={state.trip.code} />
         <section className="stack" aria-labelledby="joined-h" style={{ gap: 12 }}>
@@ -380,7 +381,7 @@ function TripGiven({ by }: { by: string }) {
         <dt>Stay</dt><dd>Barcelona · {hotel.label}</dd>
         <dt>Dates</dt><dd>{day(state.trip.from)} to {day(state.trip.to)}</dd>
       </dl>
-      <p className="small muted">The group can change it later in Group.</p>
+      <p className="small muted">The group can change it later in Our trip.</p>
     </section>
   )
 }
@@ -392,12 +393,12 @@ export function TripDetails() {
   const owner = state.trip.role === 'owner'
   const starter = members.find((m) => m.id === DEMO_TRIP.invitedBy) ?? members.find((m) => m.simulated)
   return (
-    <form className="screen-form" onSubmit={(e) => { e.preventDefault(); set({ stage: 'app' }) }}>
+    <form className="screen-form" onSubmit={(e) => { e.preventDefault(); set({ stage: 'ready' }) }}>
       <div className="screen">
         <div className="stack" style={{ gap: 28 }}>
           <div className="stack" style={{ gap: 8 }}>
             <StepBar step={3} />
-            <p className="eyebrow">Step 3 of 3 · Trip {state.trip.code}</p>
+            <p className="eyebrow">Step 3 of 4 · Trip {state.trip.code}</p>
             <h1 className="title">{owner ? 'Set up the trip' : 'You are in'}</h1>
             <p className="muted">{owner ? 'Where the group stays and when. Barcelona is the only city in this prototype.' : 'The trip is set. One more thing, just for you.'}</p>
           </div>
@@ -427,5 +428,34 @@ export function TripDetails() {
         <button className="btn primary">Done</button>
       </div>
     </form>
+  )
+}
+
+/** Step 4: setup is done. Straight to swiping, or first a look at the trip. */
+export function ReadyStep({ onDone }: { onDone: (to: 'trip' | 'swipe') => void }) {
+  const { state, set } = useStore()
+  const { members, hotel } = useGroup()
+  return (
+    <div className="screen-form">
+      <div className="screen">
+        <div className="stack" style={{ gap: 8 }}>
+          <StepBar step={4} />
+          <p className="eyebrow">Step 4 of 4 · Trip {state.trip.code}</p>
+        </div>
+        <div className="ready">
+          <GroupTable members={members} size={190} seat={42} animateKey="ready" />
+          <h1 className="title">You're all set!</h1>
+          <p className="muted">Ready to swipe? Every swipe teaches the app your taste.</p>
+          <p className="small muted">Barcelona · {hotel.label} · {members.length} people</p>
+        </div>
+        <button className="link" style={{ alignSelf: 'flex-start', marginTop: 16 }} onClick={() => set({ stage: 'details' })}>Back</button>
+      </div>
+      <div className="screen-foot">
+        <div className="stack" style={{ gap: 10 }}>
+          <button className="btn primary" onClick={() => onDone('swipe')}>Start swiping</button>
+          <button className="btn" onClick={() => onDone('trip')}>Group overview</button>
+        </div>
+      </div>
+    </div>
   )
 }

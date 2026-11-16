@@ -1,7 +1,7 @@
 import { forwardRef, useImperativeHandle, useLayoutEffect, useRef, useState } from 'react'
 import { animate, motion, useMotionValue, useTransform } from 'framer-motion'
 import type { LatLng, Place, Restaurant } from '../types'
-import type { BookingStatus } from '../model/booking'
+import { LEAD_LABEL, leadOf } from '../model/booking'
 import { CUISINE_LABEL, VIBE_LABEL } from '../model/features'
 import { count, price, walk } from './Bits'
 import { kindLabel } from './Gallery'
@@ -19,8 +19,6 @@ interface Props {
   stay: Place
   /** The other places in the deck, drawn faintly on the map slide. */
   others?: LatLng[]
-  /** How the place can be booked in the group's booking mode. */
-  booking?: BookingStatus
   onDecide: (liked: boolean) => void
   onMore: () => void
 }
@@ -34,14 +32,14 @@ function slidesOf(r: Restaurant): Slide[] {
 }
 
 /** The facts on the card, also used as its spoken description. */
-export function cardSummary(r: Restaurant, distance: number, hotelLabel: string, booking?: BookingStatus): string {
+export function cardSummary(r: Restaurant, distance: number, hotelLabel: string): string {
   const vibes = r.sample.vibes.map((v) => VIBE_LABEL[v]).join(', ')
   const review = r.sample.topReview
   return [
     `${r.displayName}. ${CUISINE_LABEL[r.primaryType]} in ${r.neighbourhood}.`,
     vibes && `${vibes}.`,
     `Price level ${r.priceLevel} of 4. ${walk(distance)} from ${hotelLabel}. Rated ${r.rating} from ${count(r.userRatingCount)} reviews.`,
-    booking && `${booking.label}.`,
+    `${LEAD_LABEL[leadOf(r)]}.`,
     review && `Sample review, ${review.rating} stars: ${review.text}`,
   ].filter(Boolean).join(' ')
 }
@@ -55,7 +53,7 @@ function Stars({ rating }: { rating: number }) {
 }
 
 export const SwipeCard = forwardRef<SwipeCardHandle, Props>(function SwipeCard(
-  { restaurant: r, distanceKm, stay, others = [], booking, onDecide, onMore },
+  { restaurant: r, distanceKm, stay, others = [], onDecide, onMore },
   ref,
 ) {
   const x = useMotionValue(0)
@@ -108,7 +106,7 @@ export const SwipeCard = forwardRef<SwipeCardHandle, Props>(function SwipeCard(
         else if (info.offset.x < -110 || info.velocity.x < -600) fling(false)
       }}
       role="group"
-      aria-label={cardSummary(r, distanceKm, stay.label, booking)}
+      aria-label={cardSummary(r, distanceKm, stay.label)}
     >
       {shown.kind === 'map' ? (
         <MiniMap stay={stay} focus={r.location} others={others} faint bottomInset={inset} credit="topright"
@@ -143,9 +141,7 @@ export const SwipeCard = forwardRef<SwipeCardHandle, Props>(function SwipeCard(
           <span className="fact">{price(r.priceLevel)}<span style={{ opacity: 0.45 }}>{price(4 - r.priceLevel)}</span></span>
           <span className="fact"><WalkIcon size={16} />{walk(distanceKm)}</span>
           <span className="fact"><StarIcon size={15} />{r.rating.toFixed(1)} ({count(r.userRatingCount)})</span>
-          {booking && (
-            <span className={booking.availability === 'full' ? 'fact booking full' : 'fact booking'}><ClockIcon size={15} />{booking.label}</span>
-          )}
+          <span className="fact booking"><ClockIcon size={15} />{LEAD_LABEL[leadOf(r)]}</span>
         </div>
         {review && (
           <figure className="card-review">

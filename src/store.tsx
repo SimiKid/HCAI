@@ -4,11 +4,9 @@ import { resolveStay } from './data/source'
 import { simulatedMembers } from './data/members'
 import { featuresOf } from './model/features'
 import { learn } from './model/learn'
-import { tripNights } from './model/rank'
-import { bookingNight, type BookingMode } from './model/booking'
 import { initialState, migrateState, personalOf, type State } from './state'
 
-export { initialState, migrateState, patchPersonal, patchTrip, personalOf, type State, type TripState } from './state'
+export { initialState, migrateState, patchPersonal, patchTrip, personalOf, startNewTrip, type PastTrip, type State, type TripState } from './state'
 
 // same key as v2: migrateState() moves an old saved state to the new shape
 const KEY = 'restaurant-tinder-v2'
@@ -116,46 +114,6 @@ export function useGroup(): Group {
     const actor = members.find((m) => m.id === state.actingAs) ?? me
     return { hotel, features, members, weights, actor }
   }, [state, sims, features, hotel])
-}
-
-export interface Night {
-  /** ISO date of the chosen night, empty when the trip has no valid dates. */
-  iso: string
-  /** Short form, for example "Fri 20 Nov". */
-  label: string
-  /** For example "Friday". */
-  weekday: string
-  /** All nights of the trip, to choose from. */
-  nights: string[]
-}
-
-export function nightLabel(iso: string): string {
-  if (!iso) return ''
-  return new Date(iso + 'T12:00:00').toLocaleDateString('en-GB', { weekday: 'short', day: 'numeric', month: 'short' }).replace(',', '')
-}
-
-/** The night the group plans dinner for. Falls back to the first night when the trip dates change. */
-export function useNight(): Night {
-  const { state } = useStore()
-  const nights = tripNights(state.trip.from, state.trip.to)
-  const iso = nights.includes(state.night) ? state.night : (nights[0] ?? '')
-  const weekday = iso ? new Date(iso + 'T12:00:00').toLocaleDateString('en-GB', { weekday: 'long' }) : ''
-  return { iso, label: nightLabel(iso), weekday, nights }
-}
-
-export interface Booking {
-  when: BookingMode
-  /** ISO date of the dinner the mode plans for: tonight, tomorrow, or the picked night of the trip. */
-  night: string
-  /** For example "Fri 20 Nov". */
-  nightLabel: string
-}
-
-/** The group's booking mode and the night it points at. Pass when, night and party size to rankGroup. */
-export function useBooking(): Booking {
-  const { state } = useStore()
-  const night = bookingNight(state.when, state.trip.from, state.trip.to, state.night)
-  return { when: state.when, night, nightLabel: nightLabel(night) }
 }
 
 // one tap erases everything the app learned about me, a second one deletes the whole profile

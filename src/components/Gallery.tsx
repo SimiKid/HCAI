@@ -33,7 +33,7 @@ export function DataNote({ restaurant: r }: { restaurant: Restaurant }) {
       </button>
       {open && (
         <p className="tiny muted">
-          Ratings, table times and other values are samples, and the photos are typical ones. The full note is in Group, “About this data”.
+          Ratings, table times and other values are samples, and the photos are typical ones. The full note is in Our trip, “About this data”.
           Photo credits: {r.photos.map((p) => p.attribution).join('; ')}.
         </p>
       )}

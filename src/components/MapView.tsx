@@ -2,6 +2,7 @@ import { useEffect, useRef } from 'react'
 import L from 'leaflet'
 import type { LatLng } from '../types'
 import type { Ranked } from '../model/rank'
+import { LEAD_LABEL } from '../model/booking'
 
 const MAX_PINS = 15
 
@@ -42,10 +43,9 @@ export function MapView({ ranked, hotel, onOpen }: { ranked: Ranked[]; hotel: La
       const pos: L.LatLngExpression = [r.location.latitude, r.location.longitude]
       points.push(pos)
       L.marker(pos, {
-        // a place with no table at the chosen time is a grey pin, still on the map
-        icon: L.divIcon({ className: '', html: `<div class="map-pin${i === 0 ? ' top' : ''}${item.unavailable ? ' off' : ''}">${i + 1}</div>`, iconSize: [30, 30], iconAnchor: [15, 15] }),
-        title: `${i + 1}. ${r.displayName}${item.booking ? `, ${item.booking.label}` : ''}`,
-        alt: `${i + 1}. ${r.displayName}${item.unavailable ? ', no table' : ''}`,
+        icon: L.divIcon({ className: '', html: `<div class="map-pin${i === 0 ? ' top' : ''}">${i + 1}</div>`, iconSize: [30, 30], iconAnchor: [15, 15] }),
+        title: `${i + 1}. ${r.displayName}, ${LEAD_LABEL[item.lead]}`,
+        alt: `${i + 1}. ${r.displayName}`,
         zIndexOffset: (MAX_PINS - i) * 10,
       }).on('click', () => open.current(r.id)).addTo(g)
     })

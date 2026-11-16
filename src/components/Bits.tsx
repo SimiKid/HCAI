@@ -93,7 +93,7 @@ export function Segmented<T extends string>({
 }
 
 /** Progress through the onboarding steps. The eyebrow text next to it says the same in words. */
-export function StepBar({ step, of = 3 }: { step: number; of?: number }) {
+export function StepBar({ step, of = 4 }: { step: number; of?: number }) {
   return (
     <div className="steps" aria-hidden="true">
       {Array.from({ length: of }, (_, i) => <i key={i} className={i < step ? 'on' : ''} />)}
@@ -115,3 +115,13 @@ export const km = (d: number) => (d < 1 ? `${Math.round(d * 100) * 10} m` : `${d
 export const walk = (d: number) => `${Math.max(1, Math.round(d * 13))} min walk`
 export const count = (n: number) => n.toLocaleString('en-US')
 export const swipes = (n: number) => `${n} ${n === 1 ? 'swipe' : 'swipes'}`
+
+const shortDate = (iso: string, month: boolean) =>
+  new Date(iso + 'T12:00:00').toLocaleDateString('en-GB', month ? { day: 'numeric', month: 'short' } : { day: 'numeric' })
+
+/** "20 to 23 Nov", or "30 Nov to 2 Dec" across a month. Empty for a date that does not parse. */
+export function tripDates(from: string, to: string): string {
+  if (Number.isNaN(new Date(from + 'T12:00:00').getTime()) || Number.isNaN(new Date(to + 'T12:00:00').getTime())) return ''
+  const sameMonth = from.slice(0, 7) === to.slice(0, 7)
+  return `${shortDate(from, !sameMonth)} to ${shortDate(to, true)}`
+}

@@ -1,14 +1,14 @@
 import { useEffect, useState } from 'react'
 import type { Allergy, Diet } from '../types'
-import { deleteProfile, eraseLearning, useGroup, useStore } from '../store'
+import { deleteProfile, eraseLearning, startNewTrip, useGroup, useStore } from '../store'
+import { resolveStay } from '../data/source'
 import { confidence, tasteProfile } from '../model/learn'
 import { featureLabel } from '../model/features'
 import { motion } from 'framer-motion'
 import { ACCESSORIES, CHARACTERS, FoodAvatar, avatarId, avatarParts } from '../components/FoodAvatar'
-import { Avatar, ChipToggle, StepBar, Switch, swipes } from '../components/Bits'
+import { Avatar, ChipToggle, StepBar, Switch, swipes, tripDates } from '../components/Bits'
 import { XIcon } from '../components/Icons'
 import { ConfidenceDots } from '../components/ConfidenceDots'
-import { PersonalTripFields } from './JoinTrip'
 
 const DIETS: { value: Diet; label: string }[] = [
   { value: 'vegetarian', label: 'Vegetarian' },
@@ -122,7 +122,7 @@ export function ProfileSetup() {
         <div className="stack" style={{ gap: 24 }}>
           <div className="stack" style={{ gap: 8 }}>
             <StepBar step={1} />
-            <p className="eyebrow">Step 1 of 3</p>
+            <p className="eyebrow">Step 1 of 4</p>
             <h1 className="title">About you</h1>
             <p className="muted">A face for the group, and what you can eat.</p>
             <p className="small muted">You can adjust these for each trip later.</p>
@@ -139,10 +139,10 @@ export function ProfileSetup() {
 
 export function ProfileScreen() {
   const { state, set } = useStore()
-  const { members, weights, actor } = useGroup()
+  const { members, weights, actor, hotel } = useGroup()
   const [confirm, setConfirm] = useState<'erase' | 'delete' | null>(null)
   const [editing, setEditing] = useState(false)
-  const [editingTrip, setEditingTrip] = useState(false)
+  const [newTrip, setNewTrip] = useState(false)
   const taste = tasteProfile(weights[actor.id])
   const likes = taste.filter((t) => t.weight > 0).slice(0, 8)
   const skips = taste.filter((t) => t.weight < 0).reverse().slice(0, 8)
@@ -209,16 +209,38 @@ export function ProfileScreen() {
           {editing && <PersonFields />}
         </section>
 
-        <section className="stack" aria-label="This trip, just for you">
-          <h2 className="h2">This trip, just for you</h2>
-          <div className="card row">
-            <div className="grow">
-              <p className="strong">Mood, must-haves and budget</p>
-              <p className="small muted">Only you see this. Change it any time during the trip.</p>
+        {/* trips come and go, the person stays: one active trip, earlier ones listed with where and when only */}
+        <section className="stack" aria-labelledby="trips-h">
+          <h2 className="h2" id="trips-h">Your trips</h2>
+          <ul className="stack" style={{ listStyle: 'none', margin: 0, padding: 0, gap: 8 }}>
+            <li className="card row">
+              <div className="grow">
+                <p className="strong">Barcelona · {hotel.label}</p>
+                <p className="small muted">{[tripDates(state.trip.from, state.trip.to), `${members.length} people`].filter(Boolean).join(' · ')}</p>
+              </div>
+              <span className="trip-tag now">Current</span>
+            </li>
+            {state.pastTrips.map((t, i) => (
+              <li key={`${t.code}-${i}`} className="card row past-trip">
+                <div className="grow">
+                  <p className="strong">Barcelona · {resolveStay(t.stay).label}</p>
+                  <p className="small muted">{tripDates(t.from, t.to) || `Trip ${t.code}`}</p>
+                </div>
+                <span className="trip-tag">Past</span>
+              </li>
+            ))}
+          </ul>
+          {newTrip ? (
+            <div className="card stack">
+              <p>Start a new trip? Your profile stays: name, avatar, diet and allergies. This trip moves to your past trips, and the new one starts with fresh swipes and wishes.</p>
+              <div className="row">
+                <button className="btn" onClick={() => setNewTrip(false)}>Cancel</button>
+                <button className="btn primary" onClick={() => set(startNewTrip)}>Start new trip</button>
+              </div>
             </div>
-            <button className="btn slim" aria-expanded={editingTrip} onClick={() => setEditingTrip(!editingTrip)}>{editingTrip ? 'Done' : 'Edit'}</button>
-          </div>
-          {editingTrip && <PersonalTripFields />}
+          ) : (
+            <button className="btn" onClick={() => setNewTrip(true)}>Start a new trip</button>
+          )}
         </section>
 
         <section className="stack" aria-label="Settings">
@@ -260,7 +282,7 @@ export function ProfileScreen() {
           )}
           {confirm === 'delete' && (
             <div className="card stack">
-              <p>This deletes your name, diet, allergies, trip and swipes from this phone. It cannot be undone.</p>
+              <p>This deletes your name, diet, allergies, trips and swipes from this phone. It cannot be undone.</p>
               <div className="row">
                 <button className="btn" onClick={() => setConfirm(null)}>Cancel</button>
                 <button className="btn primary" onClick={() => set(deleteProfile())}>Delete</button>

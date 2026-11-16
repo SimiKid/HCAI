@@ -1,4 +1,4 @@
-/* overview dashboard, swipe card extras and the mini map */
+/* the trip map on Our trip, swipe card extras and the mini map */
 
 /* mini map: shows only, taps and drags go to the card or screen around it */
 .minimap { width: 100%; height: 100%; background: var(--surface-2); isolation: isolate; z-index: 0; }
@@ -19,7 +19,6 @@
   background: rgba(255, 255, 255, 0.18); border: 1px solid rgba(255, 255, 255, 0.28);
 }
 .swipe-card .fact.booking { font-size: 0.8125rem; opacity: 0.92; }
-.swipe-card .fact.booking.full { opacity: 0.7; text-decoration: line-through; text-decoration-thickness: 1px; }
 .card-review { margin: 10px 0 0; padding-right: 60px; }
 .card-review blockquote {
   margin: 0; font-size: 0.8125rem; line-height: 1.35; font-style: italic; opacity: 0.95;
@@ -54,29 +53,21 @@
 .feedback { flex-direction: column; gap: 2px; }
 .echo-line { display: inline-flex; align-items: center; gap: 5px; color: var(--crimson-text); font-weight: 600; }
 
-/* overview dashboard */
-.dash { display: flex; flex-direction: column; gap: 14px; }
-.dash > * { flex: none; }
-.dash-eyebrow { font-size: 0.75rem; font-weight: 600; letter-spacing: 0.16em; text-transform: uppercase; color: var(--crimson-text); }
-.dash-map { position: relative; height: 240px; border-radius: var(--r-card); overflow: hidden; background: var(--surface); }
-.dash-legend {
+/* the text over the photo lets taps through to the slide buttons, also on a short card */
+.swipe-card .info { pointer-events: none; }
+
+/* Our trip: the stay and the places around it */
+.trip-map { position: relative; height: 220px; border-radius: var(--r-card); overflow: hidden; background: var(--surface); }
+.trip-legend {
   position: absolute; left: 10px; bottom: 10px; z-index: 1;
   display: flex; gap: 10px; padding: 5px 10px; border-radius: 999px;
   background: var(--bg); box-shadow: 0 2px 8px rgba(0, 0, 0, 0.18); font-size: 0.75rem; font-weight: 500;
 }
-.dash-legend span { display: inline-flex; align-items: center; gap: 5px; }
-.dash-legend i { width: 10px; height: 10px; border-radius: 50%; background: var(--lav); }
-.dash-legend i.h { border-radius: 3px; background: #15141a; box-shadow: 0 0 0 1.5px #fff; }
-@media (max-height: 720px) { .dash-map { height: 180px; } }
-.dash-people { display: flex; gap: 6px; flex-wrap: wrap; }
-.dash-people .who { position: relative; }
-.dash-people .who.clear::after {
-  content: ''; position: absolute; right: -2px; bottom: -2px; width: 10px; height: 10px;
-  border-radius: 50%; background: var(--lav); border: 2px solid var(--surface);
-}
-.dash-next { display: flex; align-items: center; gap: 12px; }
-.dash-step { width: 36px; height: 36px; border-radius: 50%; flex: none; display: grid; place-items: center; background: var(--crimson-soft); color: var(--crimson-text); }
-.dash-foot { flex: none; padding: 10px 20px 14px; background: var(--bg); }
-.dash-foot .btn { min-height: 58px; font-size: 1.0625rem; box-shadow: 0 10px 24px rgba(224, 20, 76, 0.28); }
-/* the text over the photo lets taps through to the slide buttons, also on a short card */
-.swipe-card .info { pointer-events: none; }
+.trip-legend span { display: inline-flex; align-items: center; gap: 5px; }
+.trip-legend i { width: 10px; height: 10px; border-radius: 50%; background: var(--lav); }
+.trip-legend i.h { border-radius: 3px; background: #15141a; box-shadow: 0 0 0 1.5px #fff; }
+@media (max-height: 720px) { .trip-map { height: 180px; } }
+
+/* setup step 4: you're all set */
+.ready { display: flex; flex-direction: column; align-items: center; text-align: center; gap: 10px; padding-top: 12px; }
+.ready .gtable { margin: 8px 0 6px; filter: drop-shadow(0 14px 24px rgba(60, 0, 20, 0.22)); }
