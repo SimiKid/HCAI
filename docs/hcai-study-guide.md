@@ -40,7 +40,7 @@ analysis finding it answers. Edit this section by hand.
 #### AMR-05 Match relevant social norms
 
 - `src/model/explain.ts:82` Other members' reasons are counted without names ("two people prefer cheaper places") unless they chose to share them
-- `src/screens/JoinTrip.tsx:415` Mood, own words, must-haves and budget sit apart from the shared trip under "Only you see this", and the group only ever sees the combined ranking
+- `src/screens/JoinTrip.tsx:415` Trip preferences, own words, must-haves and budget sit apart from the shared trip under "Only you see yours", and the group only ever sees the combined ranking
 - `src/screens/Swipe.tsx:77` Others' likes show only after my own like and only as a count ("2 friends liked this"), never as faces or names, so nobody feels watched
 
 #### AMR-09 Support efficient correction
@@ -71,7 +71,7 @@ analysis finding it answers. Edit this section by hand.
 
 #### MM-03 Make the AI's model of the user visible
 
-- `src/screens/Profile.tsx:158` The app's picture of the member is on screen as chips, and each chip can be removed
+- `src/screens/Profile.tsx:173` The app's picture of the member is on screen as chips, and each chip can be removed
 
 ### Errors and AI failure modes (L04 p.28 to 64)
 
@@ -103,7 +103,7 @@ analysis finding it answers. Edit this section by hand.
 
 #### FAIR-13 Harm types
 
-- `src/screens/Profile.tsx:248` "Popular with" uses taste groups, not age or gender, and stays off until a member turns it on
+- `src/screens/Profile.tsx:250` "Popular with" uses taste groups, not age or gender, and stays off until a member turns it on
 
 #### FAIR-14 Recourse
 
@@ -115,7 +115,7 @@ analysis finding it answers. Edit this section by hand.
 
 #### FAIR-17 Privacy: consent, control, erasure
 
-- `src/screens/Profile.tsx:256` Showing my reasons to the group by name is my choice, off by default, and can be switched back any time
+- `src/screens/Profile.tsx:258` Showing my reasons to the group by name is my choice, off by default, and can be switched back any time
 
 ### Explainability and trust (L07)
 
