@@ -153,21 +153,20 @@ export function ProfileScreen() {
         {/* one summary row, and the full form only while editing */}
         <section className="stack" aria-label="About you">
           <h2 className="h2">About you</h2>
-          <div className="card row">
+          <div className="card row" style={{ alignItems: 'flex-start' }}>
             <Avatar member={{ name: state.name || 'You', color: '#E0144C', avatar: state.avatar }} />
             <div className="grow">
               <p className="strong">{state.name || 'You'}</p>
-              {state.diets.length + state.allergies.length === 0 && <p className="small muted">No diet or allergies</p>}
+              {state.diets.length + state.allergies.length === 0
+                ? <p className="small muted">No diet or allergies</p>
+                : <ul className="pref-chips" aria-label="Your diet and allergies" style={{ marginTop: 8 }}>
+                    {[...state.diets, ...state.allergies.map((a) => `no ${a}`)].map((t) => (
+                      <li key={t} className="pref-chip">{t[0].toUpperCase() + t.slice(1)}</li>
+                    ))}
+                  </ul>}
             </div>
             <button className="btn slim" aria-expanded={editing} onClick={() => setEditing(!editing)}>{editing ? 'Done' : 'Edit'}</button>
           </div>
-          {!editing && state.diets.length + state.allergies.length > 0 && (
-            <ul className="pref-chips on-page" aria-label="Your diet and allergies">
-              {[...state.diets, ...state.allergies.map((a) => `no ${a}`)].map((t) => (
-                <li key={t} className="pref-chip">{t[0].toUpperCase() + t.slice(1)}</li>
-              ))}
-            </ul>
-          )}
           {editing && <PersonFields />}
         </section>
 

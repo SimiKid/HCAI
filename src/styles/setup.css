@@ -45,4 +45,3 @@
 .pref-idea { padding: 6px 12px; border-radius: var(--r-pill); background: transparent; border: 1.5px dashed var(--cloth-ring); color: var(--lav-ink); font: inherit; font-size: 0.875rem; font-weight: 600; cursor: pointer; }
 .private-box-add { align-self: stretch; background: var(--bg); }
 .scope-hint { margin: 0; font-size: 0.875rem; font-weight: 600; color: var(--lav-ink); }
-.pref-chips.on-page .pref-chip { background: var(--lav-soft); }
