@@ -57,17 +57,17 @@ export function TripScreen() {
         </section>
 
         {/* private: the member's own wishes for this trip, never shown to the group */}
-        <section className="stack" aria-labelledby="mine-h" style={{ gap: 12 }}>
-          <div className="setup-section-head">
-            <h2 className="h2" id="mine-h">Just for you</h2>
-            <p className="privacy-hint"><LockIcon />Only you see this</p>
-          </div>
-          <div className="card row">
-            <div className="grow">
-              <p className="strong">Mood, must-haves and budget</p>
-              <p className="small muted">{mySummary(personalOf(state, 'me'))}</p>
+        <section className="private-box" aria-labelledby="mine-h">
+          <div className="row" style={{ alignItems: 'flex-start' }}>
+            <div className="grow setup-section-head">
+              <h2 className="h2" id="mine-h">Just for you</h2>
+              <p className="privacy-hint"><LockIcon />Only you see this</p>
             </div>
             <button className="btn slim" style={{ background: 'var(--bg)' }} aria-expanded={editingMine} onClick={() => setEditingMine(!editingMine)}>{editingMine ? 'Done' : 'Edit'}</button>
+          </div>
+          <div>
+            <p className="strong">Mood, must-haves and budget</p>
+            <p className="small muted">{mySummary(personalOf(state, 'me'))}</p>
           </div>
           {editingMine && <div className="setup-section"><PersonalTripFields /></div>}
         </section>
