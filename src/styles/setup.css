@@ -40,3 +40,7 @@
 /* private wishes on Our trip: one closed box, so the group list below clearly sits outside it */
 .private-box { display: flex; flex-direction: column; gap: 14px; padding: 16px; border-radius: var(--r-card); background: var(--lav-soft); border: 1.5px solid var(--cloth-ring); }
 .private-box + section { margin-top: 8px; }
+.pref-chips { display: flex; flex-wrap: wrap; gap: 8px; margin: 0; padding: 0; list-style: none; }
+.pref-chip { padding: 6px 12px; border-radius: var(--r-pill); background: var(--bg); color: var(--lav-ink); font-size: 0.875rem; font-weight: 600; }
+.pref-idea { padding: 6px 12px; border-radius: var(--r-pill); background: transparent; border: 1.5px dashed var(--cloth-ring); color: var(--lav-ink); font: inherit; font-size: 0.875rem; font-weight: 600; cursor: pointer; }
+.private-box-add { align-self: stretch; background: var(--bg); }

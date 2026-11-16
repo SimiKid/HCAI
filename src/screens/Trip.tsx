@@ -1,6 +1,6 @@
 import { useMemo, useState } from 'react'
 import { restaurantSource } from '../data/source'
-import { personalOf, useGroup, useStore } from '../store'
+import { patchPersonal, personalOf, useGroup, useStore } from '../store'
 import { confidence } from '../model/learn'
 import { groupPlaces } from '../model/rank'
 import { Avatar, Fold, price, swipes, tripDates } from '../components/Bits'
@@ -11,14 +11,44 @@ import { InviteCard, LockIcon, PersonalTripFields, TRIP_PREFS, TripFields } from
 const cap = (s: string) => (s ? s[0].toUpperCase() + s.slice(1) : s)
 
 /** One line about this member's own wishes for the trip, only ever shown to them. */
-function mySummary(p: ReturnType<typeof personalOf>): string {
-  const moods = [...p.prefs.map((v) => TRIP_PREFS.find((t) => t.value === v)?.label ?? v), ...p.customPrefs]
-  const parts = [
-    moods.join(', '),
-    p.mustHaves.length > 0 && `Must-have: ${p.mustHaves.map((h) => h.text).join(', ')}`,
-    p.budget && `Up to ${price(p.budget.maxPriceLevel)}`,
-  ].filter(Boolean)
-  return parts.length ? cap(parts.join(' · ')) : 'Nothing picked yet. Mood, must-haves and budget move places up or down for you.'
+function myPrefs(p: ReturnType<typeof personalOf>): string[] {
+  return [
+    ...p.prefs.map((v) => TRIP_PREFS.find((t) => t.value === v)?.label ?? v),
+    ...p.customPrefs,
+    ...p.mustHaves.map((h) => `Must-have: ${h.text}`),
+    ...(p.budget ? [`Up to ${price(p.budget.maxPriceLevel)}`] : []),
+  ]
+}
+
+/** What I picked as filled chips, and the preset ideas I have not picked as one-tap suggestions. */
+function TripPrefsPreview() {
+  const { state, set } = useStore()
+  const mine = personalOf(state, 'me')
+  const picked = myPrefs(mine)
+  const ideas = TRIP_PREFS.filter((t) => !mine.prefs.includes(t.value))
+  return (
+    <>
+      {picked.length > 0
+        ? <ul className="pref-chips" aria-label="Your preferences">
+            {picked.map((t) => <li key={t} className="pref-chip">{t}</li>)}
+          </ul>
+        : <p className="small muted">Nothing added yet. Your preferences move places up or down for you.</p>}
+      {ideas.length > 0 && (
+        <div className="stack" style={{ gap: 6 }}>
+          <p className="small muted">Ideas, tap to add</p>
+          <ul className="pref-chips" aria-label="Ideas">
+            {ideas.map((t) => (
+              <li key={t.value}>
+                <button type="button" className="pref-idea" onClick={() => set((s) => patchPersonal(s, 'me', { prefs: [...personalOf(s, 'me').prefs, t.value] }))}>
+                  <span aria-hidden="true">+ </span>{t.label}
+                </button>
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
+    </>
+  )
 }
 
 /** The trip: where the group stays and the places around it, your own wishes for it, and the people. */
@@ -58,18 +88,15 @@ export function TripScreen() {
 
         {/* private: the member's own wishes for this trip, never shown to the group */}
         <section className="private-box" aria-labelledby="mine-h">
-          <div className="row" style={{ alignItems: 'flex-start' }}>
-            <div className="grow setup-section-head">
-              <h2 className="h2" id="mine-h">Just for you</h2>
-              <p className="privacy-hint"><LockIcon />Only you see this</p>
-            </div>
-            <button className="btn slim" style={{ background: 'var(--bg)' }} aria-expanded={editingMine} onClick={() => setEditingMine(!editingMine)}>{editingMine ? 'Done' : 'Edit'}</button>
+          <div className="setup-section-head">
+            <h2 className="h2" id="mine-h">Your preferences for this trip</h2>
+            <p className="privacy-hint"><LockIcon />Everyone sets their own. Only you see yours.</p>
           </div>
-          <div>
-            <p className="strong">Mood, must-haves and budget</p>
-            <p className="small muted">{mySummary(personalOf(state, 'me'))}</p>
-          </div>
+          {!editingMine && <TripPrefsPreview />}
           {editingMine && <div className="setup-section"><PersonalTripFields /></div>}
+          <button className="btn slim private-box-add" aria-expanded={editingMine} onClick={() => setEditingMine(!editingMine)}>
+            {editingMine ? 'Done' : <><span aria-hidden="true">+ </span>Add a preference</>}
+          </button>
         </section>
 
         <section className="stack" aria-labelledby="members-h">

@@ -182,7 +182,7 @@ export function PersonalTripFields() {
   return (
     <>
       <div className="field">
-        <span className="label">What are you in the mood for?</span>
+        <span className="label">What do you prefer on this trip?</span>
         <ChipToggle label="Trip preferences" options={TRIP_PREFS} selected={mine.prefs} onChange={(prefs) => patch({ prefs })} />
         <TextChips label="Add your own preference" placeholder="Add your own, e.g. natural wine"
           items={mine.customPrefs} onChange={(customPrefs) => patch({ customPrefs })} />
@@ -412,11 +412,11 @@ export function TripDetails() {
             <TripGiven by={starter?.name ?? 'the group'} />
           )}
 
-          {/* @hcai AMR-05 Mood, own words, must-haves and budget sit apart from the shared trip under "Only you see this", and the group only ever sees the combined ranking */}
+          {/* @hcai AMR-05 Trip preferences, own words, must-haves and budget sit apart from the shared trip under "Only you see yours", and the group only ever sees the combined ranking */}
           <section className="setup-section" aria-labelledby="mine-h">
             <div className="setup-section-head">
-              <h2 className="h2" id="mine-h">Just for you</h2>
-              <p className="privacy-hint"><LockIcon />Only you see this</p>
+              <h2 className="h2" id="mine-h">Your preferences for this trip</h2>
+              <p className="privacy-hint"><LockIcon />Everyone sets their own. Only you see yours.</p>
               <p className="small muted">It moves places up or down for you. Nobody sees what you picked.</p>
             </div>
             <PersonalTripFields />
