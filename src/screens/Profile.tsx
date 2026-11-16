@@ -25,14 +25,6 @@ const ALLERGIES: { value: Allergy; label: string }[] = [
   { value: 'eggs', label: 'Eggs' },
 ]
 
-/** "Vegetarian, no nuts", or a plain line when there is nothing to list. */
-function foodSummary(diets: Diet[], allergies: Allergy[]): string {
-  const parts = [...diets, ...allergies.map((a) => `no ${a}`)]
-  if (parts.length === 0) return 'No diet or allergies'
-  const text = parts.join(', ')
-  return text[0].toUpperCase() + text.slice(1)
-}
-
 const pickOne = <T,>(items: T[]): T => items[Math.floor(Math.random() * items.length)]
 const randomAvatar = () => avatarId(pickOne(CHARACTERS).id, pickOne(ACCESSORIES).id)
 
@@ -158,6 +150,27 @@ export function ProfileScreen() {
           <p className="scope-hint">Your diet and allergies count for all your trips. Wishes for one trip, like local food, no pizza or healthy, go under Our trip.</p>
         </div>
 
+        {/* one summary row, and the full form only while editing */}
+        <section className="stack" aria-label="About you">
+          <h2 className="h2">About you</h2>
+          <div className="card row">
+            <Avatar member={{ name: state.name || 'You', color: '#E0144C', avatar: state.avatar }} />
+            <div className="grow">
+              <p className="strong">{state.name || 'You'}</p>
+              {state.diets.length + state.allergies.length === 0 && <p className="small muted">No diet or allergies</p>}
+            </div>
+            <button className="btn slim" aria-expanded={editing} onClick={() => setEditing(!editing)}>{editing ? 'Done' : 'Edit'}</button>
+          </div>
+          {!editing && state.diets.length + state.allergies.length > 0 && (
+            <ul className="pref-chips on-page" aria-label="Your diet and allergies">
+              {[...state.diets, ...state.allergies.map((a) => `no ${a}`)].map((t) => (
+                <li key={t} className="pref-chip">{t[0].toUpperCase() + t.slice(1)}</li>
+              ))}
+            </ul>
+          )}
+          {editing && <PersonFields />}
+        </section>
+
         {/* @hcai MM-03 The app's picture of the member is on screen as chips, and each chip can be removed */}
         <section className="card stack" aria-labelledby="taste-h">
           <div className="row between">
@@ -198,19 +211,6 @@ export function ProfileScreen() {
           )}
         </section>
 
-        {/* one summary row, and the full form only while editing */}
-        <section className="stack" aria-label="About you">
-          <h2 className="h2">About you</h2>
-          <div className="card row">
-            <Avatar member={{ name: state.name || 'You', color: '#E0144C', avatar: state.avatar }} />
-            <div className="grow">
-              <p className="strong">{state.name || 'You'}</p>
-              <p className="small muted">{foodSummary(state.diets, state.allergies)}</p>
-            </div>
-            <button className="btn slim" aria-expanded={editing} onClick={() => setEditing(!editing)}>{editing ? 'Done' : 'Edit'}</button>
-          </div>
-          {editing && <PersonFields />}
-        </section>
 
         {/* trips come and go, the person stays: one active trip, earlier ones listed with where and when only */}
         <section className="stack" aria-labelledby="trips-h">
