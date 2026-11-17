@@ -77,7 +77,7 @@ analysis finding it answers. Edit this section by hand.
 
 #### ERR-04 Separate unpredictable AI suggestions from the predictable UI
 
-- `src/screens/Ranking.tsx:215` "Book early first" is a predictable second sort the group switches on: it only groups the list by how early to reserve, keeps the group order inside each group and the front-runner marker on the overall number one
+- `src/screens/Ranking.tsx:200` "Book early first" is a predictable second sort the group switches on: it only groups the list by how early to reserve, keeps the group order inside each group and the front-runner marker on the overall number one
 
 ### Fairness, accountability, ethics (L06)
 
@@ -111,7 +111,7 @@ analysis finding it answers. Edit this section by hand.
 
 #### FAIR-16 User auditing
 
-- `src/screens/Ranking.tsx:136` Anyone can switch members off and see whose taste shapes the list, with each member's swipe count on their seat
+- `src/screens/Ranking.tsx:136` Anyone can switch members off and see whose taste shapes the list
 
 #### FAIR-17 Privacy: consent, control, erasure
 
@@ -147,7 +147,7 @@ analysis finding it answers. Edit this section by hand.
 
 #### DM-01 Direct manipulation
 
-- `src/screens/Ranking.tsx:142` The people filter is the table itself: every seat shows a check or a cross, a tap leaves that person out and the list re-ranks at once, a second tap brings them back
+- `src/screens/Ranking.tsx:141` The people filter is the table itself: every seat shows a check or a cross, a tap leaves that person out and the list re-ranks at once, a second tap brings them back
 
 #### DM-04 Users keep responsibility
 

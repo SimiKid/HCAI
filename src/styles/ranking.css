@@ -78,3 +78,10 @@
 
 /* the viewer's own must-have, never anyone else's */
 .mine-line { display: inline-flex; align-items: center; gap: 6px; align-self: flex-start; padding: 3px 10px; border-radius: 10px; background: var(--lav-soft); color: var(--lav-ink); font-size: 0.75rem; font-weight: 600; }
+
+/* people filter in the old table look: centred, no side text */
+.rk-who { display: flex; flex-direction: column; align-items: center; gap: 10px; }
+.rk-who #who-h { align-self: stretch; }
+.rk-who #rule-panel { align-self: stretch; }
+.sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0; }
+.rk-who .rk-rule { align-self: center; }

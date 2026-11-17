@@ -13,7 +13,7 @@ import { GroupProgress } from '../components/GroupProgress'
 import { GroupTable } from '../components/GroupTable'
 import { WhySheet } from '../components/WhySheet'
 import { MapView } from '../components/MapView'
-import { CheckIcon, ChevronIcon, XIcon } from '../components/Icons'
+import { ChevronIcon } from '../components/Icons'
 import '../styles/ranking.css'
 
 const BOOSTS: { id: string; label: string; weights: Weights }[] = [
@@ -132,34 +132,19 @@ export function RankingScreen({ goToSwipe }: { goToSwipe: () => void }) {
           </div>
 
           {scope === 'group' && (
-            <section className="rk-panel" aria-labelledby="who-h">
-              {/* @hcai FAIR-16 Anyone can switch members off and see whose taste shapes the list, with each member's swipe count on their seat */}
+            <section className="rk-who" aria-labelledby="who-h">
+              {/* @hcai FAIR-16 Anyone can switch members off and see whose taste shapes the list */}
               <div id="who-h">
                 <InfoHeading level="label" title="Who counts in this ranking"
-                  info="Everyone counts the same, however much they swiped. The number on a seat is that person's swipes." />
+                  info="Tap a person to leave them out, tap again to bring them back. Everyone counts the same, however much they swiped." />
               </div>
-              <div className="rk-people">
-                {/* @hcai DM-01 The people filter is the table itself: every seat shows a check or a cross, a tap leaves that person out and the list re-ranks at once, a second tap brings them back */}
-                <GroupTable members={members} size={164} seat={40} onSeat={toggleMember} off={excluded} label="Who counts in this ranking"
-                  tags={Object.fromEntries(members.map((m) => [m.id, `${nameOf(m)} ${m.swipes.length}`]))}
-                  seatLabel={(m) => `${nameOf(m)}, ${m.swipes.length} swipes, ${excluded.includes(m.id) ? 'left out, tap to bring back' : 'counts, tap to leave out'}`}
-                  center={<span className="gtable-center" aria-hidden="true"><b>{included.length}/{members.length}</b><span>count</span></span>} />
-                <div className="rk-people-text">
-                  <span className="rk-count">{out.length === 0 ? `All ${members.length}` : `${included.length} of ${members.length}`}</span>
-                  <span className="rk-hint" role="status">
-                    {out.length === 0
-                      ? 'Everyone counts. Tap a person to leave them out, tap again to bring them back.'
-                      : `Without ${out.map(nameOf).join(' and ')}. Tap again to bring them back.`}
-                  </span>
-                  <span className="rk-legend" aria-hidden="true">
-                    <span><i className="in"><CheckIcon size={11} strokeWidth={3} /></i>Counts</span>
-                    <span><i className="out"><XIcon size={11} strokeWidth={3} /></i>Left out</span>
-                  </span>
-                  <button className="rk-rule" aria-expanded={showRule} aria-controls="rule-panel" onClick={() => setShowRule(!showRule)}>
-                    {RULE_LABEL[state.rule]}<ChevronIcon size={14} style={{ transform: showRule ? 'rotate(-90deg)' : 'rotate(90deg)' }} />
-                  </button>
-                </div>
-              </div>
+              {/* @hcai DM-01 The people filter is the table itself: every seat shows a check or a cross, a tap leaves that person out and the list re-ranks at once, a second tap brings them back */}
+              <GroupTable members={members} size={Math.min(240, 190 + members.length * 10)} seat={46} onSeat={toggleMember} off={excluded} label="Who counts in this ranking"
+                seatLabel={(m) => `${nameOf(m)}, ${m.swipes.length} swipes, ${excluded.includes(m.id) ? 'left out, tap to bring back' : 'counts, tap to leave out'}`} />
+              <p className="sr-only" role="status">{out.length === 0 ? 'Everyone counts' : `Without ${out.map(nameOf).join(' and ')}`}</p>
+              <button className="rk-rule" aria-expanded={showRule} aria-controls="rule-panel" onClick={() => setShowRule(!showRule)}>
+                {RULE_LABEL[state.rule]}<ChevronIcon size={14} style={{ transform: showRule ? 'rotate(-90deg)' : 'rotate(90deg)' }} />
+              </button>
               {showRule && (
                 <div className="stack" id="rule-panel" style={{ gap: 6 }}>
                   <p className="label">How the group is counted</p>
